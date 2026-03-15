@@ -2011,6 +2011,7 @@ GameObject:
   - component: {fileID: 402357789}
   - component: {fileID: 402357791}
   - component: {fileID: 402357790}
+  - component: {fileID: 402357792}
   m_Layer: 5
   m_Name: CrossHair
   m_TagString: Untagged
@@ -2025,13 +2026,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 402357788}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.098405, y: 0.098405, z: 0.098405}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 932442582}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -2075,6 +2076,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 402357788}
   m_CullTransparentMesh: 1
+--- !u!114 &402357792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 402357788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 195b19e5d7aa1482d8d708c5ebefe2b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  indicatorImage: {fileID: 402357790}
+  swinging: {fileID: 1416208302}
+  defaultScale: 0.1
+  maxScale: 0.2
+  defaultColor: {r: 0.1254902, g: 0.1254902, b: 0.1254902, a: 1}
+  grappleColor: {r: 1, g: 0.13743854, b: 0, a: 1}
+  animationSpeed: 20
 --- !u!43 &419234918
 Mesh:
   m_ObjectHideFlags: 0
@@ -7309,6 +7329,7 @@ MonoBehaviour:
   mouseSensitivity: 2000
   playerCamera: {fileID: 1289486707}
   cameraSlideHeightAdjust: -0.5
+  lookDamping: 0.15
 --- !u!136 &1416208305
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -7394,7 +7415,7 @@ Transform:
   m_GameObject: {fileID: 1416208300}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.727, y: 1.417, z: -5.968}
+  m_LocalPosition: {x: -33.909, y: 15.6, z: 35.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
