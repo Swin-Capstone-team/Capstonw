@@ -7574,6 +7574,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a012f0b02de064294a28cd1cc7caf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  normalDrag: 4
+  slideDrag: 0.3
   grappling: 1
   walkSpeed: 5
   sprintSpeed: 10
@@ -7588,6 +7590,7 @@ MonoBehaviour:
   slideDuration: 1
   slideHeight: 0.5
   slideKey: 306
+  targetGrav: 0
   wallDetector: {fileID: 1477448929}
   wallPushAwayForce: 1.5
   wallPushUpForce: 1
@@ -8485,7 +8488,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1477448927
 MeshRenderer:
