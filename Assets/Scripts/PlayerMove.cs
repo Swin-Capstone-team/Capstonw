@@ -25,6 +25,8 @@ public class PlayerMove : MonoBehaviour
     private float slideTimer = 0f;
     private float slideRefresh = 0f;
     private float slideCooldown = 2f;
+    public float normalDrag;
+    public float slideDrag;
 
     public float targetGrav;
 
@@ -38,10 +40,14 @@ public class PlayerMove : MonoBehaviour
     public float mouseSensitivity = 100f;
     public Transform playerCamera;
     public float cameraSlideHeightAdjust = -0.5f;
+    public float lookDamping = 0.15f;  // Lower = smoother, 0-1 range
 
     private Rigidbody rb;
     private CapsuleCollider capsule;
     private float xRotation = 0f;
+    private float targetXRotation = 0f;
+    private float yawRotation = 0f;
+    private float targetYawRotation = 0f;
     public bool grounded { get; private set; }
     private Vector3 inputDir;
 
@@ -130,10 +136,16 @@ public class PlayerMove : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        transform.Rotate(Vector3.up * mouseX);
+        // Accumulate target rotations from input
+        targetYawRotation += mouseX;
+        targetXRotation -= mouseY;
+        targetXRotation = Mathf.Clamp(targetXRotation, -90f, 90f);
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        // Smoothly interpolate to target rotations
+        yawRotation = Mathf.Lerp(yawRotation, targetYawRotation, lookDamping);
+        xRotation = Mathf.Lerp(xRotation, targetXRotation, lookDamping);
+
+        transform.localRotation = Quaternion.Euler(0f, yawRotation, 0f);
         playerCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 
@@ -187,15 +199,18 @@ public class PlayerMove : MonoBehaviour
         playerCamera.localPosition += new Vector3(0f, cameraSlideHeightAdjust, 0f);
 
         // small forward impulse
+        rb.AddForce(transform.forward * 2f, ForceMode.Impulse);
+        rb.linearDamping = slideDrag;
     }
 
     void StopSlide()
     {
         isSliding = false;
-
+        rb.useGravity = true;
         // restore collider
         capsule.height = originalColliderHeight;
         capsule.center = originalColliderCenter;
+        rb.linearDamping = normalDrag;
         rb.useGravity = true;
 
         // restore camera

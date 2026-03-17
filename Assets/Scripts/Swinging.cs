@@ -261,4 +261,10 @@ public class Swinging : MonoBehaviour
         joint.maxDistance = Mathf.Max(hardMin, joint.maxDistance - reelRate * Time.fixedDeltaTime);
 
     }
+
+    public bool CanGrapple()
+    {
+        RaycastHit hit;
+        return Physics.Raycast(cam.position, cam.forward, out hit, maxSwingDistance, Grappleable);
+    }
 }
