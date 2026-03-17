@@ -22,6 +22,8 @@ public class PlayerMove : MonoBehaviour
     private float slideTimer = 0f;
     private float slideRefresh = 0f;
     private float slideCooldown = 2f;
+    public float normalDrag;
+    public float slideDrag;
 
 
     [Header("Wall Jump Settings")]
@@ -73,6 +75,11 @@ public class PlayerMove : MonoBehaviour
         // start slide
         if (Input.GetKeyDown(slideKey) && !isSliding && slideRefresh <= 0f)
         {
+            if(wallDetector.nearWall)
+            {
+                // wall slide
+                rb.useGravity = false;
+            }
             StartSlide();
         }
 
@@ -184,16 +191,17 @@ public class PlayerMove : MonoBehaviour
 
         // small forward impulse
         rb.AddForce(transform.forward * 2f, ForceMode.Impulse);
+        rb.linearDamping = slideDrag;
     }
 
     void StopSlide()
     {
         isSliding = false;
-
+        rb.useGravity = true;
         // restore collider
         capsule.height = originalColliderHeight;
         capsule.center = originalColliderCenter;
-
+        rb.linearDamping = normalDrag;
         // restore camera
         playerCamera.localPosition = originalCameraLocalPos;
     }
