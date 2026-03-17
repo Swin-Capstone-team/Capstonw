@@ -25,10 +25,6 @@ public class PlayerMove : MonoBehaviour
     private float slideTimer = 0f;
     private float slideRefresh = 0f;
     private float slideCooldown = 2f;
-    public float normalDrag;
-    public float slideDrag;
-
-    public float targetGrav;
 
 
     [Header("Wall Jump Settings")]
@@ -81,11 +77,6 @@ public class PlayerMove : MonoBehaviour
         // start slide
         if (Input.GetKeyDown(slideKey) && !isSliding && slideRefresh <= 0f)
         {
-            if (wallDetector.nearWall)
-            {
-                rb.useGravity = false;
-
-            }
             StartSlide();
         }
 
