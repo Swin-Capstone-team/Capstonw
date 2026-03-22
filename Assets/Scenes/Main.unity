@@ -7605,7 +7605,6 @@ MonoBehaviour:
   reelRate: 15
   sideThrust: 4
   upThrust: 2.5
-  isSwinging: 0
 --- !u!114 &1416208303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7635,7 +7634,7 @@ MonoBehaviour:
   wallDetector: {fileID: 1477448929}
   wallPushAwayForce: 1.5
   wallPushUpForce: 1
-  mouseSensitivity: 2000
+  mouseSensitivity: 200
   playerCamera: {fileID: 1289486707}
   cameraSlideHeightAdjust: -0.5
 --- !u!136 &1416208305
@@ -8120,7 +8119,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1436763081}
   m_Layer: 0
-  m_Name: gunTip
+  m_Name: LeftGunTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11829,7 +11828,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2107969670}
   m_Layer: 0
-  m_Name: gunTip
+  m_Name: RightGunTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

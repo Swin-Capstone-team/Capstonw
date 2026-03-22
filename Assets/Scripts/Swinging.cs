@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Swinging : MonoBehaviour
 {
-
     private PlayerMove playermove;
     private Rigidbody rb;
     [Header("Input")]
@@ -17,10 +16,12 @@ public class Swinging : MonoBehaviour
     public LineRenderer rlr;
     public Transform leftGunTip, rightGunTip, cam, player;
     public LayerMask Grappleable;
-    private Vector3 currentGrapplePosition;
+    private Vector3 leftGrapplePosition;
+    private Vector3 rightGrapplePosition;
 
     //Advanced rope mechanics
-    private float shortestDistance;
+    private float leftShortestDistance;
+    private float rightShortestDistance;
     private float minLeeway = 0.2f;
     private float leewayFraction = 0.05f;
     private float adaptiveLeeway;
@@ -43,7 +44,6 @@ public class Swinging : MonoBehaviour
     [Header("Thrust")]
     public float sideThrust;
     public float upThrust;
-    public bool isSwinging = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -103,7 +103,7 @@ public class Swinging : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (spaceheld && isSwinging)
+        if (spaceheld && IsSwinging())
         {
             if (leftJoint != null) GrappleReel(ref leftJoint);
             if (rightJoint != null) GrappleReel(ref rightJoint);
@@ -112,30 +112,62 @@ public class Swinging : MonoBehaviour
 
         if (rightJoint == null && leftJoint == null) return;
 
-        avgSwingPoint = (leftSwingPoint + rightSwingPoint)/2;
-
-        float currentDist = Vector3.Distance(player.position, avgSwingPoint);
-
-        // Ratchet: only ever decrease
-        if (currentDist < shortestDistance)
-            shortestDistance = currentDist;
-
-        // Adaptive leeway: scales with how close you've reeled in
-        float adaptiveLeeway = Mathf.Max(minLeeway, shortestDistance * leewayFraction);
+        if (leftJoint != null && rightJoint != null) avgSwingPoint = (leftSwingPoint + rightSwingPoint) / 2f;
+        else if (leftJoint != null) avgSwingPoint = leftSwingPoint;
+        else if (rightJoint != null) avgSwingPoint = rightSwingPoint;
 
         if (leftJoint != null)
         {
-            // Hard minimum for maxDistance so it's always >= minDistance
-            float hardMin = leftJoint.minDistance + 0.01f;
-            // New cap: closest-ever + adaptive slack
-            float targetMax = Mathf.Max(shortestDistance + adaptiveLeeway, hardMin);
-            leftJoint.maxDistance = targetMax;
-        }else
+            float leftCurrentDist = Vector3.Distance(player.position, leftSwingPoint);
+            if (leftCurrentDist < leftShortestDistance)
+                leftShortestDistance = leftCurrentDist;
+        }
+
+        if (rightJoint != null)
         {
-            float hardMin =  rightJoint.minDistance + 0.01f;  
-            float targetMax = Mathf.Max(shortestDistance + adaptiveLeeway, hardMin);
+            float rightCurrentDist = Vector3.Distance(player.position, rightSwingPoint);
+            if (rightCurrentDist < rightShortestDistance)
+                rightShortestDistance = rightCurrentDist;
+        }
+
+        // Ratchet: only ever decrease
+        float currentDistLeft = Vector3.Distance(player.position, leftSwingPoint);
+        if (currentDistLeft < leftShortestDistance) 
+        {
+            leftShortestDistance = currentDistLeft;
+        }
+        
+        float currentDistRight = Vector3.Distance(player.position, rightSwingPoint);
+        if (currentDistRight < rightShortestDistance) 
+        {
+            rightShortestDistance = currentDistRight;
+        }
+
+        // Adaptive leeway: scales with how close you've reeled in
+        float baseDistance;
+
+        if (leftJoint != null && rightJoint != null)
+            baseDistance = Mathf.Min(leftShortestDistance, rightShortestDistance);
+        else if (leftJoint != null)
+            baseDistance = leftShortestDistance;
+        else
+            baseDistance = rightShortestDistance;
+
+        adaptiveLeeway = Mathf.Max(minLeeway, baseDistance * leewayFraction);
+
+        if (leftJoint != null)
+        {
+            float hardMin = leftJoint.minDistance + 0.01f;
+            float targetMax = Mathf.Max(leftShortestDistance + adaptiveLeeway, hardMin);
+            leftJoint.maxDistance = targetMax;
+        }
+
+        if (rightJoint != null)
+        {
+            float hardMin = rightJoint.minDistance + 0.01f;
+            float targetMax = Mathf.Max(rightShortestDistance + adaptiveLeeway, hardMin);
             rightJoint.maxDistance = targetMax;
-        } 
+        }
         
         Vector3 vAll = rb.linearVelocity;
         Vector3 vHoriz = new Vector3(vAll.x, 0f, vAll.z);
@@ -145,11 +177,7 @@ public class Swinging : MonoBehaviour
         // Advanced rope mechanics
         if (!playermove.grounded)
         {
-            if (wHeld)
-            {
-                ReelUp();
-
-            }
+            
             if (aHeld && vHoriz.magnitude < maxSpeed)
             {
                 ReelLeft();
@@ -159,10 +187,7 @@ public class Swinging : MonoBehaviour
                 ReelLeftSpeed();
             }
 
-            if (sHeld)
-            {
-                ReelDown();
-            }
+            
             if (dHeld && vHoriz.magnitude < maxSpeed)
             {
                 ReelRight();
@@ -186,17 +211,25 @@ public class Swinging : MonoBehaviour
             joint.connectedAnchor = swingPoint;
 
             float distanceFromPoint = Vector3.Distance(player.position, swingPoint);
-            shortestDistance = distanceFromPoint;
-            joint.maxDistance = shortestDistance; 
-            joint.minDistance = shortestDistance * 0.25f;
+            if (joint == leftJoint) leftShortestDistance = distanceFromPoint;
+            else rightShortestDistance = distanceFromPoint;
+
+            joint.maxDistance = distanceFromPoint;
+            joint.minDistance = distanceFromPoint * 0.25f;
 
             joint.spring = 80f;
             joint.damper = 25f;
             joint.massScale = 1f;
 
             lr.positionCount = 2;
-            currentGrapplePosition = gunTip.position;
-            isSwinging = true;
+            if (joint == leftJoint) 
+            {
+                leftGrapplePosition = gunTip.position;
+            }
+            else 
+            {
+                rightGrapplePosition = gunTip.position;
+            }
         }
     }
 
@@ -204,20 +237,19 @@ public class Swinging : MonoBehaviour
     {
         lr.positionCount = 0;
         Destroy(joint);
-        isSwinging = false;
     }
 
     void DrawRope()
     {
         if (leftJoint != null)
         {
-            currentGrapplePosition = Vector3.Lerp(currentGrapplePosition, leftSwingPoint, Time.deltaTime * 8f);
+            leftGrapplePosition = Vector3.Lerp(leftGrapplePosition, leftSwingPoint, Time.deltaTime * 8f);
             llr.SetPosition(0, leftGunTip.position);
             llr.SetPosition(1, leftSwingPoint);
         } 
         if (rightJoint != null)
         {
-            currentGrapplePosition = Vector3.Lerp(currentGrapplePosition, rightSwingPoint, Time.deltaTime * 8f);
+            rightGrapplePosition = Vector3.Lerp(rightGrapplePosition, rightSwingPoint, Time.deltaTime * 8f);
             rlr.SetPosition(0, rightGunTip.position);
             rlr.SetPosition(1, rightSwingPoint);
         } 
@@ -228,13 +260,11 @@ public class Swinging : MonoBehaviour
     void ReelUp()
     {
         rb.AddForce(player.up * sideThrust, ForceMode.Acceleration);
-        isSwinging = true;
     }
 
     void ReelDown()
     {
         rb.AddForce(-player.up * sideThrust, ForceMode.Acceleration);
-        isSwinging = true;
     }
 
     Vector3 GetRopeDir()
@@ -298,5 +328,10 @@ public class Swinging : MonoBehaviour
         rb.AddForce(toAnchor * reelStrength, ForceMode.Acceleration);
         joint.maxDistance = Mathf.Max(hardMin, joint.maxDistance - reelRate * Time.fixedDeltaTime);
 
+    }
+
+    bool IsSwinging()
+    {
+        return leftJoint != null || rightJoint != null;
     }
 }
