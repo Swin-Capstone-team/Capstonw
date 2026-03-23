@@ -29,6 +29,7 @@ public class Swinging : MonoBehaviour
 
 
     [Header("Swinging")]
+    public bool IsUsingGrappleAnchor = true;
     public float jointSpring = 2f;
     public float jointDamper = 0.5f;
     public float jointMassScale = 1f;
@@ -41,15 +42,32 @@ public class Swinging : MonoBehaviour
     public float maxSpeed;
     public float reelStrength, reelRate;
 
+    [Header("Targeting")]
+    public float maxTargetDistance = 25f;
+    public float maxTargetAngle = 20f; // degrees from center of screen
+
+    private Vector3 currentTargetPoint;
+    private bool hasTarget;
+
     [Header("Thrust")]
     public float sideThrust;
     public float upThrust;
+
+    [Header("Indicator")]
+    public GameObject grappleIndicatorPrefab;
+    private GameObject grappleIndicatorInstance;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playermove = GetComponent<PlayerMove>();
         rb = GetComponent<Rigidbody>();
+
+        if (grappleIndicatorPrefab != null)
+        {
+            grappleIndicatorInstance = Instantiate(grappleIndicatorPrefab);
+            grappleIndicatorInstance.SetActive(false);
+        }
     }
 
     float GetTangentialSpeed()
@@ -65,6 +83,9 @@ public class Swinging : MonoBehaviour
     bool wHeld, aHeld, sHeld, dHeld, spaceheld;
     void Update()
     {
+        FindBestGrapplePoint();
+        UpdateIndicator();
+
         if (Input.GetKeyDown(leftSwingKey))
         {
             StartSwing(ref leftSwingPoint, ref leftJoint, ref leftGunTip, ref llr);
@@ -94,6 +115,15 @@ public class Swinging : MonoBehaviour
             playerController.grappling = false;
         }
 
+    }
+
+    void OnDrawGizmos()
+    {
+        if (hasTarget)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(currentTargetPoint, 0.3f);
+        }
     }
 
     void LateUpdate()
@@ -200,19 +230,85 @@ public class Swinging : MonoBehaviour
 
     }
 
+    void FindBestGrapplePoint()
+    {
+        hasTarget = false;
+
+        float bestScore = float.MaxValue;
+
+        Vector3 camPos = cam.position;
+        Vector3 camForward = cam.forward;
+
+        foreach (var point in GrappleAnchor.AllAnchorPoints)
+        {
+            Vector3 toPoint = point - camPos;
+            float distance = toPoint.magnitude;
+
+            if (distance > maxTargetDistance)
+                continue;
+
+            Vector3 dir = toPoint.normalized;
+
+            float angle = Vector3.Angle(camForward, dir);
+            if (angle > maxTargetAngle)
+                continue;
+
+            float score = angle + distance;
+
+            if (score < bestScore)
+            {
+                bestScore = score;
+                currentTargetPoint = point;
+                hasTarget = true;
+            }
+        }
+    }
+
+    void UpdateIndicator()
+    {
+        if (grappleIndicatorInstance == null)
+            return;
+
+        if (leftJoint != null && rightJoint != null)
+        {
+            grappleIndicatorInstance.SetActive(false);
+            return;
+        }
+
+        if (hasTarget)
+        {
+            grappleIndicatorInstance.SetActive(true);
+
+            Vector3 offsetDir = (cam.position - currentTargetPoint).normalized;
+            grappleIndicatorInstance.transform.position = currentTargetPoint + offsetDir * 0.4f;
+
+            grappleIndicatorInstance.transform.forward = cam.forward;
+        }
+        else
+        {
+            grappleIndicatorInstance.SetActive(false);
+        }
+    }
+
     void StartSwing(ref Vector3 swingPoint, ref SpringJoint joint, ref Transform gunTip, ref LineRenderer lr)
     {
-        RaycastHit hit;
-        if (Physics.Raycast(cam.position, cam.forward, out hit, maxSwingDistance, Grappleable))
-        {
-            swingPoint = hit.point;
+        // using pre defined grapple points
+        if (IsUsingGrappleAnchor) {
+            if (!hasTarget)
+                return;
+
+            swingPoint = currentTargetPoint;
+
             joint = player.gameObject.AddComponent<SpringJoint>();
             joint.autoConfigureConnectedAnchor = false;
             joint.connectedAnchor = swingPoint;
 
             float distanceFromPoint = Vector3.Distance(player.position, swingPoint);
-            if (joint == leftJoint) leftShortestDistance = distanceFromPoint;
-            else rightShortestDistance = distanceFromPoint;
+
+            if (gunTip == leftGunTip)
+                leftShortestDistance = distanceFromPoint;
+            else
+                rightShortestDistance = distanceFromPoint;
 
             joint.maxDistance = distanceFromPoint;
             joint.minDistance = distanceFromPoint * 0.25f;
@@ -222,13 +318,45 @@ public class Swinging : MonoBehaviour
             joint.massScale = 1f;
 
             lr.positionCount = 2;
-            if (joint == leftJoint) 
+
+            if (gunTip == leftGunTip)
             {
                 leftGrapplePosition = gunTip.position;
             }
-            else 
+            else
             {
                 rightGrapplePosition = gunTip.position;
+            }
+        } else {
+            // Using raycast on any surface
+            RaycastHit hit;
+            if (Physics.Raycast(cam.position, cam.forward, out hit, maxSwingDistance, Grappleable))
+            {
+                swingPoint = hit.point;
+                joint = player.gameObject.AddComponent<SpringJoint>();
+                joint.autoConfigureConnectedAnchor = false;
+                joint.connectedAnchor = swingPoint;
+
+                float distanceFromPoint = Vector3.Distance(player.position, swingPoint);
+                if (joint == leftJoint) leftShortestDistance = distanceFromPoint;
+                else rightShortestDistance = distanceFromPoint;
+
+                joint.maxDistance = distanceFromPoint;
+                joint.minDistance = distanceFromPoint * 0.25f;
+
+                joint.spring = 80f;
+                joint.damper = 25f;
+                joint.massScale = 1f;
+
+                lr.positionCount = 2;
+                if (joint == leftJoint) 
+                {
+                    leftGrapplePosition = gunTip.position;
+                }
+                else 
+                {
+                    rightGrapplePosition = gunTip.position;
+                }
             }
         }
     }
