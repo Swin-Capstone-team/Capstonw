@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
 
 public class Swinging : MonoBehaviour
@@ -11,7 +12,6 @@ public class Swinging : MonoBehaviour
     public KeyCode rightSwingKey = KeyCode.Mouse1;
 
     [Header("References")]
-    public PlayerMove playerController;
     public LineRenderer llr;
     public LineRenderer rlr;
     public Transform leftGunTip, rightGunTip, cam, player;
@@ -89,12 +89,12 @@ public class Swinging : MonoBehaviour
         if (Input.GetKeyDown(leftSwingKey))
         {
             StartSwing(ref leftSwingPoint, ref leftJoint, ref leftGunTip, ref llr);
-            playerController.grappling = true;
+            playermove.grappling = true;
         }
         if (Input.GetKeyDown(rightSwingKey))
         {
             StartSwing(ref rightSwingPoint, ref rightJoint, ref rightGunTip, ref rlr);
-            playerController.grappling = true;
+            playermove.grappling = true;
         }
         wHeld = Input.GetKey(KeyCode.W);
         aHeld = Input.GetKey(KeyCode.A);
@@ -106,13 +106,13 @@ public class Swinging : MonoBehaviour
         {
             StopSwing(ref leftJoint, ref llr);
             if(Input.GetKey(rightSwingKey)) return;
-            playerController.grappling = false;
+            playermove.grappling = false;
         }
         if (Input.GetKeyUp(rightSwingKey))
         {
             StopSwing(ref rightJoint, ref rlr);
             if(Input.GetKey(leftSwingKey)) return;
-            playerController.grappling = false;
+            playermove.grappling = false;
         }
 
     }
@@ -158,19 +158,6 @@ public class Swinging : MonoBehaviour
             float rightCurrentDist = Vector3.Distance(player.position, rightSwingPoint);
             if (rightCurrentDist < rightShortestDistance)
                 rightShortestDistance = rightCurrentDist;
-        }
-
-        // Ratchet: only ever decrease
-        float currentDistLeft = Vector3.Distance(player.position, leftSwingPoint);
-        if (currentDistLeft < leftShortestDistance) 
-        {
-            leftShortestDistance = currentDistLeft;
-        }
-        
-        float currentDistRight = Vector3.Distance(player.position, rightSwingPoint);
-        if (currentDistRight < rightShortestDistance) 
-        {
-            rightShortestDistance = currentDistRight;
         }
 
         // Adaptive leeway: scales with how close you've reeled in
@@ -239,27 +226,40 @@ public class Swinging : MonoBehaviour
         Vector3 camPos = cam.position;
         Vector3 camForward = cam.forward;
 
-        foreach (var point in GrappleAnchor.AllAnchorPoints)
+        foreach (var anchor in GrappleAnchor.AllAnchors)
         {
-            Vector3 toPoint = point - camPos;
-            float distance = toPoint.magnitude;
+            if (anchor == null) continue;
 
-            if (distance > maxTargetDistance)
+            float anchorDist = Vector3.Distance(camPos, anchor.transform.position);
+            if (anchorDist > maxTargetDistance + anchor.boundingRadius)
                 continue;
 
-            Vector3 dir = toPoint.normalized;
+            int count = anchor.GetPointCount();
 
-            float angle = Vector3.Angle(camForward, dir);
-            if (angle > maxTargetAngle)
-                continue;
-
-            float score = angle + distance;
-
-            if (score < bestScore)
+            for (int i = 0; i < count; i++)
             {
-                bestScore = score;
-                currentTargetPoint = point;
-                hasTarget = true;
+                Vector3 point = anchor.GetWorldPoint(i);
+
+                Vector3 toPoint = point - camPos;
+                float distance = toPoint.magnitude;
+
+                if (distance > maxTargetDistance)
+                    continue;
+
+                Vector3 dir = toPoint.normalized;
+
+                float angle = Vector3.Angle(camForward, dir);
+                if (angle > maxTargetAngle)
+                    continue;
+
+                float score = angle + distance;
+
+                if (score < bestScore)
+                {
+                    bestScore = score;
+                    currentTargetPoint = point;
+                    hasTarget = true;
+                }
             }
         }
     }
@@ -338,8 +338,14 @@ public class Swinging : MonoBehaviour
                 joint.connectedAnchor = swingPoint;
 
                 float distanceFromPoint = Vector3.Distance(player.position, swingPoint);
-                if (joint == leftJoint) leftShortestDistance = distanceFromPoint;
-                else rightShortestDistance = distanceFromPoint;
+                if (gunTip == leftGunTip)
+                {
+                    leftShortestDistance = distanceFromPoint;
+                }
+                else
+                {
+                    rightShortestDistance = distanceFromPoint;
+                }
 
                 joint.maxDistance = distanceFromPoint;
                 joint.minDistance = distanceFromPoint * 0.25f;
@@ -349,11 +355,11 @@ public class Swinging : MonoBehaviour
                 joint.massScale = 1f;
 
                 lr.positionCount = 2;
-                if (joint == leftJoint) 
+                if (gunTip == leftGunTip)
                 {
                     leftGrapplePosition = gunTip.position;
                 }
-                else 
+                else
                 {
                     rightGrapplePosition = gunTip.position;
                 }
@@ -364,7 +370,12 @@ public class Swinging : MonoBehaviour
     void StopSwing(ref SpringJoint joint, ref LineRenderer lr)
     {
         lr.positionCount = 0;
-        Destroy(joint);
+
+        if (joint != null)
+        {
+            Destroy(joint);
+            joint = null;
+        }
     }
 
     void DrawRope()
@@ -450,7 +461,7 @@ public class Swinging : MonoBehaviour
     {
         float g = Mathf.Abs(Physics.gravity.y);
         float hardMin = joint.minDistance + 0.01f;
-        Vector3 toAnchor = (avgSwingPoint - player.position).normalized;
+        Vector3 toAnchor = (joint.connectedAnchor - player.position).normalized;
         rb.AddForce(Vector3.up * (g * (1f - 0.5f)), ForceMode.Acceleration); // counteract gravity partially
 
         rb.AddForce(toAnchor * reelStrength, ForceMode.Acceleration);

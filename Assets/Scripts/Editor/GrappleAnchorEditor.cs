@@ -26,6 +26,12 @@ public class GrappleAnchorEditor : Editor
             anchor.planeSize = EditorGUILayout.Vector2Field("Size", anchor.planeSize);
             anchor.planeResolution = EditorGUILayout.Vector2IntField("Resolution", anchor.planeResolution);
         }
+        else if (anchor.anchorType == GrappleAnchor.AnchorType.Cube || anchor.anchorType == GrappleAnchor.AnchorType.CubePerimeter)
+        {
+            EditorGUILayout.LabelField("Cube Settings", EditorStyles.boldLabel);
+            anchor.cubeSize = EditorGUILayout.Vector3Field("Size", anchor.cubeSize);
+            anchor.cubeResolution = EditorGUILayout.Vector3IntField("Resolution", anchor.cubeResolution);
+        }
 
         if (GUI.changed)
         {

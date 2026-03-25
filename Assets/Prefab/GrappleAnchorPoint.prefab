@@ -49,3 +49,5 @@ MonoBehaviour:
   linePoints: 5
   planeSize: {x: 5, y: 5}
   planeResolution: {x: 5, y: 5}
+  cubeSize: {x: 5, y: 5, z: 5}
+  cubeResolution: {x: 3, y: 3, z: 3}
