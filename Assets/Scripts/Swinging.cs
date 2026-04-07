@@ -1,6 +1,11 @@
 using System;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.UI;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
+using Image = UnityEngine.UI.Image;
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
 
 public class Swinging : MonoBehaviour
@@ -46,7 +51,8 @@ public class Swinging : MonoBehaviour
     public float maxTargetDistance = 25f;
     public float maxTargetAngle = 20f; // degrees from center of screen
 
-    private Vector3 currentTargetPoint;
+    private Vector3 currentTargetPointRight;
+    private Vector3 currentTargetPointLeft;
     private bool hasTarget;
 
     [Header("Thrust")]
@@ -55,7 +61,8 @@ public class Swinging : MonoBehaviour
 
     [Header("Indicator")]
     public GameObject grappleIndicatorPrefab;
-    private GameObject grappleIndicatorInstance;
+    private GameObject grappleIndicatorInstanceRed;
+    private GameObject grappleIndicatorInstanceBlue;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -65,8 +72,12 @@ public class Swinging : MonoBehaviour
 
         if (grappleIndicatorPrefab != null)
         {
-            grappleIndicatorInstance = Instantiate(grappleIndicatorPrefab);
-            grappleIndicatorInstance.SetActive(false);
+            grappleIndicatorInstanceRed = Instantiate(grappleIndicatorPrefab);
+            grappleIndicatorInstanceBlue = Instantiate(grappleIndicatorPrefab);
+            Image image = grappleIndicatorInstanceBlue.GetComponent<Image>();
+            image.color = new Color32(62, 62, 203, 196);
+            grappleIndicatorInstanceRed.SetActive(false);
+            grappleIndicatorInstanceBlue.SetActive(false);
         }
     }
 
@@ -83,17 +94,19 @@ public class Swinging : MonoBehaviour
     bool wHeld, aHeld, sHeld, dHeld, spaceheld;
     void Update()
     {
-        FindBestGrapplePoint();
-        UpdateIndicator();
+        currentTargetPointLeft = FindBestGrapplePoint(-20);
+        currentTargetPointRight = FindBestGrapplePoint(20);
+        UpdateIndicator(currentTargetPointLeft, grappleIndicatorInstanceBlue);
+        UpdateIndicator(currentTargetPointRight, grappleIndicatorInstanceRed);
 
         if (Input.GetKeyDown(leftSwingKey))
         {
-            StartSwing(ref leftSwingPoint, ref leftJoint, ref leftGunTip, ref llr);
+            StartSwing(ref leftSwingPoint, currentTargetPointLeft, ref leftJoint, ref leftGunTip, ref llr);
             playermove.grappling = true;
         }
         if (Input.GetKeyDown(rightSwingKey))
         {
-            StartSwing(ref rightSwingPoint, ref rightJoint, ref rightGunTip, ref rlr);
+            StartSwing(ref rightSwingPoint, currentTargetPointRight, ref rightJoint, ref rightGunTip, ref rlr);
             playermove.grappling = true;
         }
         wHeld = Input.GetKey(KeyCode.W);
@@ -121,8 +134,10 @@ public class Swinging : MonoBehaviour
     {
         if (hasTarget)
         {
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(currentTargetPoint, 0.3f);
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(currentTargetPointRight, 0.3f);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(currentTargetPointLeft, 0.3f);
         }
     }
 
@@ -217,9 +232,10 @@ public class Swinging : MonoBehaviour
 
     }
 
-    void FindBestGrapplePoint()
+    Vector3 FindBestGrapplePoint(float offsetAngle)
     {
         hasTarget = false;
+        Vector3 currentTargetPoint = Vector3.zero;
 
         float bestScore = float.MaxValue;
 
@@ -248,7 +264,7 @@ public class Swinging : MonoBehaviour
 
                 Vector3 dir = toPoint.normalized;
 
-                float angle = Vector3.Angle(camForward, dir);
+                float angle = Vector3.Angle(Quaternion.AngleAxis(offsetAngle, Vector3.up) * camForward, dir);
                 if (angle > maxTargetAngle)
                     continue;
 
@@ -262,20 +278,25 @@ public class Swinging : MonoBehaviour
                 }
             }
         }
+       
+        return currentTargetPoint;
     }
 
-    void UpdateIndicator()
+    void UpdateIndicator(Vector3 currentTargetPoint, GameObject grappleIndicatorInstance)
     {
         if (grappleIndicatorInstance == null)
             return;
 
-        if (leftJoint != null && rightJoint != null)
+        if (leftJoint != null)
         {
-            grappleIndicatorInstance.SetActive(false);
-            return;
+            grappleIndicatorInstanceBlue.SetActive(false);
+        }
+        if (rightJoint != null)
+        {
+            grappleIndicatorInstanceRed.SetActive(false);
         }
 
-        if (hasTarget)
+        if (currentTargetPoint != Vector3.zero)
         {
             grappleIndicatorInstance.SetActive(true);
 
@@ -290,13 +311,14 @@ public class Swinging : MonoBehaviour
         }
     }
 
-    void StartSwing(ref Vector3 swingPoint, ref SpringJoint joint, ref Transform gunTip, ref LineRenderer lr)
+    
+
+    void StartSwing(ref Vector3 swingPoint, Vector3 currentTargetPoint, ref SpringJoint joint, ref Transform gunTip, ref LineRenderer lr)
     {
         // using pre defined grapple points
         if (IsUsingGrappleAnchor) {
-            if (!hasTarget)
+            if (currentTargetPoint == Vector3.zero)
                 return;
-
             swingPoint = currentTargetPoint;
 
             joint = player.gameObject.AddComponent<SpringJoint>();
