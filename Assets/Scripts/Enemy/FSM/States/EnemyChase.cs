@@ -1,30 +1,28 @@
 using UnityEngine;
 
-public class EnemyChase : EnemyState
+public class EnemyChase : IState
 {
-    public EnemyChase(Enemy enemy, EnemyStateMachine stateMachine) : base(enemy, stateMachine)
+    private readonly EnemyReferences _refs;
+    public float TimeSinceLastSeen { get; private set; }
+
+    public EnemyChase(EnemyReferences refs) => _refs = refs;
+
+    public void OnEnter()
     {
-        
+        _refs.navMeshAgent.isStopped = false;
+        _refs.navMeshAgent.speed = 6f; 
+        TimeSinceLastSeen = 0;
     }
 
-    public override void Enter()
+    public void Tick()
     {
-        base.Enter();
+        _refs.navMeshAgent.SetDestination(_refs.target.position);
+
+        if (_refs.HasLineOfSight())
+            TimeSinceLastSeen = 0;
+        else
+            TimeSinceLastSeen += Time.deltaTime;
     }
-    public override void Exit()
-    {
-        base.Exit();
-    }
-    public override void Update()
-    {
-        base.Update();
-    }
-    public override void PhysicsUpdate()
-    {
-        base.PhysicsUpdate();
-    }
-    public override void AnimationTriggerEvent(Enemy.AnimationTriggerType triggerType)
-    {
-        base.AnimationTriggerEvent(triggerType);
-    }
+
+    public void OnExit() => _refs.navMeshAgent.isStopped = true;
 }
