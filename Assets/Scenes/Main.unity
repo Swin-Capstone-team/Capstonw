@@ -6933,12 +6933,12 @@ Transform:
   m_GameObject: {fileID: 1289486706}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.6380005, z: 0.22700119}
+  m_LocalPosition: {x: -33.909, y: 16.238, z: 35.327}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 816614201}
-  m_Father: {fileID: 1416208308}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1289486708
 MonoBehaviour:
@@ -7574,8 +7574,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a012f0b02de064294a28cd1cc7caf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalDrag: 4
-  slideDrag: 0.3
   grappling: 1
   walkSpeed: 5
   sprintSpeed: 10
@@ -7590,7 +7588,6 @@ MonoBehaviour:
   slideDuration: 1
   slideHeight: 0.5
   slideKey: 306
-  targetGrav: 0
   wallDetector: {fileID: 1477448929}
   wallPushAwayForce: 1.5
   wallPushUpForce: 1
@@ -7692,7 +7689,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1477448925}
-  - {fileID: 1289486707}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &1416208309
@@ -8488,7 +8484,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1477448927
 MeshRenderer:
@@ -11880,6 +11876,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 705507995}
+  - {fileID: 1289486707}
   - {fileID: 1416208308}
   - {fileID: 932442582}
   - {fileID: 1719330755}
