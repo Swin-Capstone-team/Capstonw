@@ -49,7 +49,8 @@ public class Swinging : MonoBehaviour
 
     [Header("Targeting")]
     public float maxTargetDistance = 25f;
-    public float maxTargetAngle = 20f; // degrees from center of screen
+    public float maxTargetAngle = 20f; // degrees from center of screen +/- targeting spread 
+    public float targetingSpread = 20f; // angle away from the center of screen for split grapple targeting
 
     private Vector3 currentTargetPointRight;
     private Vector3 currentTargetPointLeft;
@@ -95,8 +96,8 @@ public class Swinging : MonoBehaviour
     bool wHeld, aHeld, sHeld, dHeld, spaceheld;
     void Update()
     {
-        bool hasLeftTarget = FindBestGrapplePoint(-20, out currentTargetPointLeft);
-        bool hasRightTarget = FindBestGrapplePoint(20, out currentTargetPointRight);
+        bool hasLeftTarget = FindBestGrapplePoint(-targetingSpread, out currentTargetPointLeft);
+        bool hasRightTarget = FindBestGrapplePoint(targetingSpread, out currentTargetPointRight);
         hasTarget = hasLeftTarget || hasRightTarget;
         UpdateIndicator(hasLeftTarget, currentTargetPointLeft, grappleIndicatorInstanceBlue, leftJoint);
         UpdateIndicator(hasRightTarget, currentTargetPointRight, grappleIndicatorInstanceRed, rightJoint);
