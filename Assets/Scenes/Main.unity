@@ -8376,13 +8376,14 @@ MonoBehaviour:
   jointSpring: 2
   jointDamper: 0.5
   jointMassScale: 1
-  maxSpeed: 0
-  reelStrength: 10
+  maxSpeed: 50
+  reelStrength: 15
   reelRate: 15
   maxTargetDistance: 25
   maxTargetAngle: 10
   sideThrust: 4
   upThrust: 2.5
+  releaseBoost: 2
   grappleIndicatorPrefab: {fileID: 6140398287122407268, guid: c235a6176978a1541a238729dbf6f4e2, type: 3}
 --- !u!114 &1416208303
 MonoBehaviour:
