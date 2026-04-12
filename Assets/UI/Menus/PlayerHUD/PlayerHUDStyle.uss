@@ -1,0 +1,16 @@
+#healthBar {
+}
+
+#staminaBar {
+}
+
+.missionLabel {
+    font-size: 21px;
+    color: rgb(167, 255, 253);
+}
+
+.missionContainer {
+}
+
+.missionCheckbox {
+}

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 namespace UI.Menus.MainMenu
 {
@@ -38,7 +39,7 @@ namespace UI.Menus.MainMenu
 
         private void ContinueGame()
         {
-        
+            SceneManager.LoadSceneAsync("Main");
         }
 
         private void NewGame()
