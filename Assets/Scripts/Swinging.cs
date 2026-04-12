@@ -551,4 +551,10 @@ public class Swinging : MonoBehaviour
     {
         return leftJoint != null || rightJoint != null;
     }
+
+    public bool CanGrapple()
+    {
+        RaycastHit hit;
+        return Physics.Raycast(cam.position, cam.forward, out hit, maxSwingDistance, Grappleable);
+    }
 }

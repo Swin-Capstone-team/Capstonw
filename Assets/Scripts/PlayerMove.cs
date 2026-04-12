@@ -33,10 +33,14 @@ public class PlayerMove : MonoBehaviour
     public float mouseSensitivity = 100f;
     public Transform playerCamera;
     public float cameraSlideHeightAdjust = -0.5f;
+    public float lookDamping = 0.15f;  // Lower = smoother, 0-1 range
 
     private Rigidbody rb;
     private CapsuleCollider capsule;
     private float xRotation = 0f;
+    private float targetXRotation = 0f;
+    private float yawRotation = 0f;
+    private float targetYawRotation = 0f;
     public bool grounded { get; private set; }
     private Vector3 inputDir;
 
@@ -117,10 +121,16 @@ public class PlayerMove : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        transform.Rotate(Vector3.up * mouseX);
+        // Accumulate target rotations from input
+        targetYawRotation += mouseX;
+        targetXRotation -= mouseY;
+        targetXRotation = Mathf.Clamp(targetXRotation, -90f, 90f);
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        // Smoothly interpolate to target rotations
+        yawRotation = Mathf.Lerp(yawRotation, targetYawRotation, lookDamping);
+        xRotation = Mathf.Lerp(xRotation, targetXRotation, lookDamping);
+
+        transform.localRotation = Quaternion.Euler(0f, yawRotation, 0f);
         playerCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 
