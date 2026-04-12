@@ -14,8 +14,13 @@ public class EnemyReferences : MonoBehaviour
 
     [Header("Sensors")]
     public Transform target;
-    public Transform[] waypointTransforms;
+    public Transform waypointParent;
 
+    [Header("Combat Setup")]
+    public Rigidbody projectilePrefab; 
+    public Transform barrelEnd;       
+    public float bulletSpeed = 2000f; 
+    public float attackCooldown = 2f;
     private void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -36,11 +41,39 @@ public class EnemyReferences : MonoBehaviour
 
     public Vector3[] GetWaypointPositions()
     {
-        Vector3[] points = new Vector3[waypointTransforms.Length];
-        for (int i = 0; i < waypointTransforms.Length; i++)
+        if (waypointParent == null) return new Vector3[0];
+
+        int count = waypointParent.childCount;
+        Vector3[] points = new Vector3[count];
+
+        for (int i = 0; i < count; i++)
         {
-            points[i] = waypointTransforms[i].position;
+            points[i] = waypointParent.GetChild(i).position;
         }
+
         return points;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (waypointParent == null || waypointParent.childCount < 2) return;
+
+        Gizmos.color = Color.cyan;
+        for (int i = 0; i < waypointParent.childCount; i++)
+        {
+            Vector3 current = waypointParent.GetChild(i).position;
+            Gizmos.DrawSphere(current, 0.3f);
+
+            // Draw line to next point
+            if (i < waypointParent.childCount - 1)
+            {
+                Vector3 next = waypointParent.GetChild(i + 1).position;
+                Gizmos.DrawLine(current, next);
+            }
+            else // Loop back to start
+            {
+                Gizmos.DrawLine(current, waypointParent.GetChild(0).position);
+            }
+        }
     }
 }
