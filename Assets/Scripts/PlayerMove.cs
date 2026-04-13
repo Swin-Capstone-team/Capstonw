@@ -3,9 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
 public class PlayerMove : MonoBehaviour
 {
-    public float normalDrag = 4f;
-    public float slideDrag = 0.3f;
-
     [Header("Movement Settings")]
     public bool grappling = false;
     public float walkSpeed = 7f;
@@ -72,7 +69,6 @@ public class PlayerMove : MonoBehaviour
 
         slideRefresh -= Time.deltaTime;
 
-        
 
         // start slide
         if (Input.GetKeyDown(slideKey) && !isSliding && slideRefresh <= 0f)
@@ -83,11 +79,9 @@ public class PlayerMove : MonoBehaviour
         // end slide (timer or key up)
         if (isSliding)
         {
-            rb.linearDamping = slideDrag;
             slideTimer -= Time.deltaTime;
             if (slideTimer <= 0f || Input.GetKeyUp(slideKey))
             {
-                rb.linearDamping = normalDrag;
                 StopSlide();
             }
         }
@@ -178,7 +172,6 @@ public class PlayerMove : MonoBehaviour
     void StartSlide()
     {
         isSliding = true;
-
         slideTimer = slideDuration;
         slideRefresh = slideCooldown;
 
@@ -191,18 +184,15 @@ public class PlayerMove : MonoBehaviour
 
         // small forward impulse
         rb.AddForce(transform.forward * 2f, ForceMode.Impulse);
-        rb.linearDamping = slideDrag;
     }
 
     void StopSlide()
     {
         isSliding = false;
-        rb.useGravity = true;
+
         // restore collider
         capsule.height = originalColliderHeight;
         capsule.center = originalColliderCenter;
-        rb.linearDamping = normalDrag;
-        rb.useGravity = true;
 
         // restore camera
         playerCamera.localPosition = originalCameraLocalPos;
