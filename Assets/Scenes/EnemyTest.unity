@@ -1408,6 +1408,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1762682261}
     - target: {fileID: 7930173159067671881, guid: 12f32575d8bb57241b1d7aee262a34e7, type: 3}
+      propertyPath: attackCooldown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7930173159067671881, guid: 12f32575d8bb57241b1d7aee262a34e7, type: 3}
       propertyPath: waypointParent
       value: 
       objectReference: {fileID: 1518155846}
