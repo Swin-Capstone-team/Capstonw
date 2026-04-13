@@ -4,6 +4,7 @@ public class SlashAttack : MonoBehaviour
 {
     public Animator animator;
     public float comboWindow = 4f;
+    public KeyCode attackKey = KeyCode.E;
 
     private float lastClickTime;
     private int comboStep = 0;
@@ -23,7 +24,7 @@ public class SlashAttack : MonoBehaviour
             animator.SetBool("ComboAttack2", false);
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(attackKey))
         {
             if (comboStep == 0)
             {
