@@ -200,6 +200,34 @@ public class PlayerMove : MonoBehaviour
         rb.AddForce(transform.forward * 2f, ForceMode.Impulse);
     }
 
+    void WallRun()
+    {
+        //Values & bools
+        Vector3 wallNormal = wallDetector.wallNormal;
+        isSliding = true;
+        slideTimer = wallrunTimer;
+        slideRefresh = slideCooldown;
+
+        // shrink collider
+        capsule.height = slideHeight;
+        capsule.center = new Vector3(originalColliderCenter.x, slideHeight / 2f, originalColliderCenter.z);
+
+        // lower camera
+        playerCamera.localPosition += new Vector3(0f, cameraSlideHeightAdjust, 0f);
+
+        // small forward impulse
+        rb.AddForce(transform.up * 2f, ForceMode.Impulse);
+
+        //Get direction of wall
+        Vector3 wallForward = Vector3.Cross(Vector3.up, wallNormal).normalized;
+
+            // Flip it if it points opposite to where the player is facing
+        if (Vector3.Dot(wallForward, transform.forward) < 0f)
+        {
+            wallForward = -wallForward;
+        }
+    }
+
     void StopSlide()
     {
         isSliding = false;
