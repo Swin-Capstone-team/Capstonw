@@ -15,7 +15,8 @@ public class PlayerMove : MonoBehaviour
 
     [Header("Slide Settings")]
     public float slideFrictionAdjustment = 0.2f;
-    public float slideDuration = 1f;
+    private float slideDuration = 1f;
+    private float wallrunTimer; // how long the slide lasts when initiated in air near wall
     public float slideHeight = 0.5f;       // how short the collider gets while sliding
     public KeyCode slideKey = KeyCode.LeftControl;
     private bool isSliding = false;
@@ -60,6 +61,8 @@ public class PlayerMove : MonoBehaviour
         originalCameraLocalPos = playerCamera.localPosition;
 
         Cursor.lockState = CursorLockMode.Locked;
+
+        wallrunTimer = slideDuration * 1.5f; //  wallrun slide lasts 50% longer than regular slide
     }
 
     void Update()
@@ -73,16 +76,23 @@ public class PlayerMove : MonoBehaviour
         // start slide
         if (Input.GetKeyDown(slideKey) && !isSliding && slideRefresh <= 0f)
         {
+            if(!grounded && wallDetector.nearWall) // in air & near wall = wallrun
+            {
+                rb.useGravity = false;
+            }
             StartSlide();
+
         }
 
         // end slide (timer or key up)
         if (isSliding)
         {
-            slideTimer -= Time.deltaTime;
+            if (!grounded && wallDetector.nearWall) { slideTimer = wallrunTimer; } // longer slide while wallrunning
+            slideTimer -= Time.deltaTime;   //timer countdown for slide duration
             if (slideTimer <= 0f || Input.GetKeyUp(slideKey))
             {
-                StopSlide();
+                if(!rb.useGravity){rb.useGravity = true;} // re-enable gravity if we were wallrunning
+                StopSlide();    // stop slide when timer runs out or key is released
             }
         }
 
@@ -217,6 +227,8 @@ public class PlayerMove : MonoBehaviour
         Vector3 jumpDir = wallDetector.wallNormal * wallPushAwayForce + Vector3.up * wallPushUpForce;
         Jump(jumpDir);
     }
+
+    
 
     void GroundCheck()
     {
