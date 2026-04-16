@@ -86,7 +86,7 @@ public class PlayerMove : MonoBehaviour
             if (!grounded && wallDetector.nearWall) // in air & near wall = wallrun
             {
                 isWallRunning = true;
-                WallRun();
+                if(isWallRunning==true) { WallRun(); }
             }
             else { StartSlide(); }
         }
@@ -105,12 +105,12 @@ public class PlayerMove : MonoBehaviour
         // end slide (timer or key up)
         if (isSliding)
         {
-            if (!grounded && wallDetector.nearWall) { slideTimer = wallrunTimer; } // longer slide while wallrunning
             slideTimer -= Time.deltaTime;   //timer countdown for slide duration
             if (slideTimer <= 0f || Input.GetKeyUp(slideKey))
             {
+                Debug.Log("slide end");
+
                 StopSlide();    // stop slide when timer runs out or key is released
-                isWallRunning = false; // stop wallrun if we stop sliding
             }
         }
 
@@ -212,12 +212,25 @@ public class PlayerMove : MonoBehaviour
 
     void HandleWallRunMovement()    //Controls when wallrunning
     {
-        rb.AddForce(-wallDetector.wallNormal * wallStickForce, ForceMode.Force);
+        Vector3 wallNormal = wallDetector.wallNormal;   // get wall normal from detector
+
+        Vector3 wallForward = Vector3.Cross(Vector3.up, wallNormal).normalized; // direction along the wall
+
+        rb.AddForce(-wallDetector.wallNormal * wallStickForce, ForceMode.Force);    // stick to wall
+
+        if (Vector3.Dot(wallForward, transform.forward) < 0f)
+        {
+            wallForward = -wallForward;
+        }
+        wallRunDirection = wallForward;
+
         if (Input.GetKey(KeyCode.W))
         {
-            if (rb.linearVelocity.magnitude < wallmaxSpeed)
+            float forwardSpeed = Vector3.Dot(rb.linearVelocity, wallRunDirection);
+
+            if (forwardSpeed < wallmaxSpeed)
             {
-                rb.AddForce(Camera.main.transform.forward * wallrunSpeed, ForceMode.Acceleration);
+                rb.AddForce(wallRunDirection * wallrunSpeed, ForceMode.Acceleration);
             }
         }
     }
@@ -242,9 +255,9 @@ public class PlayerMove : MonoBehaviour
     void WallRun()  //Handles physics and setup for wallrunning when initiated in air near a wall
     {
         Vector3 wallNormal = wallDetector.wallNormal;
-
         isSliding = true;
         slideRefresh = slideCooldown;
+        slideTimer = wallrunTimer; // longer slide duration for wallrun
 
         // shrink collider
         capsule.height = slideHeight;
