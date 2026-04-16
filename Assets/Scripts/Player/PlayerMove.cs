@@ -244,7 +244,6 @@ public class PlayerMove : MonoBehaviour
         Vector3 wallNormal = wallDetector.wallNormal;
 
         isSliding = true;
-        slideTimer = wallrunTimer;
         slideRefresh = slideCooldown;
 
         // shrink collider
