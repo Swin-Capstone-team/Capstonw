@@ -24,8 +24,15 @@ public class PlayerMove : MonoBehaviour
     private float slideRefresh = 0f;
     private float slideCooldown = 2f;
 
+    [Header("Wall Run Settings")]
+    private Vector3 wallRunDirection;
+    private float wallrunDuration = 1.5f; // how long the wallrun lasts
+    bool isWallRunning = false;
+    private float wallrunSpeed = 5f;
+    private float wallmaxSpeed = 10f;
 
     [Header("Wall Jump Settings")]
+    [SerializeField] private float wallStickForce = 10f;
     public WallDetector wallDetector;
     public float wallPushAwayForce = 5f;
     public float wallPushUpForce = 3f;
@@ -73,16 +80,27 @@ public class PlayerMove : MonoBehaviour
         slideRefresh -= Time.deltaTime;
 
 
-        // start slide
+        // start slide and check for wallrun initiation
         if (Input.GetKeyDown(slideKey) && !isSliding && slideRefresh <= 0f)
         {
-            if(!grounded && wallDetector.nearWall) // in air & near wall = wallrun
+            if (!grounded && wallDetector.nearWall) // in air & near wall = wallrun
             {
-                rb.useGravity = false;
+                isWallRunning = true;
+                WallRun();
             }
-            StartSlide();
-
+            else { StartSlide(); }
         }
+        //Check for wallrun end conditions
+        if (isWallRunning)
+        {
+            if (!wallDetector.nearWall) { isWallRunning = false; }
+        }
+
+        if (isWallRunning)
+        {
+            rb.useGravity = false; // disable gravity while wallrunning
+        } else if (!isWallRunning) { rb.useGravity = true; }
+       
 
         // end slide (timer or key up)
         if (isSliding)
@@ -91,10 +109,12 @@ public class PlayerMove : MonoBehaviour
             slideTimer -= Time.deltaTime;   //timer countdown for slide duration
             if (slideTimer <= 0f || Input.GetKeyUp(slideKey))
             {
-                if(!rb.useGravity){rb.useGravity = true;} // re-enable gravity if we were wallrunning
                 StopSlide();    // stop slide when timer runs out or key is released
+                isWallRunning = false; // stop wallrun if we stop sliding
             }
         }
+
+       
 
         // Collect input here (for FixedUpdate use)
         float moveX = Input.GetAxisRaw("Horizontal");
@@ -116,14 +136,21 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!isSliding) // disable control while sliding
+        if (isWallRunning)
         {
-            HandleMovement();
+            HandleWallRunMovement();
         }
-        else
+
+        else if (isSliding) // disable control while sliding
         {
             HandleSlideMovement();
         }
+        else
+        {
+            HandleMovement();
+        }
+       
+        
     }
 
     void HandleLook()
@@ -158,7 +185,7 @@ public class PlayerMove : MonoBehaviour
                 Vector3 forceDir = (desiredVel - new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z)) * 10f;
                 rb.AddForce(forceDir, ForceMode.Force);
             }
-            else
+            else    //In air, less control
             {
                 Debug.Log("not grounded");
                 Vector3 airForce = inputDir * targetSpeed * airControl;
@@ -183,6 +210,18 @@ public class PlayerMove : MonoBehaviour
         rb.AddForce(slideFriction, ForceMode.Acceleration);
     }
 
+    void HandleWallRunMovement()    //Controls when wallrunning
+    {
+        rb.AddForce(-wallDetector.wallNormal * wallStickForce, ForceMode.Force);
+        if (Input.GetKey(KeyCode.W))
+        {
+            if (rb.linearVelocity.magnitude < wallmaxSpeed)
+            {
+                rb.AddForce(Camera.main.transform.forward * wallrunSpeed, ForceMode.Acceleration);
+            }
+        }
+    }
+
     void StartSlide()
     {
         isSliding = true;
@@ -200,10 +239,10 @@ public class PlayerMove : MonoBehaviour
         rb.AddForce(transform.forward * 2f, ForceMode.Impulse);
     }
 
-    void WallRun()
+    void WallRun()  //Handles physics and setup for wallrunning when initiated in air near a wall
     {
-        //Values & bools
         Vector3 wallNormal = wallDetector.wallNormal;
+
         isSliding = true;
         slideTimer = wallrunTimer;
         slideRefresh = slideCooldown;
@@ -213,23 +252,26 @@ public class PlayerMove : MonoBehaviour
         capsule.center = new Vector3(originalColliderCenter.x, slideHeight / 2f, originalColliderCenter.z);
 
         // lower camera
-        playerCamera.localPosition += new Vector3(0f, cameraSlideHeightAdjust, 0f);
+        playerCamera.localPosition = originalCameraLocalPos + new Vector3(0f, cameraSlideHeightAdjust, 0f);
 
-        // small forward impulse
-        rb.AddForce(transform.up * 2f, ForceMode.Impulse);
+        // optional small boost
+        rb.AddForce(transform.forward * 2f, ForceMode.Impulse);
 
-        //Get direction of wall
+        // Get direction along the wall
         Vector3 wallForward = Vector3.Cross(Vector3.up, wallNormal).normalized;
 
-            // Flip it if it points opposite to where the player is facing
+        // Flip if opposite to facing direction
         if (Vector3.Dot(wallForward, transform.forward) < 0f)
         {
             wallForward = -wallForward;
         }
+
+        wallRunDirection = wallForward;
     }
 
     void StopSlide()
     {
+        isWallRunning = false; // stop wallrun if we were wallrunning
         isSliding = false;
 
         // restore collider
