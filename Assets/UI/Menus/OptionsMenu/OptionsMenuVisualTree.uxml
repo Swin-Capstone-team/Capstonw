@@ -12,7 +12,7 @@
                     <ui:Button text="EXIT TO MAIN MENU" name="ExitMenuButton" class="optionsButton settingsSubMenuButton"/>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="GameOptions" style="flex-grow: 1; padding-left: 0; width: 100%; max-width: none; display: none;">
+            <ui:VisualElement name="GameOptions" style="flex-grow: 1; padding-left: 0; width: 100%; max-width: none; display: flex;">
                 <ui:Label text="GAME OPTIONS" name="" class="h1" style="margin-bottom: 4px; margin-top: 4px; -unity-background-image-tint-color: rgb(255, 255, 255); margin-right: 0; margin-left: 0; color: rgba(255, 255, 255, 0.78); -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/DevilDeceptionVX.otf?fileID=12800000&amp;guid=0feb93136238e1525b702ab70f742829&amp;type=3#DevilDeceptionVX&quot;); letter-spacing: 0; border-left-color: rgba(0, 191, 255, 0.97); border-right-color: rgba(0, 191, 255, 0.97); border-top-color: rgba(0, 191, 255, 0.97); border-bottom-color: rgba(0, 191, 255, 0.97); border-top-width: 0; border-right-width: 0; border-bottom-width: 2px; border-left-width: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 60px; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; width: 650px; -unity-font-style: normal; font-size: 32px;"/>
                 <ui:VisualElement name="OptionsList" style="flex-grow: 1; align-self: auto; align-content: auto; font-size: 32px; width: 70%; height: initial; justify-content: flex-start; align-items: auto; padding-left: 60px; margin-left: 0; padding-right: 0; display: flex;">
                     <ui:VisualElement class="optionGroup">
@@ -67,7 +67,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="VideoOptions" style="flex-grow: 1; padding-left: 0; width: 100%; max-width: none; display: none;">
+            <ui:VisualElement name="VideoOptions" style="flex-grow: 1; padding-left: 0; width: 100%; max-width: none; display: flex;">
                 <ui:Label text="VIDEO OPTIONS" name="" class="h1" style="margin-bottom: 4px; margin-top: 4px; -unity-background-image-tint-color: rgb(255, 255, 255); margin-right: 0; margin-left: 0; color: rgba(255, 255, 255, 0.78); -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/DevilDeceptionVX.otf?fileID=12800000&amp;guid=0feb93136238e1525b702ab70f742829&amp;type=3#DevilDeceptionVX&quot;); letter-spacing: 0; border-left-color: rgba(0, 191, 255, 0.97); border-right-color: rgba(0, 191, 255, 0.97); border-top-color: rgba(0, 191, 255, 0.97); border-bottom-color: rgba(0, 191, 255, 0.97); border-top-width: 0; border-right-width: 0; border-bottom-width: 2px; border-left-width: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 60px; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; width: 650px; -unity-font-style: normal; font-size: 32px;"/>
                 <ui:VisualElement name="OptionsList" style="flex-grow: 1; align-self: auto; align-content: auto; font-size: 32px; width: 70%; height: initial; justify-content: flex-start; align-items: auto; padding-left: 60px; margin-left: 0; padding-right: 0; display: flex;">
                     <ui:VisualElement class="optionGroup" style="flex-shrink: 0;">
@@ -118,7 +118,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="ControlOptions" style="flex-grow: 1; padding-left: 0; width: 100%; max-width: none; display: flex;">
+            <ui:VisualElement name="ControlOptions" style="flex-grow: 1; padding-left: 0; width: 100%; max-width: none; display: none;">
                 <ui:Label text="CONTROL OPTIONS" name="" class="h1" style="margin-bottom: 4px; margin-top: 4px; -unity-background-image-tint-color: rgb(255, 255, 255); margin-right: 0; margin-left: 0; color: rgba(255, 255, 255, 0.78); -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/DevilDeceptionVX.otf?fileID=12800000&amp;guid=0feb93136238e1525b702ab70f742829&amp;type=3#DevilDeceptionVX&quot;); letter-spacing: 0; border-left-color: rgba(0, 191, 255, 0.97); border-right-color: rgba(0, 191, 255, 0.97); border-top-color: rgba(0, 191, 255, 0.97); border-bottom-color: rgba(0, 191, 255, 0.97); border-top-width: 0; border-right-width: 0; border-bottom-width: 2px; border-left-width: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 60px; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; width: 650px; -unity-font-style: normal; font-size: 32px;"/>
                 <ui:ScrollView horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="AlwaysVisible" style="padding-left: 60px; width: 70%; display: flex;">
                     <ui:VisualElement name="MOVE_FORWARD" class="controlOptionGroup">

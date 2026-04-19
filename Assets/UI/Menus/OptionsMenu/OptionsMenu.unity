@@ -396,6 +396,10 @@ PrefabInstance:
       value: None
       objectReference: {fileID: 0}
     - target: {fileID: 4098228276087689548, guid: d92166b2daafcc7bc80c4534a47e60c4, type: 3}
+      propertyPath: listeningText
+      value: ...
+      objectReference: {fileID: 0}
+    - target: {fileID: 4098228276087689548, guid: d92166b2daafcc7bc80c4534a47e60c4, type: 3}
       propertyPath: entries.Array.data[0].actionReference
       value: 
       objectReference: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
