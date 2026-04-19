@@ -1,0 +1,212 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Menus/MainMenu/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=66b74c8f54fe3f247bb1d8b160872c6a&amp;type=3#MainMenuStyle"/>
+    <ui:VisualElement name="" enabled="true" style="flex-grow: 1; background-color: rgb(0, 0, 0); display: flex; padding-left: 0; padding-right: 0; border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0);">
+        <ui:VisualElement name="" style="flex-grow: 1; justify-content: flex-start; align-items: flex-start; padding-top: 20px; padding-right: 0; padding-bottom: 20px; padding-left: 0;">
+            <ui:Label text="OPTIONS" name="" class="header h1" style="margin-bottom: 30px; margin-top: 4px; -unity-background-image-tint-color: rgb(255, 255, 255); margin-right: 4px; margin-left: 0; color: rgb(168, 156, 126); -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/DevilDeceptionVX.otf?fileID=12800000&amp;guid=0feb93136238e1525b702ab70f742829&amp;type=3#DevilDeceptionVX&quot;); letter-spacing: 22px; padding-right: 60px; padding-left: 60px;"/>
+            <ui:VisualElement name="OptionsMainMenu" enabled="true" style="flex-grow: 1; width: 40%; display: none; align-items: center; justify-content: flex-start; align-self: flex-start; align-content: center;">
+                <ui:VisualElement name="" style="flex-grow: 1; align-self: flex-start; align-content: center; font-size: 32px; width: 100%; height: initial; justify-content: flex-start; align-items: center; padding-left: 0; margin-left: 60px;">
+                    <ui:Button text="GAME OPTIONS" name="GameOptionsButton" class="settingsSubMenuButton"/>
+                    <ui:Button text="VIDEO" name="VideoButton" class="optionsButton settingsSubMenuButton" style="height: 58px;"/>
+                    <ui:Button text="SOUND" name="SoundButton" class="optionsButton settingsSubMenuButton"/>
+                    <ui:Button text="CONTROLS" name="ControlsButton" class="optionsButton settingsSubMenuButton"/>
+                    <ui:Button text="EXIT TO MAIN MENU" name="ExitMenuButton" class="optionsButton settingsSubMenuButton"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="GameOptions" style="flex-grow: 1; padding-left: 0; width: 100%; max-width: none; display: none;">
+                <ui:Label text="GAME OPTIONS" name="" class="h1" style="margin-bottom: 4px; margin-top: 4px; -unity-background-image-tint-color: rgb(255, 255, 255); margin-right: 0; margin-left: 0; color: rgba(255, 255, 255, 0.78); -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/DevilDeceptionVX.otf?fileID=12800000&amp;guid=0feb93136238e1525b702ab70f742829&amp;type=3#DevilDeceptionVX&quot;); letter-spacing: 0; border-left-color: rgba(0, 191, 255, 0.97); border-right-color: rgba(0, 191, 255, 0.97); border-top-color: rgba(0, 191, 255, 0.97); border-bottom-color: rgba(0, 191, 255, 0.97); border-top-width: 0; border-right-width: 0; border-bottom-width: 2px; border-left-width: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 60px; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; width: 650px; -unity-font-style: normal; font-size: 32px;"/>
+                <ui:VisualElement name="OptionsList" style="flex-grow: 1; align-self: auto; align-content: auto; font-size: 32px; width: 70%; height: initial; justify-content: flex-start; align-items: auto; padding-left: 60px; margin-left: 0; padding-right: 0; display: flex;">
+                    <ui:VisualElement class="optionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="LOCK-ON MARKER" name="" class="optionLabel" style="padding-top: 8px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="optionSettingsContainer">
+                            <ui:Button text="&lt;" class="optionSettingsButton"/>
+                            <ui:Label text="ON" name="" class="optionSettingsLabel"/>
+                            <ui:Button text="&gt;" class="optionSettingsButton"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="optionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="CAMERA (HORIZONTAL)" name="" class="optionLabel"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="optionSettingsContainer">
+                            <ui:Button text="&lt;" class="optionSettingsButton"/>
+                            <ui:Label text="NORMAL" name="" class="optionSettingsLabel"/>
+                            <ui:Button text="&gt;" class="optionSettingsButton"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="" class="optionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="CAMERA (VERTICAL)" name="" class="optionLabel"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="optionSettingsContainer">
+                            <ui:Button text="&lt;" class="optionSettingsButton"/>
+                            <ui:Label text="NORMAL" name="" class="optionSettingsLabel"/>
+                            <ui:Button text="&gt;" class="optionSettingsButton"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="optionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="CAMERA SPEED (LEFT/RIGHT)" name="" class="optionLabel"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="optionSettingsContainer">
+                            <ui:Button text="&lt;" class="optionSettingsButton"/>
+                            <ui:Label text="ON" name="" class="optionSettingsLabel"/>
+                            <ui:Button text="&gt;" class="optionSettingsButton"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="optionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="VIBRATION" name="" class="optionLabel"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="optionSettingsContainer">
+                            <ui:Button text="&lt;" class="optionSettingsButton"/>
+                            <ui:Label text="ON" name="" class="optionSettingsLabel"/>
+                            <ui:Button text="&gt;" class="optionSettingsButton"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="VideoOptions" style="flex-grow: 1; padding-left: 0; width: 100%; max-width: none; display: none;">
+                <ui:Label text="VIDEO OPTIONS" name="" class="h1" style="margin-bottom: 4px; margin-top: 4px; -unity-background-image-tint-color: rgb(255, 255, 255); margin-right: 0; margin-left: 0; color: rgba(255, 255, 255, 0.78); -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/DevilDeceptionVX.otf?fileID=12800000&amp;guid=0feb93136238e1525b702ab70f742829&amp;type=3#DevilDeceptionVX&quot;); letter-spacing: 0; border-left-color: rgba(0, 191, 255, 0.97); border-right-color: rgba(0, 191, 255, 0.97); border-top-color: rgba(0, 191, 255, 0.97); border-bottom-color: rgba(0, 191, 255, 0.97); border-top-width: 0; border-right-width: 0; border-bottom-width: 2px; border-left-width: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 60px; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; width: 650px; -unity-font-style: normal; font-size: 32px;"/>
+                <ui:VisualElement name="OptionsList" style="flex-grow: 1; align-self: auto; align-content: auto; font-size: 32px; width: 70%; height: initial; justify-content: flex-start; align-items: auto; padding-left: 60px; margin-left: 0; padding-right: 0; display: flex;">
+                    <ui:VisualElement class="optionGroup" style="flex-shrink: 0;">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="DISPLAY MODE" name="" class="optionLabel" style="padding-top: 8px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="optionSettingsContainer">
+                            <ui:Button text="&lt;" class="optionSettingsButton"/>
+                            <ui:Label text="FULLSCREEN" name="" class="optionSettingsLabel"/>
+                            <ui:Button text="&gt;" class="optionSettingsButton"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="optionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="RESOLUTION" name="" class="optionLabel"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="optionSettingsContainer">
+                            <ui:Button text="&lt;" class="optionSettingsButton"/>
+                            <ui:Label text="NORMAL" name="" class="optionSettingsLabel"/>
+                            <ui:Button text="&gt;" class="optionSettingsButton"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="" class="optionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="REFRESH RATE" name="" class="optionLabel"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="optionSettingsContainer">
+                            <ui:Button text="&lt;" class="optionSettingsButton"/>
+                            <ui:Label text="NORMAL" name="" class="optionSettingsLabel"/>
+                            <ui:Button text="&gt;" class="optionSettingsButton"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="" class="optionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="BRIGHTNESS" name="" class="optionLabel"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="optionSettingsContainer" style="flex-shrink: 1; justify-content: center;">
+                            <ui:Slider label="Slider" value="42" high-value="100" show-input-field="true" tabindex="0" fill="true" style="color: rgb(255, 255, 255);"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="" class="optionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="FIELD OF VIEW" name="" class="optionLabel"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="optionSettingsContainer" style="flex-shrink: 1; justify-content: center;">
+                            <ui:Slider label="Slider" show-input-field="true" style="color: rgb(255, 255, 255);"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="ControlOptions" style="flex-grow: 1; padding-left: 0; width: 100%; max-width: none; display: flex;">
+                <ui:Label text="CONTROL OPTIONS" name="" class="h1" style="margin-bottom: 4px; margin-top: 4px; -unity-background-image-tint-color: rgb(255, 255, 255); margin-right: 0; margin-left: 0; color: rgba(255, 255, 255, 0.78); -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/DevilDeceptionVX.otf?fileID=12800000&amp;guid=0feb93136238e1525b702ab70f742829&amp;type=3#DevilDeceptionVX&quot;); letter-spacing: 0; border-left-color: rgba(0, 191, 255, 0.97); border-right-color: rgba(0, 191, 255, 0.97); border-top-color: rgba(0, 191, 255, 0.97); border-bottom-color: rgba(0, 191, 255, 0.97); border-top-width: 0; border-right-width: 0; border-bottom-width: 2px; border-left-width: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 60px; border-top-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; border-bottom-left-radius: 0; width: 650px; -unity-font-style: normal; font-size: 32px;"/>
+                <ui:ScrollView horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="AlwaysVisible" style="padding-left: 60px; width: 70%; display: flex;">
+                    <ui:VisualElement name="MOVE_FORWARD" class="controlOptionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="MOVE FORWARD" name="" class="optionLabel" style="padding-top: 8px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="controlOptionSettingsContainer">
+                            <ui:Label text="" name="" class="optionSettingsLabel" style="min-width: 100%; min-height: 100%;"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="MOVE_BACKWARD" class="controlOptionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="MOVE BACKWARD" name="" class="optionLabel" style="padding-top: 8px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="controlOptionSettingsContainer">
+                            <ui:Label text="" name="" class="optionSettingsLabel" style="min-width: 100%; min-height: 100%;"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="MOVE_LEFT" class="controlOptionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="MOVE LEFT" name="" class="optionLabel" style="padding-top: 8px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="controlOptionSettingsContainer">
+                            <ui:Label text="" name="" class="optionSettingsLabel" style="min-width: 100%; min-height: 100%;"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="MOVE_RIGHT" class="controlOptionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="MOVE RIGHT" name="" class="optionLabel" style="padding-top: 8px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="controlOptionSettingsContainer">
+                            <ui:Label text="" name="" class="optionSettingsLabel" style="min-width: 100%; min-height: 100%;"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="INTERACT" class="controlOptionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="INTERACT" name="" class="optionLabel" style="padding-top: 8px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="controlOptionSettingsContainer">
+                            <ui:Label text="" name="" class="optionSettingsLabel" style="min-width: 100%; min-height: 100%;"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="JUMP" class="controlOptionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="JUMP" name="" class="optionLabel" style="padding-top: 8px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="controlOptionSettingsContainer">
+                            <ui:Label text="" name="" class="optionSettingsLabel" style="min-width: 100%; min-height: 100%;"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="RUN" class="controlOptionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="RUN" name="" class="optionLabel" style="padding-top: 8px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="controlOptionSettingsContainer">
+                            <ui:Label text="" name="" class="optionSettingsLabel" style="min-width: 100%; min-height: 100%;"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="TOGGLE_WALK" class="controlOptionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="TOGGLE WALK" name="" class="optionLabel" style="padding-top: 8px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="controlOptionSettingsContainer">
+                            <ui:Label text="" name="" class="optionSettingsLabel" style="min-width: 100%; min-height: 100%;"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="MELEE" class="controlOptionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="MELEE" name="" class="optionLabel" style="padding-top: 8px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="controlOptionSettingsContainer">
+                            <ui:Label text="" name="" class="optionSettingsLabel" style="min-width: 100%; min-height: 100%;"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="SHOOT" class="controlOptionGroup">
+                        <ui:VisualElement name="" class="optionLabelContainer">
+                            <ui:Label text="SHOOT" name="" class="optionLabel" style="padding-top: 8px;"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement name="" class="controlOptionSettingsContainer">
+                            <ui:Label text="" name="" class="optionSettingsLabel" style="min-width: 100%; min-height: 100%;"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:ScrollView>
+            </ui:VisualElement>
+            <ui:VisualElement name="Footer" style="flex-grow: 0; justify-content: flex-end; margin-left: 0; align-items: flex-start; padding-bottom: 30px; padding-left: 60px; padding-right: 60px; flex-shrink: 0;">
+                <ui:Label text="Change game settings." name="SelectionDisplay" style="font-size: 24px; color: rgba(255, 255, 255, 0.78); height: auto; -unity-text-align: upper-center; margin-bottom: 4px; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;); padding-bottom: 4px; padding-top: 4px; padding-right: 4px; padding-left: 4px; -unity-font-style: normal; letter-spacing: -2px;"/>
+                <ui:Label text="CONFIRM BACK DEFAULT SETTINGS" name="Copyright" style="color: rgba(255, 255, 255, 0.78); font-size: 26px; -unity-font-definition: url(&quot;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&amp;guid=8add478d072d20501b615ef42b9a1a3a&amp;type=3#NotInter-Regular&quot;); letter-spacing: -2px;"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,45 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Menus/PlayerHUD/PlayerHUDStyle.uss?fileID=7433441132597879392&amp;guid=d1213a346e5d013e69e6d3cb0cb51286&amp;type=3#PlayerHUDStyle"/>
+    <ui:VisualElement name="PlayerHUDContainer" style="flex-grow: 1;">
+        <ui:VisualElement name="MinimapContainer" style="flex-grow: 1; position: absolute; right: 0; width: 325px; height: 275px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 45px; margin-right: 60px; background-color: rgba(0, 0, 0, 0.53);">
+            <ui:Label text="Minimap Panel" name="" style="position: absolute; top: -30px; left: 0; -unity-font-definition: url(&quot;project://database/Library/unity%20default%20resources?fileID=10102&amp;guid=0000000000000000e000000000000000&amp;type=0#LegacyRuntime&quot;); font-size: 20px; -unity-text-outline-width: 0; -unity-text-outline-color: rgb(0, 0, 0);"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="ObjectivesContainer" style="flex-grow: 1; width: 200px; height: 300px; position: absolute; right: 0; top: 325px; left: auto; margin-right: 60px; background-color: rgba(0, 0, 0, 0.44); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">
+            <ui:Label text="Objectives" style="-unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/DevilDeceptionVX.otf?fileID=12800000&amp;guid=0feb93136238e1525b702ab70f742829&amp;type=3#DevilDeceptionVX&quot;); font-size: 28px; background-color: rgba(0, 0, 0, 0); color: rgb(255, 255, 255); -unity-text-outline-width: 2px; -unity-text-outline-color: rgb(0, 0, 0); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: bold;"/>
+            <ui:VisualElement class="missionContainer" style="flex-grow: 0; flex-direction: row; height: 30px; flex-shrink: 0; justify-content: space-between; align-content: center;">
+                <ui:Label text="Mission 1" class="missionLabel" style="font-size: 16px; color: rgb(189, 230, 255);"/>
+                <ui:VisualElement style="flex-grow: 0; background-color: rgb(0, 0, 0); flex-shrink: 0; width: 25px; height: 25px; -unity-text-outline-color: rgb(0, 219, 255);"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="missionContainer" style="flex-grow: 0; flex-direction: row; height: 30px; flex-shrink: 0; justify-content: space-between; align-content: center;">
+                <ui:Label text="Mission 2" class="missionLabel" style="font-size: 16px; color: rgb(189, 230, 255); height: 24px;"/>
+                <ui:VisualElement style="flex-grow: 0; background-color: rgb(0, 0, 0); flex-shrink: 0; width: 25px; height: 25px; -unity-text-outline-color: rgb(0, 219, 255);"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="missionContainer" style="flex-grow: 0; flex-direction: row; height: 30px; flex-shrink: 0; justify-content: space-between; align-content: center;">
+                <ui:Label text="Mission 3" class="missionLabel" style="font-size: 16px; color: rgb(189, 230, 255);"/>
+                <ui:VisualElement style="flex-grow: 0; background-color: rgb(0, 0, 0); flex-shrink: 0; width: 25px; height: 25px; -unity-text-outline-color: rgb(0, 219, 255);"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="VitalsContainer" style="flex-grow: 1; position: absolute; bottom: 0; align-items: flex-start; justify-content: center; align-self: auto; width: 400px; height: 150px; padding-left: 10px; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; margin-left: 80px; margin-bottom: 60px; align-content: center; background-color: rgba(0, 0, 0, 0.43);">
+            <ui:Label text="Vitals Panel" name="Vitals" style="position: absolute; top: -30px; left: 0; -unity-font-definition: url(&quot;project://database/Library/unity%20default%20resources?fileID=10102&amp;guid=0000000000000000e000000000000000&amp;type=0#LegacyRuntime&quot;); font-size: 20px;"/>
+            <ui:VisualElement name="StaminaContainer" style="flex-grow: 0; background-color: rgba(93, 223, 255, 0.68); width: 80%; height: 30px; flex-shrink: 0; margin-bottom: 10px;">
+                <ui:Label text="50" style="position: absolute; left: 10px; bottom: 15px; -unity-font-definition: url(&quot;project://database/Library/unity%20default%20resources?fileID=10102&amp;guid=0000000000000000e000000000000000&amp;type=0#LegacyRuntime&quot;); margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 22px; color: rgb(189, 230, 255); -unity-text-outline-width: 1px; -unity-text-outline-color: rgb(0, 0, 0); -unity-font-style: bold;"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="HealthContainer" style="flex-grow: 0; background-color: rgba(255, 61, 61, 0.69); width: 100%; height: 40px; flex-shrink: 0; margin-bottom: 10px;">
+                <ui:Label text="100" style="position: absolute; bottom: -15px; left: 5px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 25px; -unity-font-definition: url(&quot;project://database/Library/unity%20default%20resources?fileID=10102&amp;guid=0000000000000000e000000000000000&amp;type=0#LegacyRuntime&quot;); color: rgb(189, 230, 255); -unity-text-outline-width: 1px; -unity-text-outline-color: rgb(0, 0, 0); -unity-font-style: bold;"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="EquipmentContainer" style="flex-grow: 1; position: absolute; right: 0; bottom: 0; width: 250px; height: 150px; margin-bottom: 50px; margin-right: 50px; background-color: rgba(0, 0, 0, 0.51);">
+            <ui:Label text="Equipment Panel" name="" style="position: absolute; top: -30px; left: 0; -unity-font-definition: url(&quot;project://database/Library/unity%20default%20resources?fileID=10102&amp;guid=0000000000000000e000000000000000&amp;type=0#LegacyRuntime&quot;); font-size: 20px; -unity-text-outline-width: 0; -unity-text-outline-color: rgb(0, 0, 0);"/>
+            <ui:VisualElement name="RangedContainer" style="flex-grow: 0; flex-shrink: 0; width: 250px; height: 75px; padding-top: 15px; padding-right: 15px; padding-bottom: 15px; padding-left: 15px; flex-direction: row; justify-content: space-between;">
+                <ui:VisualElement name="AmmoCounterContainer" style="flex-grow: 0; flex-shrink: 0; flex-direction: row; justify-content: flex-start; align-content: center; align-items: flex-end; padding-top: 4px; padding-right: 0; padding-bottom: 4px; padding-left: 0; border-left-color: rgb(57, 135, 161); border-right-color: rgb(57, 135, 161); border-top-color: rgb(57, 135, 161); border-bottom-color: rgb(57, 135, 161); border-bottom-width: 2px;">
+                    <ui:Label text="30" style="color: rgb(189, 230, 255); -unity-font-style: normal; -unity-font-definition: url(&quot;project://database/Library/unity%20default%20resources?fileID=10102&amp;guid=0000000000000000e000000000000000&amp;type=0#LegacyRuntime&quot;); font-size: 20px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 2px; margin-bottom: 0; margin-left: 0;"/>
+                    <ui:Label text="100" style="color: rgb(30, 170, 255); -unity-font-style: normal; -unity-font-definition: url(&quot;project://database/Library/unity%20default%20resources?fileID=10102&amp;guid=0000000000000000e000000000000000&amp;type=0#LegacyRuntime&quot;); padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; font-size: 12px;"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="EquipmentIcon" style="flex-grow: 0; flex-shrink: 0; width: 100px;">
+                    <ui:VisualElement style="flex-grow: 0; background-color: rgba(0, 0, 0, 0.35); flex-shrink: 0; width: 50px; height: 30px;"/>
+                    <ui:Label text="Sword" style="-unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;); color: rgb(28, 247, 255); font-size: 12px; margin-top: 2px; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
