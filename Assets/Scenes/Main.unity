@@ -10826,7 +10826,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   slideFrictionAdjustment: 0.2
-  slideDuration: 1
   slideHeight: 0.5
   slideKey: 306
   wallDetector: {fileID: 1477448929}
@@ -11856,7 +11855,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1477448927
 MeshRenderer:
@@ -11929,6 +11928,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nearWall: 0
   wallNormal: {x: 0, y: 0, z: 0}
+  currentWall: {fileID: 0}
 --- !u!1 &1500766790
 GameObject:
   m_ObjectHideFlags: 0
