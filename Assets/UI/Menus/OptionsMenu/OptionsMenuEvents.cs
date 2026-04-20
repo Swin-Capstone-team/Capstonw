@@ -114,16 +114,16 @@ namespace UI.Menus.OptionsMenu
             switch (button.name) 
             {
                 case  "ContinueButton":
-                    ContinueGame();
+
                     break;
                 case  "NewGameButton":
-                    NewGame();
+
                     break;
                 case  "LoadGameButton":
-                    LoadGame();
+
                     break;
                 case "QuitButton":
-                    QuitGame();
+
                     break;
             
             }
