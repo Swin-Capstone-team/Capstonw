@@ -296,7 +296,7 @@ public class Swinging : MonoBehaviour
                 Vector3 toPoint = point - camPos;
                 float distance = toPoint.magnitude;
 
-                if (Physics.Raycast(camPos, toPoint.normalized, out RaycastHit hit, distance))
+                if (Physics.Raycast(camPos, toPoint.normalized, out RaycastHit hit, distance, Grappleable))
                 {
                     float penetrationAllowance = 0.35f;
 

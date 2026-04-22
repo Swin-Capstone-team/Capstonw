@@ -187,9 +187,10 @@ public class PlayerMove : MonoBehaviour
             }
             else    //In air, less control
             {
-                Debug.Log("not grounded");
-                Vector3 airForce = inputDir * targetSpeed * airControl;
-                rb.AddForce(airForce, ForceMode.Acceleration);
+                Vector3 currentVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+                Vector3 desiredVelocity = inputDir * targetSpeed;
+                Vector3 velocityChange = (desiredVelocity - currentVelocity) * airControl;
+                rb.AddForce(velocityChange, ForceMode.Acceleration);
             }
         }
         else if (grounded)
