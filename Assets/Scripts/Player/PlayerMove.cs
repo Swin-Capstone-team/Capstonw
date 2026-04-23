@@ -173,14 +173,13 @@ public class PlayerMove : MonoBehaviour
 
     void HandleMovement()
     {
+        if (grappling) return;
         float targetSpeed = Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed;
 
         if (inputDir.sqrMagnitude > 0.01f)
         {   
             if (grounded || (grappling && wallDetector != null && wallDetector.nearWall))
             {
-                Debug.Log("Applying ground movement force");
-                Debug.Log($"Input Dir: {inputDir}, Target Speed: {targetSpeed}");
                 Vector3 desiredVel = inputDir * targetSpeed;
                 Vector3 forceDir = (desiredVel - new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z)) * 10f;
                 rb.AddForce(forceDir, ForceMode.Force);
@@ -196,7 +195,6 @@ public class PlayerMove : MonoBehaviour
         else if (grounded)
         {
             // friction only on ground
-            Debug.Log("no input");
             Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             Vector3 frictionForce = -horizontalVel * groundFriction;
             rb.AddForce(frictionForce, ForceMode.Acceleration);
@@ -315,8 +313,6 @@ public class PlayerMove : MonoBehaviour
 
     void GroundCheck()
     {
-        Debug.DrawRay(transform.position, Vector3.down * groundCheckDistance, grounded ? Color.green : Color.red);
         grounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundMask);
-        Debug.Log(grounded);
     }
 }
