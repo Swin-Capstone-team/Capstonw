@@ -1,40 +1,35 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 public class EnemyPatrol : IState
 {
-    private readonly EnemyReferences _refs;
+    private readonly IPatrolable _entity;
     private int _currentWaypointIndex;
 
-    public EnemyPatrol(EnemyReferences refs)
-    {
-        _refs = refs;
-    }
+    public EnemyPatrol(IPatrolable entity) => _entity = entity;
 
     public void OnEnter()
     {
-        _refs.navMeshAgent.isStopped = false;
-        _refs.navMeshAgent.speed = 3f;
+        _entity.navMeshAgent.isStopped = false;
+        _entity.navMeshAgent.speed = 3f;
         MoveToNextWaypoint();
     }
 
     public void Tick()
     {
-        if (!_refs.navMeshAgent.pathPending && _refs.navMeshAgent.remainingDistance < 0.5f)
+        if (!_entity.navMeshAgent.pathPending && _entity.navMeshAgent.remainingDistance < 0.5f)
         {
             MoveToNextWaypoint();
         }
     }
 
-    public void OnExit() => _refs.navMeshAgent.isStopped = true;
+    public void OnExit() => _entity.navMeshAgent.isStopped = true;
 
     private void MoveToNextWaypoint()
     {
-        var waypoints = _refs.GetWaypointPositions();
-        if (waypoints.Length == 0) return;
+        if (_entity.waypointParent == null || _entity.waypointParent.childCount == 0) return;
 
-        _refs.navMeshAgent.SetDestination(waypoints[_currentWaypointIndex]);
-        _currentWaypointIndex = (_currentWaypointIndex + 1) % waypoints.Length;
+        Vector3 nextPos = _entity.waypointParent.GetChild(_currentWaypointIndex).position;
+        _entity.navMeshAgent.SetDestination(nextPos);
+        _currentWaypointIndex = (_currentWaypointIndex + 1) % _entity.waypointParent.childCount;
     }
 }

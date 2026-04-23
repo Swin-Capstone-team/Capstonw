@@ -2,20 +2,23 @@ using UnityEngine;
 
 public class EnemyShoot : IState
 {
-    private readonly EnemyReferences _refs;
+    private readonly IShootable _shooter;
     private float _lastAttackTime;
 
-    public EnemyShoot(EnemyReferences refs) => _refs = refs;
+    public EnemyShoot(IShootable shooter) => _shooter = shooter;
 
-    public void OnEnter() => _refs.navMeshAgent.isStopped = true;
+    public void OnEnter() => _shooter.navMeshAgent.isStopped = true;
 
     public void Tick()
     {
-        Vector3 direction = (_refs.target.position - _refs.transform.position).normalized;
-        direction.y = 0; 
-        _refs.transform.forward = Vector3.Slerp(_refs.transform.forward, direction, Time.deltaTime * 5f);
+        if (_shooter.target == null) return;
 
-        if (Time.time >= _lastAttackTime + _refs.attackCooldown)
+        // Rotate toward target
+        Vector3 direction = (_shooter.target.position - _shooter.transform.position).normalized;
+        direction.y = 0; 
+        _shooter.transform.forward = Vector3.Slerp(_shooter.transform.forward, direction, Time.deltaTime * 5f);
+
+        if (Time.time >= _lastAttackTime + _shooter.attackCooldown)
         {
             Shoot();
             _lastAttackTime = Time.time;
@@ -24,15 +27,12 @@ public class EnemyShoot : IState
 
     private void Shoot()
     {
-        if (_refs.target == null) return;
+        Vector3 targetOffset = _shooter.target.position + (Vector3.up * 1.5f);
+        Vector3 fireDirection = (targetOffset - _shooter.barrelEnd.position).normalized;
 
-        Vector3 targetOffset = _refs.target.position + (Vector3.up * 1.5f);
-        Vector3 fireDirection = (targetOffset - _refs.barrelEnd.position).normalized;
-
-        Rigidbody bulletInstance = Object.Instantiate(_refs.projectilePrefab, _refs.barrelEnd.position, Quaternion.LookRotation(fireDirection));
-        
-        bulletInstance.AddForce(fireDirection * _refs.bulletSpeed);
+        Rigidbody bullet = Object.Instantiate(_shooter.projectilePrefab, _shooter.barrelEnd.position, Quaternion.LookRotation(fireDirection));
+        bullet.AddForce(fireDirection * _shooter.bulletSpeed);
     }
 
-    public void OnExit() => _refs.navMeshAgent.isStopped = false;
+    public void OnExit() => _shooter.navMeshAgent.isStopped = false;
 }

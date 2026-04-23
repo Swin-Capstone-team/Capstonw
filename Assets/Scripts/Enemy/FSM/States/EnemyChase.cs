@@ -2,27 +2,30 @@ using UnityEngine;
 
 public class EnemyChase : IState
 {
-    private readonly EnemyReferences _refs;
+    private readonly EnemyBase _enemy;
     public float TimeSinceLastSeen { get; private set; }
 
-    public EnemyChase(EnemyReferences refs) => _refs = refs;
+    public EnemyChase(EnemyBase enemy) => _enemy = enemy;
 
     public void OnEnter()
     {
-        _refs.navMeshAgent.isStopped = false;
-        _refs.navMeshAgent.speed = 6f; 
+        _enemy.navMeshAgent.isStopped = false;
+        _enemy.navMeshAgent.speed = 6f;
         TimeSinceLastSeen = 0;
     }
 
     public void Tick()
     {
-        _refs.navMeshAgent.SetDestination(_refs.target.position);
+        if (_enemy.target == null) return;
 
-        if (_refs.HasLineOfSight())
+        _enemy.navMeshAgent.SetDestination(_enemy.target.position);
+
+        // Use the utility method in EnemyBase to check sight
+        if (_enemy.HasLineOfSight())
             TimeSinceLastSeen = 0;
         else
             TimeSinceLastSeen += Time.deltaTime;
     }
 
-    public void OnExit() => _refs.navMeshAgent.isStopped = true;
+    public void OnExit() => _enemy.navMeshAgent.isStopped = true;
 }
