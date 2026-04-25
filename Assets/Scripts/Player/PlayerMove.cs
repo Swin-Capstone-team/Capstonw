@@ -105,12 +105,10 @@ public class PlayerMove : MonoBehaviour
         // end slide (timer or key up)
         if (isSliding)
         {
-            slideTimer -= Time.deltaTime;   //timer countdown for slide duration
+            slideTimer -= Time.deltaTime;
             if (slideTimer <= 0f || Input.GetKeyUp(slideKey))
             {
-                Debug.Log("slide end");
-
-                StopSlide();    // stop slide when timer runs out or key is released
+                StopSlide();
             }
         }
 
