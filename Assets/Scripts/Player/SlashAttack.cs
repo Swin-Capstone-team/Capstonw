@@ -1,15 +1,25 @@
 using UnityEngine;
+using System.Collections;
 
 public class SlashAttack : MonoBehaviour
 {
     public Animator animator;
-    public float comboWindow = 4f;
+    public SwordHit swordHit;
+    public float comboWindow = 1.0f; 
     public KeyCode attackKey = KeyCode.E;
+
+    [Header("Damage Settings")]
+    public float[] damageSteps = { 10f, 15f, 25f };
+    public float[] forceSteps = { 1f, 1f, 5f };
+
+    [Header("Timing")]
+    public float damageDelay = 0.15f; 
+    public float damageDuration = 0.2f;
 
     private float lastClickTime;
     private int comboStep = 0;
-
-    public int comboStepPublic { get; private set; }
+    private bool isAttacking = false;
+    private bool didBufferNextAttack = false;
 
     void Update()
     {
@@ -18,44 +28,70 @@ public class SlashAttack : MonoBehaviour
         if (state.IsName("idle") && !animator.IsInTransition(0))
         {
             comboStep = 0;
-            comboStepPublic = 0;
-
+            isAttacking = false;
+            didBufferNextAttack = false;
             animator.SetBool("ComboAttack", false);
             animator.SetBool("ComboAttack2", false);
         }
 
         if (Input.GetKeyDown(attackKey))
         {
-            if (comboStep == 0)
-            {
-                animator.SetTrigger("Attack");
-                comboStep = 1;
-                comboStepPublic = 1;
-                lastClickTime = Time.time;
-            }
-            else if (comboStep == 1 && Time.time - lastClickTime <= comboWindow)
-            {
-                animator.SetBool("ComboAttack", true);
-                comboStep = 2;
-                comboStepPublic = 2;
-                lastClickTime = Time.time;
-            }
-            else if (comboStep == 2 && Time.time - lastClickTime <= comboWindow)
-            {
-                animator.SetBool("ComboAttack2", true);
-                comboStep = 3;
-                comboStepPublic = 3;
-                lastClickTime = Time.time;
-            }
+            if (!isAttacking) ProcessAttackInput();
+            else didBufferNextAttack = true; 
         }
+    }
 
-        if (comboStep > 0 && Time.time - lastClickTime > comboWindow)
+    private void ProcessAttackInput()
+    {
+        if (comboStep == 0)
+            PerformAttack(1, "Attack", "slash1", false);
+        else if (comboStep == 1 && Time.time - lastClickTime <= comboWindow)
+            PerformAttack(2, "ComboAttack", "slash2", true);
+        else if (comboStep == 2 && Time.time - lastClickTime <= comboWindow)
+            PerformAttack(3, "ComboAttack2", "slash3", true);
+    }
+
+    private void PerformAttack(int step, string triggerName, string animatorStateName, bool isBool)
+    {
+        isAttacking = true;
+        didBufferNextAttack = false;
+        
+        if (isBool) animator.SetBool(triggerName, true);
+        else animator.SetTrigger(triggerName);
+
+        // Lock in the damage for THIS specific coroutine instance
+        float dmg = damageSteps[step - 1];
+        float frc = forceSteps[step - 1];
+
+        comboStep = step;
+        lastClickTime = Time.time;
+
+        StartCoroutine(AttackWindowRoutine(animatorStateName, dmg, frc));
+    }
+
+    private IEnumerator AttackWindowRoutine(string targetStateName, float dmg, float frc)
+    {
+        // Wait for state
+        while (!animator.GetCurrentAnimatorStateInfo(0).IsName(targetStateName))
+            yield return null;
+
+        yield return new WaitForSeconds(damageDelay);
+        
+        swordHit.ResetHitTargets();
+
+        float timer = 0f;
+        while (timer < damageDuration)
         {
-            comboStep = 0;
-            comboStepPublic = 0;
-
-            animator.SetBool("ComboAttack", false);
-            animator.SetBool("ComboAttack2", false);
+            // Use the "Stamped" damage values
+            swordHit.CheckForHit(dmg, frc);
+            timer += Time.deltaTime;
+            yield return null; 
         }
+
+        swordHit.ResetHitTargets();
+        isAttacking = false; 
+
+        if (didBufferNextAttack && (Time.time - lastClickTime <= comboWindow))
+            ProcessAttackInput();
     }
 }

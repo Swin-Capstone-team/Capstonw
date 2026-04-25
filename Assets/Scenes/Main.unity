@@ -2188,6 +2188,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 33749455845586655, guid: 3c6268f5f8a4f8547a20c9a24c8b5ecf, type: 3}
+      propertyPath: maxHealth
+      value: 9999
+      objectReference: {fileID: 0}
+    - target: {fileID: 33749455845586655, guid: 3c6268f5f8a4f8547a20c9a24c8b5ecf, type: 3}
+      propertyPath: damageTextPrefab
+      value: 
+      objectReference: {fileID: 9058765282153170658, guid: 0324b058bf28c2542a9ecc9a65d3ce93, type: 3}
+    - target: {fileID: 33749455845586655, guid: 3c6268f5f8a4f8547a20c9a24c8b5ecf, type: 3}
+      propertyPath: OnHealthChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 33749455845586655, guid: 3c6268f5f8a4f8547a20c9a24c8b5ecf, type: 3}
+      propertyPath: OnHealthChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1353354670}
+    - target: {fileID: 33749455845586655, guid: 3c6268f5f8a4f8547a20c9a24c8b5ecf, type: 3}
+      propertyPath: OnHealthChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 33749455845586655, guid: 3c6268f5f8a4f8547a20c9a24c8b5ecf, type: 3}
+      propertyPath: OnHealthChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: UpdateSlider
+      objectReference: {fileID: 0}
+    - target: {fileID: 33749455845586655, guid: 3c6268f5f8a4f8547a20c9a24c8b5ecf, type: 3}
+      propertyPath: OnHealthChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: HealthBar, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 33749455845586655, guid: 3c6268f5f8a4f8547a20c9a24c8b5ecf, type: 3}
+      propertyPath: OnHealthChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2892717352526068533, guid: 3c6268f5f8a4f8547a20c9a24c8b5ecf, type: 3}
       propertyPath: target
       value: 
@@ -2239,6 +2271,10 @@ PrefabInstance:
     - target: {fileID: 7132765317057499338, guid: 3c6268f5f8a4f8547a20c9a24c8b5ecf, type: 3}
       propertyPath: m_Name
       value: Dummy
+      objectReference: {fileID: 0}
+    - target: {fileID: 7132765317057499338, guid: 3c6268f5f8a4f8547a20c9a24c8b5ecf, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2663,7 +2699,8 @@ Transform:
   m_LocalPosition: {x: 6.1365786, y: 0.000000034009187, z: 0.6786999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1829338604}
   m_Father: {fileID: 600234277}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &350684471
@@ -4981,12 +5018,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20267e45058064bde8c7ee28cf1968a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwordHit
-  attack: {fileID: 1416208311}
-  damage1: 10
-  damage2: 15
-  damage3: 25
-  normalForce: 1
-  thirdSlashForce: 5
+  hitCheckPoint: {fileID: 1829338604}
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  hitBoxSize: {x: 0.5, y: 0.5, z: 1.5}
 --- !u!1001 &612491473
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10426,6 +10462,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3617685950270364102, guid: 74796ed8de86dd24a940cdb51b0548ad, type: 3}
   m_PrefabInstance: {fileID: 1350328878}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1353354670 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9133646333142338848, guid: 3c6268f5f8a4f8547a20c9a24c8b5ecf, type: 3}
+  m_PrefabInstance: {fileID: 301904446}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bc2b95b63d1d40a6b3c4f7c8ff07a6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthBar
 --- !u!1 &1355400418
 GameObject:
   m_ObjectHideFlags: 0
@@ -11114,6 +11161,21 @@ MonoBehaviour:
   maxHealth: 100
   damageTextPrefab: {fileID: 9058765282153170658, guid: 0324b058bf28c2542a9ecc9a65d3ce93, type: 3}
   damageTextSpawnPoint: {fileID: 0}
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   animator: {fileID: 1744836960}
   hitStunTime: 0.2
 --- !u!114 &1416208311
@@ -11129,8 +11191,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlashAttack
   animator: {fileID: 1744836960}
+  swordHit: {fileID: 600234280}
   comboWindow: 4
   attackKey: 101
+  damageSteps:
+  - 10
+  - 15
+  - 25
+  forceSteps:
+  - 1
+  - 1
+  - 5
+  damageDelay: 0.2
+  damageDuration: 0.4
 --- !u!1 &1422422825
 GameObject:
   m_ObjectHideFlags: 0
@@ -14723,6 +14796,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 718146490}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1829338603
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1829338604}
+  m_Layer: 0
+  m_Name: BladeHitBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1829338604
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829338603}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.14, y: -0, z: 1.62}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 350684470}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1842511132
 GameObject:

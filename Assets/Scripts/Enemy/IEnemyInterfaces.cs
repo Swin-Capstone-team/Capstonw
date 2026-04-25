@@ -4,12 +4,9 @@ using UnityEngine.AI;
 public interface IPatrolable
 {
     Transform waypointParent { get; }
-    NavMeshAgent navMeshAgent { get; }}
-
-public interface IDamageable
-{
-    void TakeDamage(float amount);
+    NavMeshAgent navMeshAgent { get; }
 }
+
 
 public interface IMeleeAttacker
 {

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public abstract class EnemyBase : MonoBehaviour, IDamageable
+public abstract class EnemyBase : MonoBehaviour
 {
     [Header("Base References")]
     public NavMeshAgent navMeshAgent;
@@ -34,11 +34,4 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
         return false;
     }
 
-    public void TakeDamage(float damage)
-    {
-        if (TryGetComponent<EnemyHealth>(out var health))
-            {
-                health.TakeDamage(damage);
-            }    
-    }
 }
