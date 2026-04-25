@@ -46,7 +46,12 @@ public class Swinging : MonoBehaviour
     private SpringJoint leftJoint;
     private SpringJoint rightJoint;
     public float maxSpeed;
+
+    [Header("Reel Settings")]
+    public bool automaticReelIn = false;
     public float reelStrength, reelRate;
+    [Range(0.9f, 1f)]
+    public float gravityEffect = 0.98f;
 
     [Header("Targeting")]
     public float maxTargetDistance = 25f;
@@ -169,7 +174,8 @@ public class Swinging : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (spaceheld && IsSwinging())
+        bool shouldReel = (automaticReelIn || spaceheld) && IsSwinging();
+        if (shouldReel)
         {
             int grappleCount = 0;
             if (leftJoint != null) grappleCount++;
@@ -296,7 +302,7 @@ public class Swinging : MonoBehaviour
                 Vector3 toPoint = point - camPos;
                 float distance = toPoint.magnitude;
 
-                if (Physics.Raycast(camPos, toPoint.normalized, out RaycastHit hit, distance))
+                if (Physics.Raycast(camPos, toPoint.normalized, out RaycastHit hit, distance, Grappleable))
                 {
                     float penetrationAllowance = 0.35f;
 
@@ -372,7 +378,7 @@ public class Swinging : MonoBehaviour
         } 
         else 
         {
-            joint.minDistance = distanceFromPoint * 0.25f;
+            joint.minDistance = distanceFromPoint * 0.05f;
         }
 
         if (gunTip == leftGunTip)
@@ -529,22 +535,47 @@ public class Swinging : MonoBehaviour
     
     void GrappleReel(ref SpringJoint joint, float forceScale)
     {
-        float hardMin = joint.minDistance + 0.01f;
-
         Vector3 toAnchor = joint.connectedAnchor - player.position;
         float distance = toAnchor.magnitude;
+        if (distance < 0.01f) return;
 
-        if (distance > 0.01f)
+        Vector3 dir = toAnchor / distance;
+
+        rb.AddForce(dir * reelStrength * forceScale, ForceMode.Acceleration);
+
+        bool anchorBelow = joint.connectedAnchor.y < player.position.y;
+
+        if (gravityEffect < 1f)
         {
-            Vector3 dir = toAnchor / distance;
+            float cancelFactor = 1f - gravityEffect;
 
-            float pullForce = reelStrength * (distance / joint.maxDistance);
-            pullForce *= forceScale;
+            rb.AddForce(-Physics.gravity * cancelFactor, ForceMode.Acceleration);
 
-            rb.AddForce(dir * pullForce, ForceMode.Acceleration);
+            Vector3 v = rb.linearVelocity;
+
+            if (!anchorBelow && v.y < 0f)
+            {
+                float newY = Mathf.Lerp(v.y, 0f, cancelFactor);
+                rb.linearVelocity = new Vector3(v.x, newY, v.z);
+            }
         }
 
-        joint.maxDistance = Mathf.Max(hardMin, joint.maxDistance - reelRate * Time.fixedDeltaTime);
+        if (!anchorBelow)
+        {
+            Vector3 velocity = rb.linearVelocity;
+            float alignment = Vector3.Dot(velocity, dir);
+
+            if (alignment < 0f)
+            {
+                rb.linearVelocity -= dir * alignment;
+            }
+        }
+
+        // Shorten rope
+        joint.maxDistance = Mathf.Max(
+            joint.minDistance,
+            joint.maxDistance - reelRate * Time.fixedDeltaTime
+        );
     }
 
     bool IsSwinging()
