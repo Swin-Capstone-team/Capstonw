@@ -1,0 +1,19 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Menus/MainMenu/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=66b74c8f54fe3f247bb1d8b160872c6a&amp;type=3"/>
+    <ui:VisualElement name="" enabled="true" style="flex-grow: 1; background-color: rgb(0, 0, 0); display: flex;">
+        <ui:VisualElement name="" style="flex-grow: 1; justify-content: flex-start; align-items: center; padding-top: 30px; padding-right: 30px; padding-bottom: 30px; padding-left: 30px;">
+            <ui:Label text="Marionette" name="" class="header title" style="margin-bottom: 80px; margin-top: 240px; -unity-font-definition: url(&quot;project://database/Assets/UI/Fonts/DevilDeceptionVX.otf?fileID=12800000&amp;guid=0feb93136238e1525b702ab70f742829&amp;type=3#DevilDeceptionVX&quot;); font-size: 164px; -unity-text-outline-color: rgb(0, 169, 255); text-shadow: 10px 5px 0 rgba(255, 255, 255, 0); color: rgba(255, 255, 255, 0.88); letter-spacing: 5px; -unity-text-outline-width: 0; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255);"/>
+            <ui:VisualElement name="" style="flex-grow: 1; align-self: auto; align-content: auto; font-size: 32px; width: 100%; height: initial; justify-content: center;">
+                <ui:Button text="CONTINUE" name="ContinueButton" class="mainButton"/>
+                <ui:Button text="NEW GAME" name="NewGameButton" class="mainButton"/>
+                <ui:Button text="LOAD GAME" name="LoadGameButton" class="mainButton"/>
+                <ui:Button text="OPTIONS" name="OptionsButton" class="mainButton"/>
+                <ui:Button text="QUIT GAME" name="QuitButton" class="mainButton"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="FooterContainer" style="flex-grow: 1; justify-content: center;">
+                <ui:Label text="Continue from the last save point." name="SelectionDisplay" style="font-size: 32px; color: rgba(255, 255, 255, 0.78); height: auto; -unity-text-align: upper-center; margin-bottom: 4px; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;); padding-bottom: 4px; padding-top: 4px; padding-right: 4px; padding-left: 4px; -unity-font-style: normal;"/>
+                <ui:Label text="SWINBURNE CAPSTONE ALL RIGHTS RESERVED." name="Copyright" style="color: rgba(255, 255, 255, 0.78); font-size: 22px; -unity-font-definition: url(&quot;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&amp;guid=8add478d072d20501b615ef42b9a1a3a&amp;type=3#NotInter-Regular&quot;);"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
