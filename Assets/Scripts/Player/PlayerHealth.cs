@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class PlayerHealth : Health
 {
     public Animator animator;
