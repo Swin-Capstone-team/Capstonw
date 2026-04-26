@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
+[DisallowMultipleComponent]
 public class PlayerMove : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -18,7 +19,6 @@ public class PlayerMove : MonoBehaviour
     private float slideDuration = 1f;
     private float wallrunTimer; // how long the slide lasts when initiated in air near wall
     public float slideHeight = 0.5f;       // how short the collider gets while sliding
-    public KeyCode slideKey = KeyCode.LeftControl;
     private bool isSliding = false;
     private float slideTimer = 0f;
     private float slideRefresh = 0f;
@@ -42,7 +42,10 @@ public class PlayerMove : MonoBehaviour
     public Transform playerCamera;
     public float cameraSlideHeightAdjust = -0.5f;
     public float lookDamping = 0.15f;  // Lower = smoother, 0-1 range
-
+    
+    private PlayerInputState _input;
+    
+    
     private Rigidbody rb;
     private CapsuleCollider capsule;
     private float xRotation = 0f;
@@ -57,10 +60,23 @@ public class PlayerMove : MonoBehaviour
     private Vector3 originalColliderCenter;
     private Vector3 originalCameraLocalPos;
 
+    void Awake()
+    {
+        _input ??= GetComponentInParent<PlayerInputState>();
+
+        if (_input != null) return;
+
+        Debug.LogError("PlayerMove requires PlayerInputState on this object or a parent.", this);
+        enabled = false;
+    }
+
     void Start()
     {
+        if (!enabled) return;
+
         rb = GetComponent<Rigidbody>();
         capsule = GetComponent<CapsuleCollider>();
+
         rb.freezeRotation = true;
 
         originalColliderHeight = capsule.height;
@@ -71,7 +87,7 @@ public class PlayerMove : MonoBehaviour
 
         wallrunTimer = slideDuration * 1.5f; //  wallrun slide lasts 50% longer than regular slide
     }
-
+    
     void Update()
     {
         HandleLook();
@@ -81,12 +97,12 @@ public class PlayerMove : MonoBehaviour
 
 
         // start slide and check for wallrun initiation
-        if (Input.GetKeyDown(slideKey) && !isSliding && slideRefresh <= 0f)
+        if (_input.CrouchPressedThisFrame && !isSliding && slideRefresh <= 0f)
         {
             if (!grounded && wallDetector.nearWall) // in air & near wall = wallrun
             {
                 isWallRunning = true;
-                if(isWallRunning==true) { WallRun(); }
+                if(isWallRunning) { WallRun(); }
             }
             else { StartSlide(); }
         }
@@ -106,7 +122,7 @@ public class PlayerMove : MonoBehaviour
         if (isSliding)
         {
             slideTimer -= Time.deltaTime;   //timer countdown for slide duration
-            if (slideTimer <= 0f || Input.GetKeyUp(slideKey))
+            if (slideTimer <= 0f || _input.CrouchReleasedThisFrame)
             {
                 Debug.Log("slide end");
 
@@ -117,13 +133,13 @@ public class PlayerMove : MonoBehaviour
        
 
         // Collect input here (for FixedUpdate use)
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveZ = Input.GetAxisRaw("Vertical");
+        float moveX = _input.Move.x;
+        float moveZ = _input.Move.y;
         inputDir = (transform.right * moveX + transform.forward * moveZ).normalized;
 
-        if (Input.GetButtonDown("Jump"))
+        if (_input.JumpPressedThisFrame)
         {
-            if (grounded && !grappling)
+            if (grounded)
             {
                 Jump(Vector3.up);
             }
@@ -155,8 +171,8 @@ public class PlayerMove : MonoBehaviour
 
     void HandleLook()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+        float mouseX = _input.Look.x * mouseSensitivity;
+        float mouseY = _input.Look.y * mouseSensitivity;
 
         // Accumulate target rotations from input
         targetYawRotation += mouseX;
@@ -173,8 +189,7 @@ public class PlayerMove : MonoBehaviour
 
     void HandleMovement()
     {
-        if (grappling) return;
-        float targetSpeed = Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed;
+        float targetSpeed = _input.SprintHeld ? sprintSpeed : walkSpeed;
 
         if (inputDir.sqrMagnitude > 0.01f)
         {   
@@ -223,7 +238,7 @@ public class PlayerMove : MonoBehaviour
         }
         wallRunDirection = wallForward;
 
-        if (Input.GetKey(KeyCode.W))
+        if (_input.Move.y > 0.1f)
         {
             float forwardSpeed = Vector3.Dot(rb.linearVelocity, wallRunDirection);
 
