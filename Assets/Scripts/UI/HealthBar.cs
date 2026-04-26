@@ -5,6 +5,7 @@ public class HealthBar : MonoBehaviour
 {
     public Health targetHealth;
     public Slider slider;
+    public bool useWorldSpace = true;
     public Vector3 offset = new Vector3(0, 2f, 0);
 
     private Camera cam;
@@ -24,12 +25,16 @@ public class HealthBar : MonoBehaviour
     {
         if (targetHealth == null || slider == null) return;
 
-        transform.position = targetHealth.transform.position + offset;
-
-        if (cam != null)
+        if (useWorldSpace)
         {
-            transform.forward = cam.transform.forward;
+            transform.position = targetHealth.transform.position + offset;
+
+            if (cam != null)
+            {
+                transform.forward = cam.transform.forward;
+            }
         }
+
 
         slider.maxValue = targetHealth.maxHealth;
         slider.value = targetHealth.CurrentHealth;
