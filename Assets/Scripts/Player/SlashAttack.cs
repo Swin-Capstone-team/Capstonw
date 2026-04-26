@@ -1,15 +1,26 @@
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class SlashAttack : MonoBehaviour
 {
     public Animator animator;
     public float comboWindow = 4f;
-    public KeyCode attackKey = KeyCode.E;
+    private PlayerInputState inputState;
 
     private float lastClickTime;
     private int comboStep = 0;
 
     public int comboStepPublic { get; private set; }
+
+    void Awake()
+    {
+        inputState ??= GetComponentInParent<PlayerInputState>();
+
+        if (inputState != null) return;
+
+        Debug.LogError("SlashAttack requires PlayerInputState on this object or a parent.", this);
+        enabled = false;
+    }
 
     void Update()
     {
@@ -24,7 +35,7 @@ public class SlashAttack : MonoBehaviour
             animator.SetBool("ComboAttack2", false);
         }
 
-        if (Input.GetKeyDown(attackKey))
+        if (inputState.AttackPressedThisFrame)
         {
             if (comboStep == 0)
             {

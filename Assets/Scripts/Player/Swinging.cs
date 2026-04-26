@@ -1,21 +1,18 @@
 using System;
-using System.Numerics;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 using Image = UnityEngine.UI.Image;
-using System.Diagnostics;
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
+[DisallowMultipleComponent]
 
 public class Swinging : MonoBehaviour
 {
     private PlayerMove playermove;
+    private PlayerInputState inputState;
     private Rigidbody rb;
-    [Header("Input")]
-    public KeyCode leftSwingKey = KeyCode.Mouse0;
-    public KeyCode rightSwingKey = KeyCode.Mouse1;
 
     [Header("References")]
     public LineRenderer llr;
@@ -72,10 +69,21 @@ public class Swinging : MonoBehaviour
     private GameObject grappleIndicatorInstanceRed;
     private GameObject grappleIndicatorInstanceBlue;
 
+    void Awake()
+    {
+        inputState ??= GetComponentInParent<PlayerInputState>();
+
+        if (inputState != null) return;
+
+        Debug.LogError("Swinging requires PlayerInputState on this object or a parent.", this);
+        enabled = false;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playermove = GetComponent<PlayerMove>();
+        if (!enabled) return;
         rb = GetComponent<Rigidbody>();
 
         if (grappleIndicatorPrefab != null)
@@ -102,6 +110,8 @@ public class Swinging : MonoBehaviour
     bool wHeld, aHeld, sHeld, dHeld, spaceheld;
     void Update()
     {
+        Vector2 moveInput = inputState.Move;
+
         bool hasLeftTarget;
         bool hasRightTarget;
         if (IsUsingGrappleAnchor)
@@ -123,34 +133,34 @@ public class Swinging : MonoBehaviour
 
        
 
-        if (Input.GetKeyDown(leftSwingKey))
+            if (inputState.LeftSwingPressedThisFrame)
         {
             StartSwing(currentTargetPointLeft, ref leftJoint, leftGunTip, ref llr);
             playermove.grappling = true;
             leftSwingPoint = currentTargetPointLeft;
         }
-        if (Input.GetKeyDown(rightSwingKey))
+            if (inputState.RightSwingPressedThisFrame)
         {
             StartSwing(currentTargetPointRight, ref rightJoint, rightGunTip, ref rlr);
             playermove.grappling = true;
             rightSwingPoint = currentTargetPointRight;
         }
-        wHeld = Input.GetKey(KeyCode.W);
-        aHeld = Input.GetKey(KeyCode.A);
-        sHeld = Input.GetKey(KeyCode.S);
-        dHeld = Input.GetKey(KeyCode.D);
-        spaceheld = Input.GetKey(KeyCode.Space);
+            wHeld = moveInput.y > 0.1f;
+            aHeld = moveInput.x < -0.1f;
+            sHeld = moveInput.y < -0.1f;
+            dHeld = moveInput.x > 0.1f;
+            spaceheld = inputState.JumpHeld;
 
-        if (Input.GetKeyUp(leftSwingKey))
+            if (inputState.LeftSwingReleasedThisFrame)
         {
             StopSwing(ref leftJoint, ref llr);
-            if(Input.GetKey(rightSwingKey)) return;
+                if (inputState.RightSwingHeld) return;
             playermove.grappling = false;
         }
-        if (Input.GetKeyUp(rightSwingKey))
+            if (inputState.RightSwingReleasedThisFrame)
         {
             StopSwing(ref rightJoint, ref rlr);
-            if(Input.GetKey(leftSwingKey)) return;
+                if (inputState.LeftSwingHeld) return;
             playermove.grappling = false;
         }
 
