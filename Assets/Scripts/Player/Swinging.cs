@@ -1,21 +1,18 @@
 using System;
-using System.Numerics;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 using Image = UnityEngine.UI.Image;
-using System.Diagnostics;
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
+[DisallowMultipleComponent]
 
 public class Swinging : MonoBehaviour
 {
     private PlayerMove playermove;
+    private PlayerInputState inputState;
     private Rigidbody rb;
-    [Header("Input")]
-    public KeyCode leftSwingKey = KeyCode.Mouse0;
-    public KeyCode rightSwingKey = KeyCode.Mouse1;
 
     [Header("References")]
     public LineRenderer llr;
@@ -46,7 +43,12 @@ public class Swinging : MonoBehaviour
     private SpringJoint leftJoint;
     private SpringJoint rightJoint;
     public float maxSpeed;
+
+    [Header("Reel Settings")]
+    public bool automaticReelIn = false;
     public float reelStrength, reelRate;
+    [Range(0.9f, 1f)]
+    public float gravityEffect = 0.98f;
 
     [Header("Targeting")]
     public float maxTargetDistance = 25f;
@@ -67,10 +69,21 @@ public class Swinging : MonoBehaviour
     private GameObject grappleIndicatorInstanceRed;
     private GameObject grappleIndicatorInstanceBlue;
 
+    void Awake()
+    {
+        inputState ??= GetComponentInParent<PlayerInputState>();
+
+        if (inputState != null) return;
+
+        Debug.LogError("Swinging requires PlayerInputState on this object or a parent.", this);
+        enabled = false;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playermove = GetComponent<PlayerMove>();
+        if (!enabled) return;
         rb = GetComponent<Rigidbody>();
 
         if (grappleIndicatorPrefab != null)
@@ -97,6 +110,8 @@ public class Swinging : MonoBehaviour
     bool wHeld, aHeld, sHeld, dHeld, spaceheld;
     void Update()
     {
+        Vector2 moveInput = inputState.Move;
+
         bool hasLeftTarget;
         bool hasRightTarget;
         if (IsUsingGrappleAnchor)
@@ -118,34 +133,34 @@ public class Swinging : MonoBehaviour
 
        
 
-        if (Input.GetKeyDown(leftSwingKey))
+            if (inputState.LeftSwingPressedThisFrame)
         {
             StartSwing(currentTargetPointLeft, ref leftJoint, leftGunTip, ref llr);
             playermove.grappling = true;
             leftSwingPoint = currentTargetPointLeft;
         }
-        if (Input.GetKeyDown(rightSwingKey))
+            if (inputState.RightSwingPressedThisFrame)
         {
             StartSwing(currentTargetPointRight, ref rightJoint, rightGunTip, ref rlr);
             playermove.grappling = true;
             rightSwingPoint = currentTargetPointRight;
         }
-        wHeld = Input.GetKey(KeyCode.W);
-        aHeld = Input.GetKey(KeyCode.A);
-        sHeld = Input.GetKey(KeyCode.S);
-        dHeld = Input.GetKey(KeyCode.D);
-        spaceheld = Input.GetKey(KeyCode.Space);
+            wHeld = moveInput.y > 0.1f;
+            aHeld = moveInput.x < -0.1f;
+            sHeld = moveInput.y < -0.1f;
+            dHeld = moveInput.x > 0.1f;
+            spaceheld = inputState.JumpHeld;
 
-        if (Input.GetKeyUp(leftSwingKey))
+            if (inputState.LeftSwingReleasedThisFrame)
         {
             StopSwing(ref leftJoint, ref llr);
-            if(Input.GetKey(rightSwingKey)) return;
+                if (inputState.RightSwingHeld) return;
             playermove.grappling = false;
         }
-        if (Input.GetKeyUp(rightSwingKey))
+            if (inputState.RightSwingReleasedThisFrame)
         {
             StopSwing(ref rightJoint, ref rlr);
-            if(Input.GetKey(leftSwingKey)) return;
+                if (inputState.LeftSwingHeld) return;
             playermove.grappling = false;
         }
 
@@ -169,7 +184,8 @@ public class Swinging : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (spaceheld && IsSwinging())
+        bool shouldReel = (automaticReelIn || spaceheld) && IsSwinging();
+        if (shouldReel)
         {
             int grappleCount = 0;
             if (leftJoint != null) grappleCount++;
@@ -296,7 +312,7 @@ public class Swinging : MonoBehaviour
                 Vector3 toPoint = point - camPos;
                 float distance = toPoint.magnitude;
 
-                if (Physics.Raycast(camPos, toPoint.normalized, out RaycastHit hit, distance))
+                if (Physics.Raycast(camPos, toPoint.normalized, out RaycastHit hit, distance, Grappleable))
                 {
                     float penetrationAllowance = 0.35f;
 
@@ -372,7 +388,7 @@ public class Swinging : MonoBehaviour
         } 
         else 
         {
-            joint.minDistance = distanceFromPoint * 0.25f;
+            joint.minDistance = distanceFromPoint * 0.05f;
         }
 
         if (gunTip == leftGunTip)
@@ -529,22 +545,47 @@ public class Swinging : MonoBehaviour
     
     void GrappleReel(ref SpringJoint joint, float forceScale)
     {
-        float hardMin = joint.minDistance + 0.01f;
-
         Vector3 toAnchor = joint.connectedAnchor - player.position;
         float distance = toAnchor.magnitude;
+        if (distance < 0.01f) return;
 
-        if (distance > 0.01f)
+        Vector3 dir = toAnchor / distance;
+
+        rb.AddForce(dir * reelStrength * forceScale, ForceMode.Acceleration);
+
+        bool anchorBelow = joint.connectedAnchor.y < player.position.y;
+
+        if (gravityEffect < 1f)
         {
-            Vector3 dir = toAnchor / distance;
+            float cancelFactor = 1f - gravityEffect;
 
-            float pullForce = reelStrength * (distance / joint.maxDistance);
-            pullForce *= forceScale;
+            rb.AddForce(-Physics.gravity * cancelFactor, ForceMode.Acceleration);
 
-            rb.AddForce(dir * pullForce, ForceMode.Acceleration);
+            Vector3 v = rb.linearVelocity;
+
+            if (!anchorBelow && v.y < 0f)
+            {
+                float newY = Mathf.Lerp(v.y, 0f, cancelFactor);
+                rb.linearVelocity = new Vector3(v.x, newY, v.z);
+            }
         }
 
-        joint.maxDistance = Mathf.Max(hardMin, joint.maxDistance - reelRate * Time.fixedDeltaTime);
+        if (!anchorBelow)
+        {
+            Vector3 velocity = rb.linearVelocity;
+            float alignment = Vector3.Dot(velocity, dir);
+
+            if (alignment < 0f)
+            {
+                rb.linearVelocity -= dir * alignment;
+            }
+        }
+
+        // Shorten rope
+        joint.maxDistance = Mathf.Max(
+            joint.minDistance,
+            joint.maxDistance - reelRate * Time.fixedDeltaTime
+        );
     }
 
     bool IsSwinging()
