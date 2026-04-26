@@ -6715,7 +6715,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HealthBar
   targetHealth: {fileID: 1416208310}
   slider: {fileID: 881877191}
-  useWorldSpace: 0
+  isWorldSpace: 0
   offset: {x: 0, y: 0, z: 0}
 --- !u!1 &932442578
 GameObject:

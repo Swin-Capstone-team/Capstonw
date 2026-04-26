@@ -23,7 +23,16 @@ public class HealthBar : MonoBehaviour
 
     void LateUpdate()
     {
+        UpdateSlider(targetHealth.CurrentHealth);
         if (!isWorldSpace || targetHealth == null) return;
+
+        transform.position = targetHealth.transform.position + offset;
+
+        if (cam != null)
+        {
+            transform.forward = cam.transform.forward;
+        }
+
     }
 
     public void UpdateSlider(float currentHP)
