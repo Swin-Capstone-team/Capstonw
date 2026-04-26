@@ -10842,6 +10842,8 @@ GameObject:
   - component: {fileID: 1416208307}
   - component: {fileID: 1416208306}
   - component: {fileID: 1416208305}
+  - component: {fileID: 1416208313}
+  - component: {fileID: 1416208312}
   - component: {fileID: 1416208303}
   - component: {fileID: 1416208302}
   - component: {fileID: 1416208309}
@@ -10866,8 +10868,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c00d718c0d637944e885640f2a40a6c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftSwingKey: 323
-  rightSwingKey: 324
   llr: {fileID: 662767389}
   rlr: {fileID: 816614205}
   leftGunTip: {fileID: 1436763081}
@@ -10882,8 +10882,10 @@ MonoBehaviour:
   jointDamper: 0.5
   jointMassScale: 1
   maxSpeed: 50
+  automaticReelIn: 0
   reelStrength: 15
   reelRate: 15
+  gravityEffect: 0.98
   maxTargetDistance: 25
   maxTargetAngle: 10
   targetingSpread: 20
@@ -10906,6 +10908,7 @@ MonoBehaviour:
   grappling: 1
   walkSpeed: 5
   sprintSpeed: 10
+  acceleration: 1
   jumpForce: 10
   groundFriction: 12
   airControl: 0.1
@@ -10913,10 +10916,10 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  currentSpeed: 0
   canMove: 1
   slideFrictionAdjustment: 0.2
   slideHeight: 0.5
-  slideKey: 306
   wallStickForce: 10
   wallDetector: {fileID: 1477448929}
   wallPushAwayForce: 1.5
@@ -11097,19 +11100,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlashAttack
   animator: {fileID: 1744836960}
-  swordHit: {fileID: 600234280}
   comboWindow: 4
-  attackKey: 101
-  damageSteps:
-  - 10
-  - 15
-  - 25
-  forceSteps:
-  - 1
-  - 1
-  - 5
-  damageDelay: 0.2
-  damageDuration: 0.4
+--- !u!114 &1416208312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416208300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a0141430eb2cc90ba30e792981de59f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputState
+  logActionPresses: 0
+--- !u!114 &1416208313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416208300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+  m_Actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: 
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1422422825
 GameObject:
   m_ObjectHideFlags: 0
@@ -16267,21 +16301,13 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 1416208308}
-    - target: {fileID: 3311201686114200311, guid: da74496e330b0954a9ee686e9c460623, type: 3}
-      propertyPath: _attackCooldown
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7394389449816004861, guid: da74496e330b0954a9ee686e9c460623, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8607647636555346705, guid: da74496e330b0954a9ee686e9c460623, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.72
       objectReference: {fileID: 0}
     - target: {fileID: 8607647636555346705, guid: da74496e330b0954a9ee686e9c460623, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8607647636555346705, guid: da74496e330b0954a9ee686e9c460623, type: 3}
       propertyPath: m_LocalPosition.z
