@@ -8,14 +8,19 @@ namespace UI.Menus.MainMenu
     public class MainMenuEvents : MonoBehaviour
     {
         private UIDocument _document;
-        private List<Button> _mainMenuButtons = new List<Button>();
-        private AudioSource _audioSource;
+        private readonly List<Button> _mainMenuButtons = new List<Button>();
     
         private void Awake()
         {
-            _audioSource = GetComponent<AudioSource>();
             _document = GetComponent<UIDocument>();
-            _mainMenuButtons = _document.rootVisualElement.Query<Button>().ToList();
+            if (_document == null || _document.rootVisualElement == null)
+            {
+                enabled = false;
+                return;
+            }
+
+            _mainMenuButtons.Clear();
+            _mainMenuButtons.AddRange(_document.rootVisualElement.Query<Button>().ToList());
         
             foreach (var button in _mainMenuButtons)
             {
@@ -44,7 +49,7 @@ namespace UI.Menus.MainMenu
 
         private void NewGame()
         {
-        
+            SceneManager.LoadSceneAsync("Main");
         }
 
         private void LoadGame()
@@ -54,7 +59,11 @@ namespace UI.Menus.MainMenu
 
         private void OnButtonClick(ClickEvent evt)
         {
-            var button = evt.target as Button;
+            var button = evt.currentTarget as Button;
+            if (button == null)
+            {
+                return;
+            }
         
             Debug.Log($"{button.name} clicked");
             switch (button.name) 
@@ -68,12 +77,14 @@ namespace UI.Menus.MainMenu
                 case  "LoadGameButton":
                     LoadGame();
                     break;
+                case "OptionsButton":
+                    SceneManager.LoadSceneAsync("OptionsMenu");
+                    break;
                 case "QuitButton":
                     QuitGame();
                     break;
             
             }
-            // _audioSource.Play();
         }
     }
 
