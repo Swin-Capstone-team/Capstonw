@@ -8,11 +8,14 @@ public class PlayerMove : MonoBehaviour
     public bool grappling = false;
     public float walkSpeed = 7f;
     public float sprintSpeed = 12f;
+    public float acceleration = 1f;
     public float jumpForce = 7f;
     public float groundFriction = 12f;
     public float airControl = 0.5f;
     public float groundCheckDistance = 0.5f;
     public LayerMask groundMask;
+    public float currentSpeed = 0;
+    private KeyCode SprintKey = KeyCode.LeftShift;
 
     [Header("Slide Settings")]
     public float slideFrictionAdjustment = 0.2f;
@@ -124,8 +127,6 @@ public class PlayerMove : MonoBehaviour
             slideTimer -= Time.deltaTime;   //timer countdown for slide duration
             if (slideTimer <= 0f || _input.CrouchReleasedThisFrame)
             {
-                Debug.Log("slide end");
-
                 StopSlide();    // stop slide when timer runs out or key is released
             }
         }
@@ -189,31 +190,46 @@ public class PlayerMove : MonoBehaviour
 
     void HandleMovement()
     {
+        if (grappling) return;
         float targetSpeed = _input.SprintHeld ? sprintSpeed : walkSpeed;
 
         if (inputDir.sqrMagnitude > 0.01f)
-        {   
-            if (grounded || (grappling && wallDetector != null && wallDetector.nearWall))
+        { 
+            Vector3 currentVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            
+            if (grounded) // Can you accelerate in the air?
             {
-                Vector3 desiredVel = inputDir * targetSpeed;
-                Vector3 forceDir = (desiredVel - new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z)) * 10f;
-                rb.AddForce(forceDir, ForceMode.Force);
+                if(currentSpeed < targetSpeed) 
+                {
+                    currentSpeed += acceleration * (targetSpeed/walkSpeed); // Does sprinting increase acceleration or just max speed
+                }
+
+                if (new Vector2(currentVelocity.x, currentVelocity.z).sqrMagnitude > targetSpeed*targetSpeed) 
+                {
+                    ApplyFriction();
+                }
             }
-            else    //In air, less control
-            {
-                Vector3 currentVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-                Vector3 desiredVelocity = inputDir * targetSpeed;
-                Vector3 velocityChange = (desiredVelocity - currentVelocity) * airControl;
-                rb.AddForce(velocityChange, ForceMode.Acceleration);
-            }
+
+            // Less control in the air
+            float modifier = grounded || (grappling && wallDetector != null && wallDetector.nearWall) ? 10 : airControl;
+            
+            Vector3 desiredVel = inputDir * currentSpeed;
+            Vector3 forceDir = (desiredVel - currentVelocity) * modifier;
+            rb.AddForce(forceDir, ForceMode.Force);
         }
         else if (grounded)
         {
-            // friction only on ground
-            Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-            Vector3 frictionForce = -horizontalVel * groundFriction;
-            rb.AddForce(frictionForce, ForceMode.Acceleration);
+            ApplyFriction(); 
         }
+    }
+    
+    void ApplyFriction()
+    {
+        Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        Vector3 frictionForce = -horizontalVel * groundFriction;
+        rb.AddForce(frictionForce, ForceMode.Acceleration);
+                
+        currentSpeed = horizontalVel.magnitude;
     }
 
     void HandleSlideMovement()
