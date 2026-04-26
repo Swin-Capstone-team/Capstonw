@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+[DisallowMultipleComponent]
 public class SlashAttack : MonoBehaviour
 {
     public Animator animator;
@@ -21,6 +22,16 @@ public class SlashAttack : MonoBehaviour
     private bool isAttacking = false;
     private bool didBufferNextAttack = false;
 
+    void Awake()
+    {
+        inputState ??= GetComponentInParent<PlayerInputState>();
+
+        if (inputState != null) return;
+
+        Debug.LogError("SlashAttack requires PlayerInputState on this object or a parent.", this);
+        enabled = false;
+    }
+
     void Update()
     {
         AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
@@ -34,7 +45,7 @@ public class SlashAttack : MonoBehaviour
             animator.SetBool("ComboAttack2", false);
         }
 
-        if (Input.GetKeyDown(attackKey))
+        if (inputState.AttackPressedThisFrame)
         {
             if (!isAttacking) ProcessAttackInput();
             else didBufferNextAttack = true; 
