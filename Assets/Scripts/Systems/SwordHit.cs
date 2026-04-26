@@ -4,74 +4,51 @@ using UnityEngine;
 public class SwordHit : MonoBehaviour
 {
     [Header("References")]
-    public SlashAttack attack;
+    public Transform hitCheckPoint; 
+    public LayerMask enemyLayer;    
 
-    [Header("Damage Settings")]
-    public float damage1 = 10f;
-    public float damage2 = 15f;
-    public float damage3 = 25f;
+    [Header("Hitbox Settings")]
+    public Vector3 hitBoxSize = new Vector3(0.5f, 0.5f, 1.5f); 
 
-    [Header("Knockback Settings")]
-    public float normalForce = 1f;
-    public float thirdSlashForce = 5f;
+    private HashSet<IDamageable> hitTargets = new HashSet<IDamageable>();
 
-    private HashSet<Collider> hitTargets = new HashSet<Collider>();
-    private int lastComboStep = 0;
+    public void ResetHitTargets() => hitTargets.Clear();
 
-    void Update()
+    // Now accepts parameters so it doesn't "guess" based on the combo step
+    public void CheckForHit(float damage, float force)
     {
-        if (attack == null) return;
+        Collider[] hitColliders = Physics.OverlapBox(
+            hitCheckPoint.position, 
+            hitBoxSize / 2, 
+            hitCheckPoint.rotation, 
+            enemyLayer
+        );
 
-
-        if (attack.comboStepPublic != lastComboStep)
+        foreach (var hitCollider in hitColliders)
         {
-            hitTargets.Clear();
-            lastComboStep = attack.comboStepPublic;
-        }
+            if (hitCollider.TryGetComponent(out IDamageable target))
+            {
+                if (hitTargets.Contains(target)) continue;
 
-        // Safety clear when idle
-        if (attack.comboStepPublic == 0)
-        {
-            hitTargets.Clear();
+                DamageInfo info = new DamageInfo
+                {
+                    amount = damage, // Use the "stamped" damage
+                    direction = transform.root.forward,
+                    force = force,
+                    attacker = transform.root.gameObject
+                };
+
+                target.TakeDamage(info);
+                hitTargets.Add(target);
+            }
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnDrawGizmosSelected()
     {
-        if (attack == null || attack.comboStepPublic == 0) return;
-        
-        if (hitTargets.Contains(other)) return;
-
-        Health targetHealth = other.GetComponent<Health>();
-        if (targetHealth == null) return;
-
-        float finalDamage = GetDamageForStep(attack.comboStepPublic);
-        float finalForce = (attack.comboStepPublic == 3) ? thirdSlashForce : normalForce;
-
-        Vector3 knockbackDir = (other.transform.position - transform.position).normalized;
-        knockbackDir.y = 0.5f; // Add a little "pop" upward
-
-        // If it's an EnemyHealth, use the special TakeHit for flash/physics
-        if (targetHealth is EnemyHealth enemy)
-        {
-            enemy.TakeHit(finalDamage, knockbackDir, finalForce);
-        }
-        else
-        {
-            // If it's a Player or a generic destructible, just do normal damage
-            targetHealth.TakeDamage(finalDamage);
-        }
-
-        hitTargets.Add(other);
-    }
-
-    private float GetDamageForStep(int step)
-    {
-        return step switch
-        {
-            2 => damage2,
-            3 => damage3,
-            _ => damage1,
-        };
+        if (hitCheckPoint == null) return;
+        Gizmos.color = Color.red;
+        Gizmos.matrix = hitCheckPoint.localToWorldMatrix;
+        Gizmos.DrawWireCube(Vector3.zero, hitBoxSize);
     }
 }

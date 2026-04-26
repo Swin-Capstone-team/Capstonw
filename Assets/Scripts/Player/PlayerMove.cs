@@ -15,7 +15,7 @@ public class PlayerMove : MonoBehaviour
     public float groundCheckDistance = 0.5f;
     public LayerMask groundMask;
     public float currentSpeed = 0;
-    private KeyCode SprintKey = KeyCode.LeftShift;
+    public bool canMove = true;
 
     [Header("Slide Settings")]
     public float slideFrictionAdjustment = 0.2f;
