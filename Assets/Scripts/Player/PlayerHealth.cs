@@ -19,7 +19,7 @@ public class PlayerHealth : Health
         {
             hitTimer -= Time.deltaTime;
             // Restore movement control after hitstun ends
-            if (hitTimer <= 0f && move != null && !isDead) move.enabled = true;
+            if (hitTimer <= 0f && move != null && !isDead) move.canMove = true;
         }
     }
 
@@ -32,7 +32,7 @@ public class PlayerHealth : Health
 
         // Disable movement for a short duration
         hitTimer = hitStunTime;
-        if (move != null) move.enabled = false;
+        if (move != null) move.canMove = false;
 
         base.TakeDamage(info);
     }
@@ -43,6 +43,6 @@ public class PlayerHealth : Health
         isDead = true;
 
         if (animator != null) animator.SetTrigger("Die");
-        if (move != null) move.enabled = false;
+        if (move != null) move.canMove = false;
     }
 }

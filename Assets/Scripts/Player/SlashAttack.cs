@@ -25,7 +25,7 @@ public class SlashAttack : MonoBehaviour
     {
         AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
 
-        if (state.IsName("idle") && !animator.IsInTransition(0))
+        if ((state.IsName("idle") || state.IsName("Getting Hit (1)")) && !animator.IsInTransition(0))
         {
             comboStep = 0;
             isAttacking = false;

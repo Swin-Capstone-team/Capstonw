@@ -1,28 +1,31 @@
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.AI;
 
-public interface IPatrolable
+public interface IBaseEnemy
+{
+    NavMeshAgent navMeshAgent { get; }
+    Transform transform { get; }
+    void ChangeVisualState(Color stateColor);
+}
+
+public interface IPatrolable : IBaseEnemy
 {
     Transform waypointParent { get; }
-    NavMeshAgent navMeshAgent { get; }
 }
 
-
-public interface IMeleeAttacker
+public interface IMeleeAttacker : IBaseEnemy
 {
     Transform target { get; }
-    Transform transform { get; }
     float attackCooldown { get; }
-    NavMeshAgent navMeshAgent { get; }
+    void MeleeAttack();
 }
 
-public interface IShootable
+public interface IShootable : IBaseEnemy
 {
     Transform target { get; }
-    Transform transform { get; }
     Transform barrelEnd { get; }
     Rigidbody projectilePrefab { get; }
     float bulletSpeed { get; }
     float attackCooldown { get; }
-    NavMeshAgent navMeshAgent { get; }
 }

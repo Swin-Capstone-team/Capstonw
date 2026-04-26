@@ -9,6 +9,7 @@ public class EnemyChase : IState
 
     public void OnEnter()
     {
+        _enemy.ChangeVisualState(Color.yellow);
         _enemy.navMeshAgent.isStopped = false;
         _enemy.navMeshAgent.speed = 6f;
         TimeSinceLastSeen = 0;

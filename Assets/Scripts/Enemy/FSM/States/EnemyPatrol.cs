@@ -9,6 +9,7 @@ public class EnemyPatrol : IState
 
     public void OnEnter()
     {
+        _entity.ChangeVisualState(Color.blue);
         _entity.navMeshAgent.isStopped = false;
         _entity.navMeshAgent.speed = 3f;
         MoveToNextWaypoint();

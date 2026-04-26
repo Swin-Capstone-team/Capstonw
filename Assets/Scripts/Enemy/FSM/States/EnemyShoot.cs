@@ -7,7 +7,11 @@ public class EnemyShoot : IState
 
     public EnemyShoot(IShootable shooter) => _shooter = shooter;
 
-    public void OnEnter() => _shooter.navMeshAgent.isStopped = true;
+    public void OnEnter() 
+    {
+        _shooter.ChangeVisualState(Color.magenta);
+        _shooter.navMeshAgent.isStopped = true;
+    }
 
     public void Tick()
     {

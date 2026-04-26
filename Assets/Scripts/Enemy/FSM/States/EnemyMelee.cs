@@ -9,6 +9,7 @@ public class EnemyMelee : IState
 
     public void OnEnter()
     {
+        _attacker.ChangeVisualState(Color.orange);
         _attacker.navMeshAgent.isStopped = true;
         _attacker.navMeshAgent.velocity = Vector3.zero;
     }
@@ -24,16 +25,11 @@ public class EnemyMelee : IState
 
         if (Time.time >= _lastAttackTime + _attacker.attackCooldown)
         {
-            PerformAttack();
+            _attacker.MeleeAttack();
             _lastAttackTime = Time.time;
         }
     }
 
-    private void PerformAttack()
-    {
-        Debug.Log($"{_attacker.transform.name} performed a melee attack!");
-        // Trigger animation or damage logic here
-    }
 
     public void OnExit() => _attacker.navMeshAgent.isStopped = false;
 }

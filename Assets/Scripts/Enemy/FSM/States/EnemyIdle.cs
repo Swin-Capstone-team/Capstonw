@@ -11,6 +11,7 @@ public class EnemyIdle : IState
 
     public void OnEnter()
     {
+        _enemy.ChangeVisualState(Color.green);
         _enemy.navMeshAgent.isStopped = true;
         _enemy.navMeshAgent.velocity = Vector3.zero;
         

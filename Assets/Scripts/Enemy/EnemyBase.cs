@@ -2,17 +2,20 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public abstract class EnemyBase : MonoBehaviour
+public abstract class EnemyBase : MonoBehaviour, IBaseEnemy
 {
     [Header("Base References")]
-    public NavMeshAgent navMeshAgent;
+    private NavMeshAgent _navMeshAgent;
+    public NavMeshAgent navMeshAgent => _navMeshAgent;
     public Transform target;
+    public MeshRenderer meshRenderer;
+    public Color CurrentStateColor { get; private set; } = Color.grey;
 
     protected StateMachine stateMachine;
 
     protected virtual void Awake()
     {
-        navMeshAgent = GetComponent<NavMeshAgent>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
         stateMachine = new StateMachine();
     }
 
@@ -32,6 +35,15 @@ public abstract class EnemyBase : MonoBehaviour
             return hit.transform == target;
         }
         return false;
+    }
+
+    public void ChangeVisualState(Color stateColor)
+    {
+        CurrentStateColor = stateColor;
+        if (meshRenderer != null)
+        {
+            meshRenderer.material.color = stateColor;
+        }
     }
 
 }

@@ -6,9 +6,10 @@ public class EnemyHealth : Health
     [Header("Enemy Feedback")]
     public float flashDuration = 0.2f;
     private Renderer rend;
-    private Color originalColor;
     private Rigidbody rb;
     private UnityEngine.AI.NavMeshAgent agent;
+    
+    private EnemyBase enemyBase; 
 
     protected override void Start()
     {
@@ -16,32 +17,40 @@ public class EnemyHealth : Health
         rend = GetComponentInChildren<Renderer>();
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        enemyBase = GetComponent<EnemyBase>();
 
-        if (rend != null) originalColor = rend.material.color;
-        if (rb != null) rb.isKinematic = true; // Use kinematic while NavMesh is moving
+        if (rb != null) rb.isKinematic = true; 
     }
 
     public override void TakeDamage(DamageInfo info)
     {
-        // Call base logic (subtracts HP, spawns text)
         base.TakeDamage(info);
 
-        // Visual Flash
-        if (rend != null) StartCoroutine(FlashRoutine());
+        if (rend != null) 
+        {
+            StopCoroutine(nameof(FlashRoutine)); 
+            StartCoroutine(FlashRoutine());
+        }
 
-        // Physics Knockback
         if (rb != null && agent != null)
         {
-            StopAllCoroutines(); 
             StartCoroutine(HandleKnockback(info.direction, info.force));
         }
     }
 
     private IEnumerator FlashRoutine()
     {
-        rend.material.color = Color.red;
+        rend.material.color = Color.red; 
         yield return new WaitForSeconds(flashDuration);
-        rend.material.color = originalColor;
+
+        if (enemyBase != null)
+        {
+            rend.material.color = enemyBase.CurrentStateColor;
+        }
+        else
+        {
+            rend.material.color = Color.grey;
+        }
     }
 
     private IEnumerator HandleKnockback(Vector3 dir, float force)
@@ -49,16 +58,15 @@ public class EnemyHealth : Health
         agent.enabled = false;
         rb.isKinematic = false;
 
-        // Apply force (adding a slight lift)
         Vector3 finalDir = dir + Vector3.up * 0.5f;
         rb.AddForce(finalDir.normalized * force, ForceMode.VelocityChange);
 
         yield return new WaitForFixedUpdate();
 
-        // Wait until the enemy stops sliding
         while (rb.linearVelocity.magnitude > 0.2f) yield return null;
 
         rb.isKinematic = true;
-        agent.enabled = true;
+        
+        if (currentHealth > 0) agent.enabled = true; 
     }
 }

@@ -12,6 +12,7 @@ public class PlayerMove : MonoBehaviour
     public float airControl = 0.5f;
     public float groundCheckDistance = 0.5f;
     public LayerMask groundMask;
+    public bool canMove = true;
 
     [Header("Slide Settings")]
     public float slideFrictionAdjustment = 0.2f;
@@ -136,6 +137,8 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!canMove) return;
+
         if (isWallRunning)
         {
             HandleWallRunMovement();

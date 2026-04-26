@@ -5,6 +5,7 @@ public class HealthBar : MonoBehaviour
 {
     public Health targetHealth;
     public Slider slider;
+    public bool isWorldSpace = true;
     public Vector3 offset = new Vector3(0, 2f, 0);
 
     private Camera cam;
@@ -22,7 +23,7 @@ public class HealthBar : MonoBehaviour
 
     void LateUpdate()
     {
-        if (targetHealth == null) return;
+        if (!isWorldSpace || targetHealth == null) return;
 
         transform.position = targetHealth.transform.position + offset;
 
