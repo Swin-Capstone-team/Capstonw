@@ -20,13 +20,13 @@ public class PlayerInputState : MonoBehaviour
     public bool CrouchPressedThisFrame => _actions.Player.Crouch.WasPressedThisFrame();
     public bool CrouchReleasedThisFrame => _actions.Player.Crouch.WasReleasedThisFrame();
 
-    public bool LeftSwingHeld => _actions.Player.Previous.IsPressed();
-    public bool LeftSwingPressedThisFrame => _actions.Player.Previous.WasPressedThisFrame();
-    public bool LeftSwingReleasedThisFrame => _actions.Player.Previous.WasReleasedThisFrame();
+    public bool LeftSwingHeld => _actions.Player.LeftSwing.IsPressed();
+    public bool LeftSwingPressedThisFrame => _actions.Player.LeftSwing.WasPressedThisFrame();
+    public bool LeftSwingReleasedThisFrame => _actions.Player.LeftSwing.WasReleasedThisFrame();
 
-    public bool RightSwingHeld => _actions.Player.Next.IsPressed();
-    public bool RightSwingPressedThisFrame => _actions.Player.Next.WasPressedThisFrame();
-    public bool RightSwingReleasedThisFrame => _actions.Player.Next.WasReleasedThisFrame();
+    public bool RightSwingHeld => _actions.Player.RightSwing.IsPressed();
+    public bool RightSwingPressedThisFrame => _actions.Player.RightSwing.WasPressedThisFrame();
+    public bool RightSwingReleasedThisFrame => _actions.Player.RightSwing.WasReleasedThisFrame();
 
     public bool AttackPressedThisFrame => _actions.Player.Attack.WasPressedThisFrame();
 
@@ -59,8 +59,8 @@ public class PlayerInputState : MonoBehaviour
         LogActionPress(_actions.Player.Jump, "Jump");
         LogActionPress(_actions.Player.Sprint, "Sprint");
         LogActionPress(_actions.Player.Crouch, "Crouch");
-        LogActionPress(_actions.Player.Previous, "LeftSwing");
-        LogActionPress(_actions.Player.Next, "RightSwing");
+        LogActionPress(_actions.Player.LeftSwing, "LeftSwing");
+        LogActionPress(_actions.Player.RightSwing, "RightSwing");
         LogActionPress(_actions.Player.Attack, "Attack");
     }
 }

@@ -15,7 +15,7 @@ public class PlayerMove : MonoBehaviour
     public float groundCheckDistance = 0.5f;
     public LayerMask groundMask;
     public float currentSpeed = 0;
-    private KeyCode SprintKey = KeyCode.LeftShift;
+    public bool canMove = true;
 
     [Header("Slide Settings")]
     public float slideFrictionAdjustment = 0.2f;
@@ -180,8 +180,9 @@ public class PlayerMove : MonoBehaviour
         targetXRotation -= mouseY;
         targetXRotation = Mathf.Clamp(targetXRotation, -90f, 90f);
 
-        // Smoothly interpolate to target rotations
-        yawRotation = Mathf.Lerp(yawRotation, targetYawRotation, lookDamping);
+        // Player body rotates immediately to match input (no damping)
+        yawRotation = targetYawRotation;
+        // Camera gets smoothly damped for comfortable viewing
         xRotation = Mathf.Lerp(xRotation, targetXRotation, lookDamping);
 
         transform.localRotation = Quaternion.Euler(0f, yawRotation, 0f);
