@@ -17,6 +17,7 @@ public class SwordHit : MonoBehaviour
     // Now accepts parameters so it doesn't "guess" based on the combo step
     public void CheckForHit(float damage, float force)
     {
+        Debug.Log($"Checking for hits. Damage: {damage}, Force: {force}", this);
         Collider[] hitColliders = Physics.OverlapBox(
             hitCheckPoint.position, 
             hitBoxSize / 2, 

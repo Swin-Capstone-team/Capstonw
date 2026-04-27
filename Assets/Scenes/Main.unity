@@ -18790,6 +18790,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5100109744965799473, guid: 74796ed8de86dd24a940cdb51b0548ad, type: 3}
+      propertyPath: boundingRadius
+      value: 3.5707142
+      objectReference: {fileID: 0}
+    - target: {fileID: 5100109744965799473, guid: 74796ed8de86dd24a940cdb51b0548ad, type: 3}
       propertyPath: cubeResolution.x
       value: 5
       objectReference: {fileID: 0}

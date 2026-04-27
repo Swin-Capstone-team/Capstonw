@@ -48,7 +48,6 @@ public class PlayerMove : MonoBehaviour
     
     private PlayerInputState _input;
     
-    
     private Rigidbody rb;
     private CapsuleCollider capsule;
     private float xRotation = 0f;
@@ -146,6 +145,7 @@ public class PlayerMove : MonoBehaviour
             }
             else if (wallDetector != null && wallDetector.nearWall)
             {
+                Debug.Log("Attempting wall jump...", this);
                 WallJump();
             }
         }

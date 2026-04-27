@@ -30,6 +30,8 @@ public class PlayerInputState : MonoBehaviour
 
     public bool AttackPressedThisFrame => _actions.Player.Attack.WasPressedThisFrame();
 
+    public bool RestartPressedThisFrame => _actions.Player.Restart.WasPressedThisFrame();
+
 
     private void LogActionPress(InputAction action, string actionName)
     {
