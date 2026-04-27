@@ -100,7 +100,7 @@ MonoBehaviour:
   _giveUpDistance: 15
   _maxLostTime: 2
   _meleeRange: 2
-  _attackCooldown: 2
+  _attackCooldown: 3
   _strikeDamage: 15
   _lungeDistance: 1.5
   _sphereVisual: {fileID: 3835737590522895036}

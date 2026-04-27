@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 8986489874427178083}
   - component: {fileID: 4289950412520244229}
   - component: {fileID: 383237688246370072}
-  - component: {fileID: 6681923008537689452}
   - component: {fileID: 7347716136700242173}
   m_Layer: 0
   m_Name: SimpleMeleeGoon
@@ -140,26 +139,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &6681923008537689452
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 535590953891632331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 161d75e94b1887f4684f382ae0b40a54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Goon
-  navMeshAgent: {fileID: 383237688246370072}
-  target: {fileID: 0}
-  _detectionRange: 10
-  _giveUpDistance: 20
-  _maxLostTime: 2
-  _meleeRange: 2.5
-  _attackCooldown: 2
-  _waypointParent: {fileID: 0}
 --- !u!114 &7347716136700242173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,6 +154,9 @@ MonoBehaviour:
   maxHealth: 100
   damageTextPrefab: {fileID: 9058765282153170658, guid: 0324b058bf28c2542a9ecc9a65d3ce93, type: 3}
   damageTextSpawnPoint: {fileID: 0}
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
   flashDuration: 0.25
 --- !u!1001 &5542036684653984517
 PrefabInstance:
@@ -325,6 +307,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HealthBar
   targetHealth: {fileID: 7347716136700242173}
   slider: {fileID: 8456489356099942980}
+  isWorldSpace: 1
   offset: {x: 0, y: 2, z: 0}
 --- !u!114 &8456489356099942980 stripped
 MonoBehaviour:

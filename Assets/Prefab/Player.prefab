@@ -1030,12 +1030,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20267e45058064bde8c7ee28cf1968a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwordHit
-  attack: {fileID: 1458288088373961312}
-  damage1: 10
-  damage2: 15
-  damage3: 25
-  normalForce: 1
-  thirdSlashForce: 5
+  hitCheckPoint: {fileID: 1597031434350259064}
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  hitBoxSize: {x: 3, y: 3, z: 14}
 --- !u!1 &1692664184180494353
 GameObject:
   m_ObjectHideFlags: 0
@@ -1432,7 +1431,7 @@ Transform:
   m_GameObject: {fileID: 2614453586722883740}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 1.2, z: -5.0000005}
+  m_LocalPosition: {x: 0.5, y: 1.2, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3386,9 +3385,10 @@ GameObject:
   - component: {fileID: 2242431794466313390}
   - component: {fileID: 1458288088373961312}
   - component: {fileID: 6159800898551102946}
+  - component: {fileID: 9172992868836322229}
   m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3580,7 +3580,7 @@ MonoBehaviour:
   walkSpeed: 7
   sprintSpeed: 15
   acceleration: 0.02
-  jumpForce: 10
+  jumpForce: 9
   groundFriction: 12
   airControl: 2
   groundCheckDistance: 1.5
@@ -3588,6 +3588,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   currentSpeed: 0
+  canMove: 1
   slideFrictionAdjustment: 0.2
   slideHeight: 0.5
   wallStickForce: 10
@@ -3628,7 +3629,7 @@ MonoBehaviour:
   reelStrength: 30
   reelRate: 25
   gravityEffect: 0.985
-  maxTargetDistance: 30
+  maxTargetDistance: 50
   maxTargetAngle: 10
   targetingSpread: 20
   sideThrust: 4
@@ -3649,6 +3650,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SlashAttack
   animator: {fileID: 5958145051326071223}
   comboWindow: 4
+  swordHit: {fileID: 8528028585330400968}
+  attackDamage: 10
+  attackForce: 5
 --- !u!114 &6159800898551102946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3664,8 +3668,23 @@ MonoBehaviour:
   maxHealth: 100
   damageTextPrefab: {fileID: 9058765282153170658, guid: 0324b058bf28c2542a9ecc9a65d3ce93, type: 3}
   damageTextSpawnPoint: {fileID: 0}
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
   animator: {fileID: 5958145051326071223}
   hitStunTime: 0.2
+--- !u!114 &9172992868836322229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8021186322358567283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d577660f82e049dcbac3ec8cd556cec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Restart
 --- !u!1 &8915295694396538300
 GameObject:
   m_ObjectHideFlags: 0

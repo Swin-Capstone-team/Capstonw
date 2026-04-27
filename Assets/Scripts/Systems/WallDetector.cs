@@ -16,6 +16,7 @@ public class WallDetector : MonoBehaviour
 
             // Direction from player to collider center
             Vector3 dir = (transform.position - other.ClosestPointOnBounds(transform.position)).normalized;
+            Debug.Log($"WallDetector: Near wall. Direction to wall: {dir}", this);
             wallNormal = dir;
         }
     }

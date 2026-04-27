@@ -44,12 +44,12 @@ namespace UI.Menus.MainMenu
 
         private void ContinueGame()
         {
-            SceneManager.LoadSceneAsync("Main");
+            SceneManager.LoadSceneAsync("LevelOne");
         }
 
         private void NewGame()
         {
-            SceneManager.LoadSceneAsync("Main");
+            SceneManager.LoadSceneAsync("LevelOne");
         }
 
         private void LoadGame()
