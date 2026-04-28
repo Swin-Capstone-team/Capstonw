@@ -46,6 +46,10 @@ public class PlayerMove : MonoBehaviour
     public float cameraSlideHeightAdjust = -0.5f;
     public float lookDamping = 0.15f;  // Lower = smoother, 0-1 range
     
+    [Header("Animation Settings")]
+    public Animator animator;
+    private float lastYaw;
+
     private PlayerInputState _input;
     
     private Rigidbody rb;
@@ -145,10 +149,11 @@ public class PlayerMove : MonoBehaviour
             }
             else if (wallDetector != null && wallDetector.nearWall)
             {
-                Debug.Log("Attempting wall jump...", this);
                 WallJump();
             }
         }
+        
+        UpdateAnimations();
     }
 
     void FixedUpdate()
@@ -330,6 +335,8 @@ public class PlayerMove : MonoBehaviour
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         rb.AddForce(direction * jumpForce, ForceMode.Impulse);
 
+        if (animator != null) animator.SetTrigger("Jump");
+
         if (isSliding) StopSlide(); // jump cancels slide
     }
 
@@ -346,5 +353,32 @@ public class PlayerMove : MonoBehaviour
     void GroundCheck()
     {
         grounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundMask);
+    }
+
+    void UpdateAnimations()
+    {
+        if (animator == null) return;
+
+        // Calculate local velocity for directional movement (X=Strafe, Z=Forward/Back)
+        Vector3 localVel = transform.InverseTransformDirection(rb.linearVelocity);
+
+        // Calculate IsMoving by checking input
+        animator.SetBool("IsMoving", _input.Move.sqrMagnitude > 0.01f);
+        
+        // Pass X and Z velocities roughly mapped -1 to 1 based on current running speed
+        animator.SetFloat("VelocityX", localVel.x / sprintSpeed, 0.1f, Time.deltaTime);
+        animator.SetFloat("VelocityZ", localVel.z / sprintSpeed, 0.1f, Time.deltaTime);
+
+        // Ground and Air states
+        animator.SetBool("IsGrounded", grounded);
+        animator.SetFloat("VerticalVelocity", rb.linearVelocity.y);
+
+        animator.SetBool("IsTurning", Mathf.Abs(_input.Look.x) > 0.1f);
+        // Turn rate for left/right camera rotation animations
+        float rawTurnRate = (yawRotation - lastYaw) / Time.deltaTime;
+        float normalizedTurn = Mathf.Clamp(rawTurnRate / 20f, -1f, 1f);
+        animator.SetFloat("Turn", normalizedTurn, 0.1f, Time.deltaTime);
+        
+        lastYaw = yawRotation;
     }
 }
