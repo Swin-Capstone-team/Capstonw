@@ -126,7 +126,8 @@ public class PlayerMove : MonoBehaviour
 
         // end slide (timer or key up)
         if (isSliding)
-        {
+        {   
+
             slideTimer -= Time.deltaTime;   //timer countdown for slide duration
             if (slideTimer <= 0f || _input.CrouchReleasedThisFrame)
             {
@@ -241,9 +242,9 @@ public class PlayerMove : MonoBehaviour
     void HandleSlideMovement()
     {
         // low friction → keeps momentum
-        Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-        Vector3 slideFriction = -horizontalVel * groundFriction * slideFrictionAdjustment;
-        rb.AddForce(slideFriction, ForceMode.Acceleration);
+        // Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        // Vector3 slideFriction = -horizontalVel * groundFriction * slideFrictionAdjustment;
+        // rb.AddForce(slideFriction, ForceMode.Acceleration);
     }
 
     void HandleWallRunMovement()    //Controls when wallrunning
