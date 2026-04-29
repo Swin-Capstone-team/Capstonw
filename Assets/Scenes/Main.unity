@@ -279,11 +279,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.5, y: 1.5, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &9750227
 MeshRenderer:
@@ -3180,6 +3180,11 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!20 &344752117 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 135514527062458614, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+  m_PrefabInstance: {fileID: 3053293063748303919}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &350871473
 GameObject:
   m_ObjectHideFlags: 0
@@ -12512,9 +12517,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   currentSlot: 0
+  crossbowTip: {fileID: 2104081415}
+  shotgunTip: {fileID: 980974297}
+  boltPrefab: {fileID: 919132149155446097, guid: 96feb6c1fa2cb48d497e4789a95334c0, type: 3}
   razor: {fileID: 9750223}
   shotgun: {fileID: 172058653}
   crossbow: {fileID: 477914406}
+  boltSpeed: 50
+  playerCamera: {fileID: 344752117}
+  aimMask:
+    serializedVersion: 2
+    m_Bits: 0
+  aimDistance: 100
 --- !u!1 &1512706852
 GameObject:
   m_ObjectHideFlags: 0
@@ -19694,6 +19708,10 @@ PrefabInstance:
     - target: {fileID: 2028740325759082492, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242431794466313390, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: Grappleable.m_Bits
+      value: 79
       objectReference: {fileID: 0}
     - target: {fileID: 8021186322358567283, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
       propertyPath: m_Name

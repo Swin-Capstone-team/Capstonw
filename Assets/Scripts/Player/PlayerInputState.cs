@@ -15,6 +15,8 @@ public class PlayerInputState : MonoBehaviour
     public bool JumpHeld => _actions.Player.Jump.IsPressed();
     public bool JumpPressedThisFrame => _actions.Player.Jump.WasPressedThisFrame();
 
+    public bool ShootPressedThisFrame => _actions.Player.Shoot.WasPressedThisFrame();
+
     public bool SprintHeld => _actions.Player.Sprint.IsPressed();
 
     public bool CrouchPressedThisFrame => _actions.Player.Crouch.WasPressedThisFrame();
