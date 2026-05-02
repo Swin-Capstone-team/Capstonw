@@ -1234,7 +1234,7 @@ GameObject:
   - component: {fileID: 353634227}
   - component: {fileID: 353634226}
   m_Layer: 0
-  m_Name: StompDetect
+  m_Name: SwipeRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3455,9 +3455,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1255464933}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1528885436}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
       insertIndex: -1
@@ -3499,16 +3496,12 @@ MonoBehaviour:
   animator: {fileID: 1011146453}
   player: {fileID: 30228734}
   followRange: {fileID: 1255464930}
-  stompRange: {fileID: 353634225}
-  swipeRange: {fileID: 1528885433}
+  swipeRange: {fileID: 353634225}
   isFollowing: 0
-  stompattackRange: 0
-  swipeattackRange: 0
-  isAttacking: 0
+  isSwiping: 0
   health: 100
   damage: 10
   speed: 10
-  attackTimer: 0
 --- !u!54 &1011146456
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4065,7 +4058,7 @@ GameObject:
   - component: {fileID: 1255464932}
   - component: {fileID: 1255464931}
   m_Layer: 0
-  m_Name: AggroRange
+  m_Name: AttackRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4373,73 +4366,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518655673}
   m_CullTransparentMesh: 1
---- !u!1 &1528885433
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1528885436}
-  - component: {fileID: 1528885435}
-  - component: {fileID: 1528885434}
-  m_Layer: 0
-  m_Name: SwipeDetect
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1528885434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1528885433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f03897de9f30e43ed8539bd3826b8589, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  boss: {fileID: 1011146455}
---- !u!65 &1528885435
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1528885433}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2, y: 0.8802973, z: 2}
-  m_Center: {x: 0, y: 1.4119903, z: 0}
---- !u!4 &1528885436
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1528885433}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1011146454}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1579185535
 GameObject:
   m_ObjectHideFlags: 0
