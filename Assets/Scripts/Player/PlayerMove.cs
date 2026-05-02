@@ -196,52 +196,32 @@ public class PlayerMove : MonoBehaviour
 
     void HandleMovement()
     {
-        if (grappling)
-        {
-            currentSpeed = Mathf.Min(rb.linearVelocity.magnitude, sprintSpeed);
-            return;
-        }
+        if (grappling) return;
+        float targetSpeed = _input.SprintHeld ? sprintSpeed : walkSpeed;
 
         if (inputDir.sqrMagnitude > 0.01f)
         { 
-            // Handles speed and acceleration
-            float targetSpeed = _input.SprintHeld ? sprintSpeed : walkSpeed;
             Vector3 currentVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             
-            if (grounded) // Can you accelerate in the air? Only when grappling
+            if (grounded) // Can you accelerate in the air?
             {
                 if(currentSpeed < targetSpeed) 
                 {
-                    currentSpeed += acceleration * (targetSpeed/walkSpeed); 
+                    currentSpeed += acceleration * (targetSpeed/walkSpeed); // Does sprinting increase acceleration or just max speed
                 }
 
-                if (currentVelocity.sqrMagnitude > targetSpeed*targetSpeed) 
+                if (new Vector2(currentVelocity.x, currentVelocity.z).sqrMagnitude > targetSpeed*targetSpeed) 
                 {
                     ApplyFriction();
                 }
             }
 
+            // Less control in the air
+            float modifier = grounded || (grappling && wallDetector != null && wallDetector.nearWall) ? 10 : airControl;
+            
             Vector3 desiredVel = inputDir * currentSpeed;
-
-            // Handles force
-            float modifier = 10;
-            Vector3 forceDir = desiredVel - currentVelocity;
-            
-            if(!grounded && !(grappling && wallDetector != null && wallDetector.nearWall)) // In air
-            {
-                modifier = airControl;
-                if (currentVelocity.sqrMagnitude > desiredVel.sqrMagnitude)
-                {
-                    // If force is forward, subtract the force that is in the same direction as velocity
-                    if(Vector3.Dot(desiredVel, currentVelocity) > 0)
-                    {
-                        forceDir -= Vector3.Project(forceDir, currentVelocity);
-                    }
-                    
-                }
-            }
-            
-            rb.AddForce(forceDir * modifier, ForceMode.Force);
+            Vector3 forceDir = (desiredVel - currentVelocity) * modifier;
+            rb.AddForce(forceDir, ForceMode.Force);
         }
         else if (grounded)
         {
