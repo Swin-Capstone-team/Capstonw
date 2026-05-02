@@ -241,9 +241,6 @@ public class PlayerMove : MonoBehaviour
                 }
             }
             
-            
-            //UnityEngine.Debug.Log(forceDir);
-            UnityEngine.Debug.Log("Current Vel:" + currentVelocity.magnitude.ToString() + ". Desired Vel: " + desiredVel.ToString());
             rb.AddForce(forceDir * modifier, ForceMode.Force);
         }
         else if (grounded)
