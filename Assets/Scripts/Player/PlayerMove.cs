@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public bool grappling = false;
+    public bool grappling { get;  set; }
+    public bool slingshotting { get; set; }
     public float walkSpeed = 7f;
     public float sprintSpeed = 12f;
     public float acceleration = 1f;
@@ -14,7 +15,7 @@ public class PlayerMove : MonoBehaviour
     public float airControl = 0.5f;
     public float groundCheckDistance = 0.5f;
     public LayerMask groundMask;
-    public float currentSpeed = 0;
+    public float currentSpeed { get;  set; }
     public bool canMove = true;
 
     [Header("Slide Settings")]
@@ -196,7 +197,7 @@ public class PlayerMove : MonoBehaviour
 
     void HandleMovement()
     {
-        if (grappling)
+        if (grappling && !slingshotting)
         {
             currentSpeed = Mathf.Min(rb.linearVelocity.magnitude, sprintSpeed);
             return;
