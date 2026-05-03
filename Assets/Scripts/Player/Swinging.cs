@@ -39,7 +39,6 @@ public class Swinging : MonoBehaviour
     private float maxSwingDistance = 25f;
     private Vector3 leftSwingPoint;
     private Vector3 rightSwingPoint;
-    private Vector3 avgSwingPoint;
     private SpringJoint leftJoint;
     private SpringJoint rightJoint;
     public float maxSpeed;
@@ -68,6 +67,15 @@ public class Swinging : MonoBehaviour
     public GameObject grappleIndicatorPrefab;
     private GameObject grappleIndicatorInstanceRed;
     private GameObject grappleIndicatorInstanceBlue;
+
+    [Header("Slingshot")]
+    public float maximumWindUp;
+    public float slingForce;
+    public float slingForwardBoost = 0.3f;
+    public float slingUpwardBoost = 0.25f;
+    public float slingMinYDir = 0.3f;
+    private Vector3 initialPosition;
+
 
     void Awake()
     {
@@ -133,37 +141,106 @@ public class Swinging : MonoBehaviour
 
        
 
-            if (inputState.LeftSwingPressedThisFrame)
+        if (inputState.LeftSwingPressedThisFrame)
         {
             StartSwing(currentTargetPointLeft, ref leftJoint, leftGunTip, ref llr);
             playermove.grappling = true;
             leftSwingPoint = currentTargetPointLeft;
         }
-            if (inputState.RightSwingPressedThisFrame)
+        if (inputState.RightSwingPressedThisFrame)
         {
             StartSwing(currentTargetPointRight, ref rightJoint, rightGunTip, ref rlr);
             playermove.grappling = true;
             rightSwingPoint = currentTargetPointRight;
         }
-            wHeld = moveInput.y > 0.1f;
-            aHeld = moveInput.x < -0.1f;
-            sHeld = moveInput.y < -0.1f;
-            dHeld = moveInput.x > 0.1f;
-            spaceheld = inputState.JumpHeld;
 
-            if (inputState.LeftSwingReleasedThisFrame)
+        wHeld = moveInput.y > 0.1f;
+        aHeld = moveInput.x < -0.1f;
+        sHeld = moveInput.y < -0.1f;
+        dHeld = moveInput.x > 0.1f;
+        spaceheld = inputState.JumpHeld;
+
+        Vector3 midPoint = Vector3.zero;
+        if (rightJoint != null && leftJoint != null) midPoint = (rightJoint.connectedAnchor + leftJoint.connectedAnchor) / 2;
+        else if (rightJoint != null) midPoint = rightJoint.connectedAnchor;
+        else if (leftJoint != null) midPoint = leftJoint.connectedAnchor;
+
+        if (inputState.LeftSwingReleasedThisFrame)
         {
-            StopSwing(ref leftJoint, ref llr);
-                if (inputState.RightSwingHeld) return;
+            if (playermove.slingshotting) LaunchSlingShot(midPoint);
+            else StopSwing(ref leftJoint, ref llr);
+            
+            if (inputState.RightSwingHeld) return;
             playermove.grappling = false;
         }
-            if (inputState.RightSwingReleasedThisFrame)
+        if (inputState.RightSwingReleasedThisFrame)
         {
-            StopSwing(ref rightJoint, ref rlr);
-                if (inputState.LeftSwingHeld) return;
+            if (playermove.slingshotting) LaunchSlingShot(midPoint);
+            else StopSwing(ref rightJoint, ref rlr);
+            
+            if (inputState.LeftSwingHeld) return;
             playermove.grappling = false;
         }
 
+        
+        // If both grapples are active, the camera is looking towards the grapples, the player is on the ground and moving back do slingshot
+        if(rightJoint != null && leftJoint != null && Vector3.Dot(cam.forward.normalized, (midPoint - cam.position).normalized) > 0.9 && playermove.grounded && sHeld)
+        {
+            if(!playermove.slingshotting)
+            {
+                StartSlingshot();
+            }
+        }
+        if (playermove.slingshotting)
+        {
+            float distance = (transform.position - initialPosition).magnitude;
+            float windUpSpeed = Mathf.Max(maximumWindUp - distance, 0);
+            playermove.currentSpeed = Mathf.Min(windUpSpeed, playermove.currentSpeed);
+
+            if((midPoint - transform.position - (midPoint - initialPosition)).sqrMagnitude >  + maximumWindUp*maximumWindUp + 5)
+            {
+                LaunchSlingShot(midPoint);
+            }
+        }
+
+        if (moveInput.y >= 0  && playermove.slingshotting)
+        {
+           LaunchSlingShot(midPoint);
+        }
+    }
+
+    void StartSlingshot()
+    {
+        playermove.slingshotting = true;
+        initialPosition = transform.position;
+        leftJoint.spring = 0;
+        leftJoint.damper = 0;
+        rightJoint.spring = 0;
+        rightJoint.damper = 0;
+    }
+
+    void LaunchSlingShot(Vector3 midPoint)
+    {
+        playermove.slingshotting = false;
+        
+        if(rightJoint != null)
+        {
+            Destroy(rightJoint);
+            rightJoint = null;
+            rlr.positionCount = 0;
+        }
+        if (leftJoint != null)
+        {
+            Destroy(leftJoint);
+            leftJoint = null;
+            llr.positionCount = 0;
+        }
+        
+        Vector3 direction = (midPoint - transform.position).normalized;
+        if (direction.y < slingMinYDir) direction.y = slingMinYDir; // Prevent launching into the ground
+        direction = (direction + cam.forward * slingForwardBoost + Vector3.up * slingUpwardBoost).normalized;
+        Vector3 force = direction * (transform.position - initialPosition).magnitude;
+        rb.AddForce(force * slingForce, ForceMode.Impulse);
     }
 
     void OnDrawGizmos()
@@ -199,9 +276,6 @@ public class Swinging : MonoBehaviour
 
         if (rightJoint == null && leftJoint == null) return;
 
-        if (leftJoint != null && rightJoint != null) avgSwingPoint = (leftSwingPoint + rightSwingPoint) / 2f;
-        else if (leftJoint != null) avgSwingPoint = leftSwingPoint;
-        else if (rightJoint != null) avgSwingPoint = rightSwingPoint;
 
         if (leftJoint != null)
         {
