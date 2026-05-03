@@ -71,6 +71,9 @@ public class Swinging : MonoBehaviour
     [Header("Slingshot")]
     public float maximumWindUp;
     public float slingForce;
+    public float slingForwardBoost = 0.3f;
+    public float slingUpwardBoost = 0.25f;
+    public float slingMinYDir = 0.3f;
     private Vector3 initialPosition;
 
 
@@ -157,28 +160,31 @@ public class Swinging : MonoBehaviour
         dHeld = moveInput.x > 0.1f;
         spaceheld = inputState.JumpHeld;
 
-        
-        
+        Vector3 midPoint = Vector3.zero;
+        if (rightJoint != null && leftJoint != null) midPoint = (rightJoint.connectedAnchor + leftJoint.connectedAnchor) / 2;
+        else if (rightJoint != null) midPoint = rightJoint.connectedAnchor;
+        else if (leftJoint != null) midPoint = leftJoint.connectedAnchor;
+
         if (inputState.LeftSwingReleasedThisFrame)
         {
-            StopSwing(ref leftJoint, ref llr);
-            if (playermove.slingshotting)  playermove.slingshotting = false;
+            if (playermove.slingshotting) LaunchSlingShot(midPoint);
+            else StopSwing(ref leftJoint, ref llr);
+            
             if (inputState.RightSwingHeld) return;
             playermove.grappling = false;
         }
         if (inputState.RightSwingReleasedThisFrame)
         {
-            StopSwing(ref rightJoint, ref rlr);
-            if (playermove.slingshotting)  playermove.slingshotting = false;
+            if (playermove.slingshotting) LaunchSlingShot(midPoint);
+            else StopSwing(ref rightJoint, ref rlr);
+            
             if (inputState.LeftSwingHeld) return;
             playermove.grappling = false;
         }
 
         
         // If both grapples are active, the camera is looking towards the grapples, the player is on the ground and moving back do slingshot
-        Vector3 midPoint = Vector3.zero;
-        if (rightJoint != null && leftJoint != null)  midPoint = (rightJoint.connectedAnchor + leftJoint.connectedAnchor)/2;
-        if(Vector3.Dot(cam.forward.normalized, (midPoint - cam.position).normalized) > 0.9 && playermove.grounded && sHeld)
+        if(rightJoint != null && leftJoint != null && Vector3.Dot(cam.forward.normalized, (midPoint - cam.position).normalized) > 0.9 && playermove.grounded && sHeld)
         {
             if(!playermove.slingshotting)
             {
@@ -231,7 +237,8 @@ public class Swinging : MonoBehaviour
         }
         
         Vector3 direction = (midPoint - transform.position).normalized;
-        direction = (direction + cam.forward * 0.3f + Vector3.up * 0.25f).normalized;
+        if (direction.y < slingMinYDir) direction.y = slingMinYDir; // Prevent launching into the ground
+        direction = (direction + cam.forward * slingForwardBoost + Vector3.up * slingUpwardBoost).normalized;
         Vector3 force = direction * (transform.position - initialPosition).magnitude;
         rb.AddForce(force * slingForce, ForceMode.Impulse);
     }

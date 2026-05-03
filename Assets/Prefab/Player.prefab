@@ -2980,6 +2980,9 @@ MonoBehaviour:
   grappleIndicatorPrefab: {fileID: 6140398287122407268, guid: c235a6176978a1541a238729dbf6f4e2, type: 3}
   maximumWindUp: 10
   slingForce: 4
+  slingForwardBoost: 0.5
+  slingUpwardBoost: 0.1
+  slingMinYDir: 0.7
 --- !u!114 &6159800898551102946
 MonoBehaviour:
   m_ObjectHideFlags: 0
