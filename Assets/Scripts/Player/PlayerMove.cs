@@ -49,6 +49,7 @@ public class PlayerMove : MonoBehaviour
     [Header("Animation Settings")]
     public Animator animator;
     private float lastYaw;
+    [SerializeField] private CameraShake cameraShake;
 
     private PlayerInputState _input;
     
@@ -59,6 +60,9 @@ public class PlayerMove : MonoBehaviour
     private float yawRotation = 0f;
     private float targetYawRotation = 0f;
     public bool grounded { get; private set; }
+    private bool wasGrounded;
+    private float lowestAirVelocityY;
+    private bool jumpedThisAir = false;
     private Vector3 inputDir;
 
     // store original collider + camera info
@@ -88,6 +92,20 @@ public class PlayerMove : MonoBehaviour
         originalColliderHeight = capsule.height;
         originalColliderCenter = capsule.center;
         originalCameraLocalPos = playerCamera.localPosition;
+        // Prefer an inspector-assigned CameraShake reference. Fall back only to the camera GameObject itself.
+        if (cameraShake == null)
+        {
+            cameraShake = playerCamera.GetComponent<CameraShake>();
+        }
+
+        if (cameraShake == null)
+        {
+            Debug.LogWarning($"PlayerMove: no CameraShake found. Assign `cameraShake` in the Inspector on the Player prefab to avoid runtime lookups.", this);
+        }
+        else
+        {
+            Debug.Log($"PlayerMove: CameraShake assigned from {cameraShake.gameObject.name}", this);
+        }
 
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -147,7 +165,7 @@ public class PlayerMove : MonoBehaviour
             {
                 Jump(Vector3.up);
             }
-            else if (wallDetector != null && wallDetector.nearWall)
+            else if (wallDetector.nearWall)
             {
                 WallJump();
             }
@@ -217,7 +235,7 @@ public class PlayerMove : MonoBehaviour
             }
 
             // Less control in the air
-            float modifier = grounded || (grappling && wallDetector != null && wallDetector.nearWall) ? 10 : airControl;
+            float modifier = grounded || (grappling && wallDetector.nearWall) ? 10 : airControl;
             
             Vector3 desiredVel = inputDir * currentSpeed;
             Vector3 forceDir = (desiredVel - currentVelocity) * modifier;
@@ -335,14 +353,18 @@ public class PlayerMove : MonoBehaviour
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         rb.AddForce(direction * jumpForce, ForceMode.Impulse);
 
-        if (animator != null) animator.SetTrigger("Jump");
+        // Mark that we've initiated a jump so the landing shake
+        // will only play when we come back to ground after this jump.
+        jumpedThisAir = true;
+
+        animator.SetTrigger("Jump");
 
         if (isSliding) StopSlide(); // jump cancels slide
     }
 
     void WallJump()
     {
-        if (wallDetector == null || wallDetector.wallNormal == Vector3.zero) return;
+        if (wallDetector.wallNormal == Vector3.zero) return;
 
         Vector3 jumpDir = wallDetector.wallNormal * wallPushAwayForce + Vector3.up * wallPushUpForce;
         Jump(jumpDir);
@@ -352,13 +374,33 @@ public class PlayerMove : MonoBehaviour
 
     void GroundCheck()
     {
+        wasGrounded = grounded;
         grounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundMask);
+
+        if (!grounded)
+        {
+            lowestAirVelocityY = Mathf.Min(lowestAirVelocityY, rb.linearVelocity.y);
+        }
+
+        if (!wasGrounded && grounded)
+        {
+            if (jumpedThisAir)
+            {
+                Debug.Log($"Landing detected: lowestAirVelocityY={lowestAirVelocityY:F2}, jumpedThisAir={jumpedThisAir}", this);
+                cameraShake?.PlayLandingShake(Mathf.Abs(lowestAirVelocityY));
+            }
+            jumpedThisAir = false;
+            lowestAirVelocityY = 0f;
+        }
+
+        if (grounded)
+        {
+            lowestAirVelocityY = 0f;
+        }
     }
 
     void UpdateAnimations()
     {
-        if (animator == null) return;
-
         // Calculate local velocity for directional movement (X=Strafe, Z=Forward/Back)
         Vector3 localVel = transform.InverseTransformDirection(rb.linearVelocity);
 

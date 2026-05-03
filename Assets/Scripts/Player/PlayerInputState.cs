@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
+[RequireComponent(typeof(CinemachineImpulseSource))]
 [DisallowMultipleComponent]
 public class PlayerInputState : MonoBehaviour
 {
