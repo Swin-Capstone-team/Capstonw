@@ -18799,22 +18799,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2242431794466313390, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
-      propertyPath: slingForce
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242431794466313390, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
-      propertyPath: slingMinYDir
-      value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242431794466313390, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
-      propertyPath: slingUpwardBoost
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2242431794466313390, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
-      propertyPath: slingForwardBoost
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 8021186322358567283, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
       propertyPath: m_Name
       value: Player
