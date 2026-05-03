@@ -4,9 +4,11 @@ public class Behaviour : MonoBehaviour
 {
     public Animator animator;
     public Transform player;
-    public GameObject followRange;
-    public GameObject stompRange;
-    public GameObject swipeRange;
+    public GameObject followRange;      // Aggro range for the boss to start following the player
+    public GameObject stompRange;       // Range for the stomp attack
+    public GameObject stompAttack;       // Range for the stomp attack
+    public GameObject swipeRange;       // Range for the swipe attack
+    public GameObject swipeAttack;       // Range for the swipe attack
     public bool isFollowing = false;
     public bool stompattackRange = false;
     public bool swipeattackRange = false;
@@ -62,6 +64,7 @@ public class Behaviour : MonoBehaviour
         if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
         {
             isAttacking = false;
+            Debug.Log("Attack ended?!");
         }
         
         if(health <= 0f)
@@ -104,5 +107,31 @@ public class Behaviour : MonoBehaviour
         animator.SetBool("isFollowing", false);
         animator.SetTrigger("Swipe");
         Debug.Log("Performing swipe attack!");
+    }
+
+    public void SwipeHitboxEnable()
+    {
+        swipeAttack.SetActive(true);
+    }
+
+    public void SwipeHitboxDisable()
+    {
+        swipeAttack.SetActive(false);
+    }
+
+    public void StompHitboxEnable()
+    {
+        stompAttack.SetActive(true);
+    }
+
+    public void StompHitboxDisable()
+    {
+        stompAttack.SetActive(false);
+    }
+
+    public void EndAttack()
+    {
+        isAttacking = false;
+        Debug.Log("Attack ended!");
     }
 }
