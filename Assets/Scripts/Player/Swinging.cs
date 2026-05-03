@@ -48,6 +48,7 @@ public class Swinging : MonoBehaviour
     public float reelStrength, reelRate;
     [Range(0.9f, 1f)]
     public float gravityEffect = 0.98f;
+    public float reelInStartBoost = 20f;
 
     [Header("Targeting")]
     public float maxTargetDistance = 25f;
@@ -76,6 +77,13 @@ public class Swinging : MonoBehaviour
     public float slingMinYDir = 0.3f;
     private Vector3 initialPosition;
 
+
+    private Transform leftAnchorTransform;
+    private Transform rightAnchorTransform;
+    private Vector3 leftAnchorLocalPoint;
+    private Vector3 rightAnchorLocalPoint;
+    private Transform leftTargetTransform;
+    private Transform rightTargetTransform;
 
     void Awake()
     {
@@ -124,8 +132,8 @@ public class Swinging : MonoBehaviour
         bool hasRightTarget;
         if (IsUsingGrappleAnchor)
         {
-            hasLeftTarget = FindBestGrapplePoint(-targetingSpread, out currentTargetPointLeft);
-            hasRightTarget = FindBestGrapplePoint(targetingSpread, out currentTargetPointRight); 
+            hasLeftTarget = FindBestGrapplePoint(-targetingSpread, out currentTargetPointLeft, out leftTargetTransform);
+            hasRightTarget = FindBestGrapplePoint(targetingSpread, out currentTargetPointRight, out rightTargetTransform);
         }
         else
         {
@@ -143,13 +151,13 @@ public class Swinging : MonoBehaviour
 
         if (inputState.LeftSwingPressedThisFrame)
         {
-            StartSwing(currentTargetPointLeft, ref leftJoint, leftGunTip, ref llr);
+            StartSwing(currentTargetPointLeft, leftTargetTransform, ref leftJoint, leftGunTip, ref llr);
             playermove.grappling = true;
             leftSwingPoint = currentTargetPointLeft;
         }
         if (inputState.RightSwingPressedThisFrame)
         {
-            StartSwing(currentTargetPointRight, ref rightJoint, rightGunTip, ref rlr);
+            StartSwing(currentTargetPointRight, rightTargetTransform, ref rightJoint, rightGunTip, ref rlr);
             playermove.grappling = true;
             rightSwingPoint = currentTargetPointRight;
         }
@@ -168,7 +176,7 @@ public class Swinging : MonoBehaviour
         if (inputState.LeftSwingReleasedThisFrame)
         {
             if (playermove.slingshotting) LaunchSlingShot(midPoint);
-            else StopSwing(ref leftJoint, ref llr);
+            else StopSwing(ref leftJoint, ref llr, true);
             
             if (inputState.RightSwingHeld) return;
             playermove.grappling = false;
@@ -176,7 +184,7 @@ public class Swinging : MonoBehaviour
         if (inputState.RightSwingReleasedThisFrame)
         {
             if (playermove.slingshotting) LaunchSlingShot(midPoint);
-            else StopSwing(ref rightJoint, ref rlr);
+            else StopSwing(ref rightJoint, ref rlr, false);
             
             if (inputState.LeftSwingHeld) return;
             playermove.grappling = false;
@@ -261,7 +269,31 @@ public class Swinging : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (leftJoint != null && leftAnchorTransform != null)
+        {
+            leftSwingPoint = leftAnchorTransform.TransformPoint(leftAnchorLocalPoint);
+            leftJoint.connectedAnchor = leftSwingPoint;
+        }
+
+        if (rightJoint != null && rightAnchorTransform != null)
+        {
+            rightSwingPoint = rightAnchorTransform.TransformPoint(rightAnchorLocalPoint);
+            rightJoint.connectedAnchor = rightSwingPoint;
+        }
+
+
         bool shouldReel = (automaticReelIn || spaceheld) && IsSwinging();
+        bool reelStartedThisFrame = inputState.JumpPressedThisFrame && IsSwinging();
+
+        if (reelStartedThisFrame)
+        {
+            Vector3 dir = GetBoostDir();
+            if (dir != Vector3.zero)
+            {
+                rb.AddForce(dir * reelInStartBoost, ForceMode.Impulse);
+            }
+        }
+
         if (shouldReel)
         {
             int grappleCount = 0;
@@ -359,7 +391,7 @@ public class Swinging : MonoBehaviour
         rb.linearVelocity = Vector3.ClampMagnitude(rb.linearVelocity, maxSpeed);
     }
 
-    bool FindBestGrapplePoint(float offsetAngle, out Vector3 currentTargetPoint)
+    bool FindBestGrapplePoint(float offsetAngle, out Vector3 currentTargetPoint, out Transform anchorTransform)
     {
         currentTargetPoint = Vector3.zero;
         bool foundTarget = false;
@@ -368,6 +400,7 @@ public class Swinging : MonoBehaviour
 
         Vector3 camPos = cam.position;
         Vector3 camForward = cam.forward;
+        anchorTransform = null;
 
         foreach (var anchor in GrappleAnchor.AllAnchors)
         {
@@ -409,6 +442,7 @@ public class Swinging : MonoBehaviour
                 {
                     bestScore = score;
                     currentTargetPoint = point;
+                    anchorTransform = anchor.transform;
                     foundTarget = true;
                 }
             }
@@ -446,7 +480,7 @@ public class Swinging : MonoBehaviour
 
     
 
-    void StartSwing(Vector3 currentTargetPoint, ref SpringJoint joint, Transform gunTip, ref LineRenderer lr)
+    void StartSwing(Vector3 currentTargetPoint, Transform anchorTransform, ref SpringJoint joint, Transform gunTip, ref LineRenderer lr)
     {
         if (currentTargetPoint == Vector3.zero)
             return;
@@ -465,15 +499,22 @@ public class Swinging : MonoBehaviour
             joint.minDistance = distanceFromPoint * 0.05f;
         }
 
+        Vector3 localPoint = anchorTransform.InverseTransformPoint(currentTargetPoint);
+
         if (gunTip == leftGunTip)
         {
             leftShortestDistance = distanceFromPoint;
             leftGrapplePosition = gunTip.position;
+            leftAnchorTransform = anchorTransform;
+            leftAnchorLocalPoint = localPoint;
         }
         else
         {
             rightShortestDistance = distanceFromPoint;
-             rightGrapplePosition = gunTip.position;
+            rightGrapplePosition = gunTip.position;
+
+            rightAnchorTransform = anchorTransform;
+            rightAnchorLocalPoint = localPoint;
         }
             
 
@@ -487,7 +528,7 @@ public class Swinging : MonoBehaviour
         lr.positionCount = 2;  
     }
 
-    void StopSwing(ref SpringJoint joint, ref LineRenderer lr)
+    void StopSwing(ref SpringJoint joint, ref LineRenderer lr, bool isLeft)
     {
         lr.positionCount = 0;
 
@@ -519,6 +560,15 @@ public class Swinging : MonoBehaviour
 
             Destroy(joint);
             joint = null;
+
+            if (isLeft)
+            {
+                leftAnchorTransform = null;
+            }
+            else
+            {
+                rightAnchorTransform = null;
+            }
         }
     }
 
@@ -671,5 +721,24 @@ public class Swinging : MonoBehaviour
     {
         RaycastHit hit;
         return Physics.Raycast(cam.position, cam.forward, out hit, maxSwingDistance, Grappleable);
+    }
+
+    Vector3 GetBoostDir()
+    {
+        if (leftJoint != null && rightJoint != null)
+        {
+            Vector3 avgSwingPoint = (leftSwingPoint + rightSwingPoint) * 0.5f;
+            return (avgSwingPoint - player.position).normalized;
+        }
+        else if (leftJoint != null)
+        {
+            return (leftSwingPoint - player.position).normalized;
+        }
+        else if (rightJoint != null)
+        {
+            return (rightSwingPoint - player.position).normalized;
+        }
+
+        return Vector3.zero;
     }
 }
