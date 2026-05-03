@@ -195,18 +195,19 @@ public class PlayerMove : MonoBehaviour
             {
                 if(currentSpeed < targetSpeed) 
                 {
-                    currentSpeed += acceleration * (targetSpeed/walkSpeed); 
+                    currentSpeed += acceleration * (targetSpeed/walkSpeed); // Does sprinting increase acceleration or just max speed
                 }
 
-                if (currentVelocity.sqrMagnitude > targetSpeed*targetSpeed) 
+                if (new Vector2(currentVelocity.x, currentVelocity.z).sqrMagnitude > targetSpeed*targetSpeed) 
                 {
                     ApplyFriction();
                 }
             }
 
+            // Less control in the air
+            float modifier = grounded || (grappling && wallDetector != null && wallDetector.nearWall) ? 10 : airControl;
+            
             Vector3 desiredVel = inputDir * currentSpeed;
-
-            float modifier = 10;
             Vector3 forceDir = desiredVel - currentVelocity;
             
             if(!grounded && !(grappling && wallDetector != null && wallDetector.nearWall))
