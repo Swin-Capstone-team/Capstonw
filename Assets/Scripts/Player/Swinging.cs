@@ -282,8 +282,8 @@ public class Swinging : MonoBehaviour
         }
 
 
-        bool shouldReel = (automaticReelIn || spaceheld) && IsSwinging();
-        bool reelStartedThisFrame = inputState.JumpPressedThisFrame && IsSwinging();
+        bool shouldReel = (automaticReelIn || spaceheld) && IsSwinging() && !playermove.slingshotting;
+        bool reelStartedThisFrame = inputState.JumpPressedThisFrame && IsSwinging()  && !playermove.slingshotting;
 
         if (reelStartedThisFrame)
         {
