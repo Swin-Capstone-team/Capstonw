@@ -2967,11 +2967,12 @@ MonoBehaviour:
   jointSpring: 2
   jointDamper: 0.5
   jointMassScale: 1
-  maxSpeed: 17
+  maxSpeed: 25
   automaticReelIn: 0
   reelStrength: 30
   reelRate: 25
   gravityEffect: 0.985
+  reelInStartBoost: 8
   maxTargetDistance: 50
   maxTargetAngle: 10
   targetingSpread: 20
