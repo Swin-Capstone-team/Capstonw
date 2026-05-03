@@ -18,7 +18,7 @@ public class Dmg : MonoBehaviour
     
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.gameObject.tag == "Player") // Check if the collided object is the player
         {
             playerHealth.currentHealth -= damageAmount; // Inflict damage to the player
             Debug.Log("Player hit! Damage inflicted: " + damageAmount);

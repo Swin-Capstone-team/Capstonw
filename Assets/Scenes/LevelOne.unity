@@ -276,8 +276,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 2, y: 1.0103339, z: 2}
-  m_Center: {x: -0.0034721375, y: -0.005166769, z: 0.5236891}
+  m_Size: {x: 2, y: 1.551115, z: 2}
+  m_Center: {x: -0.0034721375, y: -0.27555647, z: 0.5236891}
 --- !u!4 &64864758
 Transform:
   m_ObjectHideFlags: 0
@@ -1357,8 +1357,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.5888504, y: 1.0103339, z: 1.4303662}
-  m_Center: {x: -0.0034721375, y: -0.005166769, z: 0.5236891}
+  m_Size: {x: 1.5888504, y: 1.4440354, z: 1.4303662}
+  m_Center: {x: -0.0034721375, y: -0.22201686, z: 0.5236891}
 --- !u!4 &353634228
 Transform:
   m_ObjectHideFlags: 0
@@ -3485,7 +3485,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10.59
+      value: 5.99
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3591,15 +3591,14 @@ MonoBehaviour:
   player: {fileID: 30228734}
   followRange: {fileID: 1255464930}
   stompRange: {fileID: 353634225}
-  stompAttack: {fileID: 64864755}
+  stompHitbox: {fileID: 64864757}
   swipeRange: {fileID: 1528885433}
-  swipeAttack: {fileID: 1951356201}
+  swipeHitbox: {fileID: 1951356203}
   isFollowing: 0
   stompattackRange: 0
   swipeattackRange: 0
   isAttacking: 0
   health: 100
-  damage: 10
   speed: 10
   attackTimer: 0
 --- !u!54 &1011146456
