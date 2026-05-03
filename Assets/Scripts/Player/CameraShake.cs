@@ -21,21 +21,8 @@ public class CameraShake : MonoBehaviour
     private void Awake()
     {
         playerInput = GetComponentInParent<PlayerInputState>();
-        if (playerInput == null)
-        {
-            Debug.LogError("CameraShake requires PlayerInputState assigned in the Inspector or as a parent.", this);
-            enabled = false;
-            return;
-        }
-
         var virtualCamera = GetComponent<CinemachineVirtualCamera>();
         noise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        if (noise == null)
-        {
-            Debug.LogError("CameraShake requires a Cinemachine Basic Multi Channel Perlin noise component.", this);
-            enabled = false;
-            return;
-        }
 
         impulseSource = playerInput.GetComponent<CinemachineImpulseSource>();
 
@@ -47,8 +34,6 @@ public class CameraShake : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!enabled) return;
-
         float targetAmplitudeGain = playerInput.SprintHeld ? baseAmplitudeGain * sprintNoiseMultiplier : 0f;
         currentAmplitudeGain = Mathf.MoveTowards(currentAmplitudeGain, targetAmplitudeGain, noiseFadeSpeed * Time.deltaTime);
         noise.m_AmplitudeGain = currentAmplitudeGain;
@@ -58,17 +43,9 @@ public class CameraShake : MonoBehaviour
 
     public void PlayLandingShake(float fallSpeed)
     {
-        if (!enabled)
-        {
-            Debug.Log("PlayLandingShake called but CameraShake is disabled.", this);
-            return;
-        }
-
         float normalizedSpeed = Mathf.Clamp01(fallSpeed / landingSpeedForMaxImpulse);
         float curveT = landingImpulseCurve.Evaluate(normalizedSpeed);
         float scaledForce = Mathf.Lerp(landImpulseForce, maxLandImpulseForce, curveT);
-
-        Debug.Log($"PlayLandingShake: fallSpeed={fallSpeed:F2} normalized={normalizedSpeed:F2} scaledForce={scaledForce:F2}", this);
 
         impulseSource.GenerateImpulseWithVelocity(Vector3.down * scaledForce);
     }

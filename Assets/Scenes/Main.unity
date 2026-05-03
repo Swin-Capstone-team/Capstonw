@@ -3268,6 +3268,11 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1 &375394668 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8021186322358567283, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+  m_PrefabInstance: {fileID: 3053293063748303919}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &402357788
 GameObject:
   m_ObjectHideFlags: 0
@@ -11049,7 +11054,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 730152704774735949, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
   m_PrefabInstance: {fileID: 3053293063748303919}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 375394668}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 59a012f0b02de064294a28cd1cc7caf4, type: 3}
@@ -11060,12 +11065,65 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6159800898551102946, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
   m_PrefabInstance: {fileID: 3053293063748303919}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 375394668}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2484d3ff0fa47f24088845356147995b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+--- !u!114 &1416208315 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 141076187796556624, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+  m_PrefabInstance: {fileID: 3053293063748303919}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375394668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a0141430eb2cc90ba30e792981de59f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputState
+--- !u!136 &1416208317 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 7943722937436230036, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+  m_PrefabInstance: {fileID: 3053293063748303919}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &1416208318 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 6132413323070933807, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+  m_PrefabInstance: {fileID: 3053293063748303919}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1416208319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375394668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f90143135a56ca129a23f77529707829, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlideController
+  slideHeight: 0.5
+  slideSpeedBoost: 2
+  slideMinSlopeAngle: 10
+  slideMaxSpeed: 25
+  slideGravityMultiplier: 2
+  slideFrictionAdjustment: 0.05
+  slideCooldown: 1
+  slideDecayDuration: 3
+  slideStopSpeed: 0.1
+  slideStopSurfaceAngle: 60
+  slideStopUphillAngle: 25
+  rb: {fileID: 1416208318}
+  capsule: {fileID: 1416208317}
+  playerCamera: {fileID: 1750178763}
+  playerInput: {fileID: 1416208315}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  groundCheckDistance: 0.5
+  sprintSpeed: 12
 --- !u!1 &1422422825
 GameObject:
   m_ObjectHideFlags: 0
@@ -14953,6 +15011,11 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!4 &1750178763 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4164513468612024272, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+  m_PrefabInstance: {fileID: 3053293063748303919}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1753201032
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16588,7 +16651,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcc6c9da032c325c48bd2a50e70bc42f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraSprintNoise
-  settings: {fileID: 0}
   sprintNoiseMultiplier: 1
   noiseFadeSpeed: 8
   landImpulseForce: 0.35
@@ -18937,8 +18999,32 @@ PrefabInstance:
       value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 730152704774735949, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: slideCooldown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 730152704774735949, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: slideMaxSpeed
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 730152704774735949, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
       propertyPath: groundFriction
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 730152704774735949, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: slideStopSpeed
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 730152704774735949, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: slideController
+      value: 
+      objectReference: {fileID: 1416208319}
+    - target: {fileID: 730152704774735949, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: slideSpeedBoost
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 730152704774735949, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: slideDecayDuration
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 730152704774735949, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
       propertyPath: groundCheckDistance
@@ -19007,7 +19093,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8021186322358567283, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1416208319}
   m_SourcePrefab: {fileID: 100100000, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
 --- !u!1001 &5201973108855671928
 PrefabInstance:
