@@ -2910,6 +2910,8 @@ GameObject:
   - component: {fileID: 6159800898551102946}
   - component: {fileID: 9172992868836322229}
   - component: {fileID: 2221325639409464096}
+  - component: {fileID: 7279432708165357114}
+  - component: {fileID: 6367339942695658804}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -3198,6 +3200,36 @@ MonoBehaviour:
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: 0, y: -1, z: 0}
+--- !u!114 &7279432708165357114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8021186322358567283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4de318b09eed18e4db1b289aa0585075, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SprintCameraZoom
+  vcam: {fileID: 0}
+  normalDistance: 5
+  sprintDistance: 3
+  zoomSpeed: 5
+--- !u!114 &6367339942695658804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8021186322358567283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dca48b35d384bfb459c20a3470d4d43c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SprintSpeedLines
+  speedLines: {fileID: 0}
+  inputState: {fileID: 141076187796556624}
 --- !u!1 &8026314750805339795
 GameObject:
   m_ObjectHideFlags: 0

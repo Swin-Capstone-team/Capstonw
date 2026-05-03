@@ -12747,81 +12747,6 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
---- !u!1 &1111339891
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1111339892}
-  - component: {fileID: 1111339894}
-  - component: {fileID: 1111339893}
-  m_Layer: 5
-  m_Name: CrossHair (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1111339892
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1111339891}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.098405, y: 0.098405, z: 0.098405}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1425711281}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 227.5, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1111339893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1111339891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.1254902, g: 0.1254902, b: 0.1254902, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1111339894
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1111339891}
-  m_CullTransparentMesh: 1
 --- !u!1001 &1125482266
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15886,7 +15811,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 730152704774735949, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
   m_PrefabInstance: {fileID: 3053293063748303919}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1606509261}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 59a012f0b02de064294a28cd1cc7caf4, type: 3}
@@ -15897,7 +15822,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6159800898551102946, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
   m_PrefabInstance: {fileID: 3053293063748303919}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1606509261}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2484d3ff0fa47f24088845356147995b, type: 3}
@@ -18639,52 +18564,6 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
---- !u!1 &1606509261 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8021186322358567283, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
-  m_PrefabInstance: {fileID: 3053293063748303919}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1606509263
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1606509261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4de318b09eed18e4db1b289aa0585075, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SprintCameraZoom
-  vcam: {fileID: 1887950933}
-  normalDistance: 5
-  sprintDistance: 3
-  zoomSpeed: 5
---- !u!114 &1606509266 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 141076187796556624, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
-  m_PrefabInstance: {fileID: 3053293063748303919}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1606509261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a0141430eb2cc90ba30e792981de59f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputState
---- !u!114 &1606509270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1606509261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dca48b35d384bfb459c20a3470d4d43c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SprintSpeedLines
-  speedLines: {fileID: 93149646}
-  inputState: {fileID: 1606509266}
 --- !u!1 &1653449263
 GameObject:
   m_ObjectHideFlags: 0
@@ -23979,6 +23858,14 @@ PrefabInstance:
       propertyPath: ammoDisplay
       value: 
       objectReference: {fileID: 2086553142}
+    - target: {fileID: 6367339942695658804, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: speedLines
+      value: 
+      objectReference: {fileID: 93149646}
+    - target: {fileID: 7279432708165357114, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: vcam
+      value: 
+      objectReference: {fileID: 1887950933}
     - target: {fileID: 8021186322358567283, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
       propertyPath: m_Name
       value: Player
@@ -23986,13 +23873,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8021186322358567283, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1606509263}
-    - targetCorrespondingSourceObject: {fileID: 8021186322358567283, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1606509270}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
 --- !u!1001 &5201973108855671928
 PrefabInstance:

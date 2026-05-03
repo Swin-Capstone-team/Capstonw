@@ -208,8 +208,6 @@ public class PlayerMove : MonoBehaviour
             float modifier = grounded || (grappling && wallDetector != null && wallDetector.nearWall) ? 10 : airControl;
             
             Vector3 desiredVel = inputDir * currentSpeed;
-
-            float modifier = 10;
             Vector3 forceDir = desiredVel - currentVelocity;
             
             if(!grounded && !(grappling && wallDetector != null && wallDetector.nearWall))
