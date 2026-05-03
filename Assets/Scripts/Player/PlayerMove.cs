@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public bool grappling = false;
+    public bool grappling { get;  set; }
+    public bool slingshotting { get; set; }
     public float walkSpeed = 7f;
     public float sprintSpeed = 12f;
     public float acceleration = 1f;
@@ -14,22 +15,26 @@ public class PlayerMove : MonoBehaviour
     public float airControl = 0.5f;
     public float groundCheckDistance = 0.5f;
     public LayerMask groundMask;
-    public float currentSpeed = 0;
+    public float currentSpeed { get;  set; }
     public bool canMove = true;
 
     [Header("Slide Settings")]
-    public float slideFrictionAdjustment = 0.2f;
-    private float slideDuration = 1f;
-    private float wallrunTimer; // how long the slide lasts when initiated in air near wall
-    public float slideHeight = 0.5f;       // how short the collider gets while sliding
+    public float slideSpeedBoost = 1f;
+    public float slideMinSlopeAngle = 10f;
     private bool isSliding = false;
-    private float slideTimer = 0f;
     private float slideRefresh = 0f;
-    private float slideCooldown = 2f;
+    public float slideCooldown = 2.5f;
+    private float currentSlopeAngle = 0f;
+    private bool downhillSlide = false;
+    public float slideDecayDuration = 2.5f;
+    private float slideDecayElapsed = 0f;
+    private float slideStartHorizontalSpeed = 0f;
+    public float slideStopSpeed = 0.05f;
+    public float slideStopSurfaceAngle = 60f;
+    public float slideStopUphillAngle = 25f;
 
     [Header("Wall Run Settings")]
     private Vector3 wallRunDirection;
-    private float wallrunDuration = 1.5f; // how long the wallrun lasts
     bool isWallRunning = false;
     private float wallrunSpeed = 5f;
     private float wallmaxSpeed = 10f;
@@ -43,28 +48,25 @@ public class PlayerMove : MonoBehaviour
     [Header("Look Settings")]
     public float mouseSensitivity = 100f;
     public Transform playerCamera;
-    public float cameraSlideHeightAdjust = -0.5f;
-    public float lookDamping = 0.15f;  // Lower = smoother, 0-1 range
+    public float lookDamping = 0.15f;
     
     [Header("Animation Settings")]
     public Animator animator;
     private float lastYaw;
+    [SerializeField] private CameraShake cameraShake;
 
     private PlayerInputState _input;
     
     private Rigidbody rb;
-    private CapsuleCollider capsule;
     private float xRotation = 0f;
     private float targetXRotation = 0f;
     private float yawRotation = 0f;
     private float targetYawRotation = 0f;
     public bool grounded { get; private set; }
+    private bool wasGrounded;
+    private float lowestAirVelocityY;
+    private bool jumpedThisAir = false;
     private Vector3 inputDir;
-
-    // store original collider + camera info
-    private float originalColliderHeight;
-    private Vector3 originalColliderCenter;
-    private Vector3 originalCameraLocalPos;
 
     void Awake()
     {
@@ -81,17 +83,15 @@ public class PlayerMove : MonoBehaviour
         if (!enabled) return;
 
         rb = GetComponent<Rigidbody>();
-        capsule = GetComponent<CapsuleCollider>();
 
         rb.freezeRotation = true;
-
-        originalColliderHeight = capsule.height;
-        originalColliderCenter = capsule.center;
-        originalCameraLocalPos = playerCamera.localPosition;
+        if (cameraShake == null)
+        {
+            cameraShake = playerCamera.GetComponent<CameraShake>();
+        }
 
         Cursor.lockState = CursorLockMode.Locked;
-
-        wallrunTimer = slideDuration * 1.5f; //  wallrun slide lasts 50% longer than regular slide
+        slideRefresh = 0f;
     }
     
     void Update()
@@ -101,43 +101,32 @@ public class PlayerMove : MonoBehaviour
 
         slideRefresh -= Time.deltaTime;
 
-
-        // start slide and check for wallrun initiation
-        if (_input.CrouchPressedThisFrame && !isSliding && slideRefresh <= 0f)
+        if (_input.CrouchPressedThisFrame && !isSliding && slideRefresh <= 0f && _input.SprintHeld)
         {
-            if (!grounded && wallDetector.nearWall) // in air & near wall = wallrun
+            if (!grounded && wallDetector.nearWall)
             {
                 isWallRunning = true;
                 if(isWallRunning) { WallRun(); }
             }
-            else { StartSlide(); }
+            else if (grounded)
+            {
+                float slopeAngle = GetGroundSlopeAngle();
+                if (CanStartSlide(slopeAngle))
+                {
+                    StartSlide(slopeAngle);
+                }
+            }
         }
-        //Check for wallrun end conditions
+        
         if (isWallRunning)
         {
             if (!wallDetector.nearWall) { isWallRunning = false; }
         }
 
-        if (isWallRunning)
-        {
-            rb.useGravity = false; // disable gravity while wallrunning
-        } else if (!isWallRunning) { rb.useGravity = true; }
-       
+        rb.useGravity = !isWallRunning;
 
-        // end slide (timer or key up)
-        if (isSliding)
-        {   
+        UpdateSlideState();
 
-            slideTimer -= Time.deltaTime;   //timer countdown for slide duration
-            if (slideTimer <= 0f || _input.CrouchReleasedThisFrame)
-            {
-                StopSlide();    // stop slide when timer runs out or key is released
-            }
-        }
-
-       
-
-        // Collect input here (for FixedUpdate use)
         float moveX = _input.Move.x;
         float moveZ = _input.Move.y;
         inputDir = (transform.right * moveX + transform.forward * moveZ).normalized;
@@ -148,7 +137,7 @@ public class PlayerMove : MonoBehaviour
             {
                 Jump(Vector3.up);
             }
-            else if (wallDetector != null && wallDetector.nearWall)
+            else if (wallDetector.nearWall)
             {
                 WallJump();
             }
@@ -163,8 +152,7 @@ public class PlayerMove : MonoBehaviour
         {
             HandleWallRunMovement();
         }
-
-        else if (isSliding) // disable control while sliding
+        else if (isSliding)
         {
             HandleSlideMovement();
         }
@@ -172,8 +160,6 @@ public class PlayerMove : MonoBehaviour
         {
             HandleMovement();
         }
-       
-        
     }
 
     void HandleLook()
@@ -181,14 +167,11 @@ public class PlayerMove : MonoBehaviour
         float mouseX = _input.Look.x * mouseSensitivity;
         float mouseY = _input.Look.y * mouseSensitivity;
 
-        // Accumulate target rotations from input
         targetYawRotation += mouseX;
         targetXRotation -= mouseY;
         targetXRotation = Mathf.Clamp(targetXRotation, -90f, 90f);
 
-        // Player body rotates immediately to match input (no damping)
         yawRotation = targetYawRotation;
-        // Camera gets smoothly damped for comfortable viewing
         xRotation = Mathf.Lerp(xRotation, targetXRotation, lookDamping);
 
         transform.localRotation = Quaternion.Euler(0f, yawRotation, 0f);
@@ -197,32 +180,50 @@ public class PlayerMove : MonoBehaviour
 
     void HandleMovement()
     {
-        if (grappling) return;
-        float targetSpeed = _input.SprintHeld ? sprintSpeed : walkSpeed;
+        if (grappling && !slingshotting)
+        {
+            currentSpeed = Mathf.Min(rb.linearVelocity.magnitude, sprintSpeed);
+            return;
+        }
 
         if (inputDir.sqrMagnitude > 0.01f)
         { 
+            float targetSpeed = _input.SprintHeld ? sprintSpeed : walkSpeed;
             Vector3 currentVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             
-            if (grounded) // Can you accelerate in the air?
+            if (grounded)
             {
                 if(currentSpeed < targetSpeed) 
                 {
-                    currentSpeed += acceleration * (targetSpeed/walkSpeed); // Does sprinting increase acceleration or just max speed
+                    currentSpeed += acceleration * (targetSpeed/walkSpeed); 
                 }
 
-                if (new Vector2(currentVelocity.x, currentVelocity.z).sqrMagnitude > targetSpeed*targetSpeed) 
+                if (currentVelocity.sqrMagnitude > targetSpeed*targetSpeed) 
                 {
                     ApplyFriction();
                 }
             }
 
-            // Less control in the air
-            float modifier = grounded || (grappling && wallDetector != null && wallDetector.nearWall) ? 10 : airControl;
-            
             Vector3 desiredVel = inputDir * currentSpeed;
-            Vector3 forceDir = (desiredVel - currentVelocity) * modifier;
-            rb.AddForce(forceDir, ForceMode.Force);
+
+            float modifier = 10;
+            Vector3 forceDir = desiredVel - currentVelocity;
+            
+            if(!grounded && !(grappling && wallDetector != null && wallDetector.nearWall))
+            {
+                modifier = airControl;
+                if (currentVelocity.sqrMagnitude > desiredVel.sqrMagnitude)
+                {
+                    // If force is forward, subtract the force that is in the same direction as velocity
+                    if(Vector3.Dot(desiredVel, currentVelocity) > 0)
+                    {
+                        forceDir -= Vector3.Project(forceDir, currentVelocity);
+                    }
+                    
+                }
+            }
+            
+            rb.AddForce(forceDir * modifier, ForceMode.Force);
         }
         else if (grounded)
         {
@@ -241,24 +242,74 @@ public class PlayerMove : MonoBehaviour
 
     void HandleSlideMovement()
     {
-        // low friction → keeps momentum
-        // Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-        // Vector3 slideFriction = -horizontalVel * groundFriction * slideFrictionAdjustment;
-        // rb.AddForce(slideFriction, ForceMode.Acceleration);
+        Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        float horizontalMagnitude = horizontalVel.magnitude;
+
+        slideDecayElapsed += Time.fixedDeltaTime;
+        float decayT = Mathf.Clamp01(slideDecayElapsed / slideDecayDuration);
+        float targetHorizontalSpeed = Mathf.Lerp(slideStartHorizontalSpeed, 0f, decayT);
+
+        if (targetHorizontalSpeed <= slideStopSpeed || horizontalMagnitude < 0.0001f)
+        {
+            StopSlide();
+            return;
+        }
+
+        float clampedSpeed = Mathf.Min(horizontalMagnitude, targetHorizontalSpeed);
+        Vector3 horizontalDirection = horizontalVel / horizontalMagnitude;
+
+        rb.linearVelocity = new Vector3(
+            horizontalDirection.x * clampedSpeed,
+            rb.linearVelocity.y,
+            horizontalDirection.z * clampedSpeed
+        );
     }
 
-    void HandleWallRunMovement()    //Controls when wallrunning
+    void UpdateSlideState()
     {
-        Vector3 wallNormal = wallDetector.wallNormal;   // get wall normal from detector
+        if (!isSliding)
+        {
+            return;
+        }
 
-        Vector3 wallForward = Vector3.Cross(Vector3.up, wallNormal).normalized; // direction along the wall
+        currentSlopeAngle = GetGroundSlopeAngle();
 
-        rb.AddForce(-wallDetector.wallNormal * wallStickForce, ForceMode.Force);    // stick to wall
+        if (downhillSlide && currentSlopeAngle <= 0f && grounded)
+        {
+            downhillSlide = false;
+        }
+
+        if (_input.CrouchReleasedThisFrame || currentSlopeAngle < -slideStopUphillAngle)
+        {
+            StopSlide();
+            return;
+        }
+
+        float horizontalSpeedSqr = rb.linearVelocity.x * rb.linearVelocity.x + rb.linearVelocity.z * rb.linearVelocity.z;
+        if (horizontalSpeedSqr <= slideStopSpeed * slideStopSpeed)
+        {
+            StopSlide();
+        }
+    }
+
+    bool CanStartSlide(float slopeAngle)
+    {
+        return slopeAngle >= -slideStopUphillAngle;
+    }
+
+    void HandleWallRunMovement()
+    {
+        Vector3 wallNormal = wallDetector.wallNormal;
+
+        Vector3 wallForward = Vector3.Cross(Vector3.up, wallNormal).normalized;
+
+        rb.AddForce(-wallDetector.wallNormal * wallStickForce, ForceMode.Force);
 
         if (Vector3.Dot(wallForward, transform.forward) < 0f)
         {
             wallForward = -wallForward;
         }
+
         wallRunDirection = wallForward;
 
         if (_input.Move.y > 0.1f)
@@ -272,44 +323,71 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    void StartSlide()
+    void OnCollisionEnter(Collision collision)
     {
-        isSliding = true;
-        slideTimer = slideDuration;
-        slideRefresh = slideCooldown;
+        if (!isSliding) return;
 
-        // shrink collider
-        capsule.height = slideHeight;
-        capsule.center = new Vector3(originalColliderCenter.x, slideHeight / 2f, originalColliderCenter.z);
-
-        // lower camera
-        playerCamera.localPosition += new Vector3(0f, cameraSlideHeightAdjust, 0f);
-
-        // small forward impulse
-        rb.AddForce(transform.forward * 2f, ForceMode.Impulse);
+        if (ShouldStopSlideForCollision(collision))
+        {
+            StopSlide();
+        }
     }
 
-    void WallRun()  //Handles physics and setup for wallrunning when initiated in air near a wall
+    bool ShouldStopSlideForCollision(Collision collision)
+    {
+        foreach (ContactPoint contact in collision.contacts)
+        {
+            float surfaceAngle = Vector3.Angle(contact.normal, Vector3.up);
+            if (surfaceAngle >= slideStopSurfaceAngle)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void StartSlide(float slopeAngle)
+    {
+        currentSlopeAngle = slopeAngle;
+
+        if (currentSlopeAngle < -slideStopUphillAngle)
+        {
+            return;
+        }
+
+        isSliding = true;
+        slideRefresh = slideCooldown;
+        slideDecayElapsed = 0f;
+
+        Vector3 currentVel = rb.linearVelocity;
+        Vector3 horizontalVel = new Vector3(currentVel.x, 0f, currentVel.z);
+        float currentHorizontalSpeed = horizontalVel.magnitude;
+        slideStartHorizontalSpeed = Mathf.Max(currentHorizontalSpeed, sprintSpeed * slideSpeedBoost);
+
+        if (currentHorizontalSpeed > 0.1f)
+        {
+            Vector3 direction = horizontalVel.normalized;
+            rb.linearVelocity = new Vector3(direction.x * slideStartHorizontalSpeed, currentVel.y, direction.z * slideStartHorizontalSpeed);
+            downhillSlide = currentSlopeAngle > slideMinSlopeAngle;
+        }
+        else
+        {
+            rb.AddForce(transform.forward * slideStartHorizontalSpeed, ForceMode.Impulse);
+            downhillSlide = currentSlopeAngle > slideMinSlopeAngle;
+        }
+    }
+
+    void WallRun()
     {
         Vector3 wallNormal = wallDetector.wallNormal;
         isSliding = true;
         slideRefresh = slideCooldown;
-        slideTimer = wallrunTimer; // longer slide duration for wallrun
 
-        // shrink collider
-        capsule.height = slideHeight;
-        capsule.center = new Vector3(originalColliderCenter.x, slideHeight / 2f, originalColliderCenter.z);
-
-        // lower camera
-        playerCamera.localPosition = originalCameraLocalPos + new Vector3(0f, cameraSlideHeightAdjust, 0f);
-
-        // optional small boost
         rb.AddForce(transform.forward * 2f, ForceMode.Impulse);
 
-        // Get direction along the wall
         Vector3 wallForward = Vector3.Cross(Vector3.up, wallNormal).normalized;
 
-        // Flip if opposite to facing direction
         if (Vector3.Dot(wallForward, transform.forward) < 0f)
         {
             wallForward = -wallForward;
@@ -320,15 +398,12 @@ public class PlayerMove : MonoBehaviour
 
     void StopSlide()
     {
-        isWallRunning = false; // stop wallrun if we were wallrunning
+        isWallRunning = false;
         isSliding = false;
-
-        // restore collider
-        capsule.height = originalColliderHeight;
-        capsule.center = originalColliderCenter;
-
-        // restore camera
-        playerCamera.localPosition = originalCameraLocalPos;
+        downhillSlide = false;
+        slideDecayElapsed = 0f;
+        slideStartHorizontalSpeed = 0f;
+        slideRefresh = slideCooldown;
     }
 
     void Jump(Vector3 direction)
@@ -336,14 +411,16 @@ public class PlayerMove : MonoBehaviour
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         rb.AddForce(direction * jumpForce, ForceMode.Impulse);
 
-        if (animator != null) animator.SetTrigger("Jump");
+        jumpedThisAir = true;
 
-        if (isSliding) StopSlide(); // jump cancels slide
+        animator.SetTrigger("Jump");
+
+        if (isSliding) StopSlide();
     }
 
     void WallJump()
     {
-        if (wallDetector == null || wallDetector.wallNormal == Vector3.zero) return;
+        if (wallDetector.wallNormal == Vector3.zero) return;
 
         Vector3 jumpDir = wallDetector.wallNormal * wallPushAwayForce + Vector3.up * wallPushUpForce;
         Jump(jumpDir);
@@ -353,33 +430,65 @@ public class PlayerMove : MonoBehaviour
 
     void GroundCheck()
     {
+        wasGrounded = grounded;
         grounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundMask);
+
+        if (!grounded)
+        {
+            lowestAirVelocityY = Mathf.Min(lowestAirVelocityY, rb.linearVelocity.y);
+        }
+
+        if (!wasGrounded && grounded)
+        {
+            if (jumpedThisAir)
+            {
+                cameraShake?.PlayLandingShake(Mathf.Abs(lowestAirVelocityY));
+            }
+            jumpedThisAir = false;
+            lowestAirVelocityY = 0f;
+        }
+
+        if (grounded)
+        {
+            lowestAirVelocityY = 0f;
+        }
+    }
+    
+    float GetGroundSlopeAngle()
+    {
+        RaycastHit hit;
+        if (!Physics.Raycast(transform.position, Vector3.down, out hit, groundCheckDistance * 2f, groundMask))
+        {
+            return 0f;
+        }
+
+        float angle = Vector3.Angle(Vector3.up, hit.normal);
+
+        Vector3 slopeDir = Vector3.Cross(hit.normal, transform.right).normalized;
+        bool isDownslope = Vector3.Dot(slopeDir, transform.forward) > 0f;
+
+        if (angle < 2f) return 0f;
+        return isDownslope ? angle : -angle;
     }
 
     void UpdateAnimations()
     {
-        if (animator == null) return;
-
-        // Calculate local velocity for directional movement (X=Strafe, Z=Forward/Back)
         Vector3 localVel = transform.InverseTransformDirection(rb.linearVelocity);
 
-        // Calculate IsMoving by checking input
         animator.SetBool("IsMoving", _input.Move.sqrMagnitude > 0.01f);
-        
-        // Pass X and Z velocities roughly mapped -1 to 1 based on current running speed
+
         animator.SetFloat("VelocityX", localVel.x / sprintSpeed, 0.1f, Time.deltaTime);
         animator.SetFloat("VelocityZ", localVel.z / sprintSpeed, 0.1f, Time.deltaTime);
 
-        // Ground and Air states
         animator.SetBool("IsGrounded", grounded);
         animator.SetFloat("VerticalVelocity", rb.linearVelocity.y);
 
         animator.SetBool("IsTurning", Mathf.Abs(_input.Look.x) > 0.1f);
-        // Turn rate for left/right camera rotation animations
+
         float rawTurnRate = (yawRotation - lastYaw) / Time.deltaTime;
         float normalizedTurn = Mathf.Clamp(rawTurnRate / 20f, -1f, 1f);
         animator.SetFloat("Turn", normalizedTurn, 0.1f, Time.deltaTime);
-        
+
         lastYaw = yawRotation;
     }
 }
