@@ -3,28 +3,27 @@ using UnityEngine;
 public class SprintSpeedLines : MonoBehaviour
 {
     public ParticleSystem speedLines;
-    public PlayerInputState inputState;
+    public Rigidbody playerRigidbody;
+    public float speedThreshold = 10f;
 
-    private bool wasSprinting = false;
+    private bool wasFast = false;
 
     void Update()
     {
-        if (speedLines == null || inputState == null) return;
+        if (speedLines == null || playerRigidbody == null) return;
 
-        bool sprintingNow =
-            inputState.SprintHeld &&
-            inputState.Move.sqrMagnitude > 0.01f;
+        bool fastNow = playerRigidbody.linearVelocity.magnitude >= speedThreshold;
 
-        if (sprintingNow && !wasSprinting)
+        if (fastNow && !wasFast)
         {
             speedLines.Clear(true);
             speedLines.Play(true);
         }
-        else if (!sprintingNow && wasSprinting)
+        else if (!fastNow && wasFast)
         {
             speedLines.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
 
-        wasSprinting = sprintingNow;
+        wasFast = fastNow;
     }
 }

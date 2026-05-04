@@ -10,13 +10,19 @@ public class PlayerMove : MonoBehaviour
     public float walkSpeed = 7f;
     public float sprintSpeed = 12f;
     public float acceleration = 1f;
-    public float jumpForce = 7f;
+    public float jumpForce = 15.5f;
+    public float upwardMultiplier = 2f;
+    public float fallMultiplier = 3.5f;
+    public float lowJumpMultiplier = 4.5f;
     public float groundFriction = 12f;
-    public float airControl = 0.5f;
     public float groundCheckDistance = 0.5f;
     public LayerMask groundMask;
     public float currentSpeed { get;  set; }
     public bool canMove = true;
+
+    [Header("Air Strafing Settings")]
+    public float airMaxSpeed = 7f;
+    public float airAcceleration = 15f;
 
     [Header("Slide Settings")]
     public float slideSpeedBoost = 1f;
@@ -98,9 +104,71 @@ public class PlayerMove : MonoBehaviour
     {
         HandleLook();
         GroundCheck();
+        
+        UpdateTimers();
+        ParseInputDirection();
+        
+        HandleCrouchInput();
+        HandleJumpInput();
+        
+        UpdatePhysicsStates();
+        UpdateSlideState();
+        UpdateAnimations();
+    }
 
+    void FixedUpdate()
+    {
+        if (isWallRunning)
+        {
+            HandleWallRunMovement();
+        }
+        else if (isSliding)
+        {
+            HandleSlideMovement();
+            HandleGravityModifiers();
+        }
+        else
+        {
+            HandleStandardMovement();
+            HandleGravityModifiers();
+        }
+    }
+
+    private void HandleGravityModifiers()
+    {
+        if (!rb.useGravity) return;
+
+        if (rb.linearVelocity.y < 0)
+        {
+            rb.AddForce(Vector3.up * Physics.gravity.y * (fallMultiplier - 1f), ForceMode.Acceleration);
+        }
+        else if (rb.linearVelocity.y > 0)
+        {
+            if (!_input.JumpHeld)
+            {
+                rb.AddForce(Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1f), ForceMode.Acceleration);
+            }
+            else
+            {
+                rb.AddForce(Vector3.up * Physics.gravity.y * (upwardMultiplier - 1f), ForceMode.Acceleration);
+            }
+        }
+    }
+
+    private void UpdateTimers()
+    {
         slideRefresh -= Time.deltaTime;
+    }
 
+    private void ParseInputDirection()
+    {
+        float moveX = _input.Move.x;
+        float moveZ = _input.Move.y;
+        inputDir = (transform.right * moveX + transform.forward * moveZ).normalized;
+    }
+
+    private void HandleCrouchInput()
+    {
         if (_input.CrouchPressedThisFrame && !isSliding && slideRefresh <= 0f && _input.SprintHeld)
         {
             if (!grounded && wallDetector.nearWall)
@@ -117,49 +185,31 @@ public class PlayerMove : MonoBehaviour
                 }
             }
         }
-        
-        if (isWallRunning)
-        {
-            if (!wallDetector.nearWall) { isWallRunning = false; }
-        }
+    }
 
-        rb.useGravity = !isWallRunning;
-
-        UpdateSlideState();
-
-        float moveX = _input.Move.x;
-        float moveZ = _input.Move.y;
-        inputDir = (transform.right * moveX + transform.forward * moveZ).normalized;
-
+    private void HandleJumpInput()
+    {
         if (_input.JumpPressedThisFrame)
         {
             if (grounded)
             {
                 Jump(Vector3.up);
             }
-            else if (wallDetector.nearWall)
+            else if (wallDetector != null && wallDetector.nearWall)
             {
                 WallJump();
             }
         }
-        
-        UpdateAnimations();
     }
 
-    void FixedUpdate()
+    private void UpdatePhysicsStates()
     {
         if (isWallRunning)
         {
-            HandleWallRunMovement();
+            if (!wallDetector.nearWall) { isWallRunning = false; }
         }
-        else if (isSliding)
-        {
-            HandleSlideMovement();
-        }
-        else
-        {
-            HandleMovement();
-        }
+
+        rb.useGravity = !isWallRunning;
     }
 
     void HandleLook()
@@ -178,58 +228,75 @@ public class PlayerMove : MonoBehaviour
         playerCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 
-    void HandleMovement()
+    void HandleStandardMovement()
     {
-        if (grappling && !slingshotting)
-        {
-            currentSpeed = Mathf.Min(rb.linearVelocity.magnitude, sprintSpeed);
-            return;
-        }
+        if (HandleGrappleMovement()) return;
 
         if (inputDir.sqrMagnitude > 0.01f)
         { 
-            float targetSpeed = _input.SprintHeld ? sprintSpeed : walkSpeed;
             Vector3 currentVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             
+            if (!grounded && !(grappling && wallDetector != null && wallDetector.nearWall))
+            {
+                HandleAirStrafing(currentVelocity);
+                return;
+            }
+
             if (grounded)
             {
-                if(currentSpeed < targetSpeed) 
-                {
-                    currentSpeed += acceleration * (targetSpeed/walkSpeed); // Does sprinting increase acceleration or just max speed
-                }
-
-                if (new Vector2(currentVelocity.x, currentVelocity.z).sqrMagnitude > targetSpeed*targetSpeed) 
-                {
-                    ApplyFriction();
-                }
+                HandleGroundAcceleration(currentVelocity);
             }
 
-            // Less control in the air
-            float modifier = grounded || (grappling && wallDetector != null && wallDetector.nearWall) ? 10 : airControl;
-            
-            Vector3 desiredVel = inputDir * currentSpeed;
-            Vector3 forceDir = desiredVel - currentVelocity;
-            
-            if(!grounded && !(grappling && wallDetector != null && wallDetector.nearWall))
-            {
-                modifier = airControl;
-                if (currentVelocity.sqrMagnitude > desiredVel.sqrMagnitude)
-                {
-                    // If force is forward, subtract the force that is in the same direction as velocity
-                    if(Vector3.Dot(desiredVel, currentVelocity) > 0)
-                    {
-                        forceDir -= Vector3.Project(forceDir, currentVelocity);
-                    }
-                    
-                }
-            }
-            
-            rb.AddForce(forceDir * modifier, ForceMode.Force);
+            ApplyMovementForce(currentVelocity);
         }
         else if (grounded)
         {
             ApplyFriction(); 
         }
+    }
+
+    private bool HandleGrappleMovement()
+    {
+        if (grappling && !slingshotting && !grounded)
+        {
+            currentSpeed = Mathf.Min(rb.linearVelocity.magnitude, sprintSpeed);
+            return true;
+        }
+        return false;
+    }
+
+    private void HandleAirStrafing(Vector3 currentVelocity)
+    {
+        float projVel = Vector3.Dot(currentVelocity, inputDir);
+        float addSpeed = airMaxSpeed - projVel;
+        
+        if (addSpeed > 0)
+        {
+            rb.AddForce(inputDir * airAcceleration, ForceMode.Acceleration);
+        }
+    }
+
+    private void HandleGroundAcceleration(Vector3 currentVelocity)
+    {
+        float targetSpeed = _input.SprintHeld ? sprintSpeed : walkSpeed;
+        if(currentSpeed < targetSpeed) 
+        {
+            currentSpeed += acceleration * (targetSpeed/walkSpeed);
+        }
+
+        if (new Vector2(currentVelocity.x, currentVelocity.z).sqrMagnitude > targetSpeed*targetSpeed) 
+        {
+            ApplyFriction();
+        }
+    }
+
+    private void ApplyMovementForce(Vector3 currentVelocity)
+    {
+        float modifier = grounded || (grappling && wallDetector != null && wallDetector.nearWall) ? 10 : 1f;
+        Vector3 desiredVel = inputDir * currentSpeed;
+        Vector3 forceDir = desiredVel - currentVelocity;
+        
+        rb.AddForce(forceDir * modifier, ForceMode.Force);
     }
     
     void ApplyFriction()
@@ -423,11 +490,9 @@ public class PlayerMove : MonoBehaviour
     {
         if (wallDetector.wallNormal == Vector3.zero) return;
 
-        Vector3 jumpDir = wallDetector.wallNormal * wallPushAwayForce + Vector3.up * wallPushUpForce;
-        Jump(jumpDir);
+        Vector3 jumpDir = (wallDetector.wallNormal * wallPushAwayForce + Vector3.up * wallPushUpForce).normalized;
+        Jump(jumpDir * 1.5f);
     }
-
-    
 
     void GroundCheck()
     {

@@ -4,12 +4,14 @@ using Cinemachine;
 public class SprintCameraZoom : MonoBehaviour
 {
     public CinemachineVirtualCamera vcam;
+    public Rigidbody playerRigidbody;
 
     private Cinemachine3rdPersonFollow follow;
 
     [Header("Zoom Settings")]
     public float normalDistance = 5f;
     public float sprintDistance = 3f;
+    public float speedThreshold = 10f;
     public float zoomSpeed = 5f;
 
     void Start()
@@ -19,9 +21,9 @@ public class SprintCameraZoom : MonoBehaviour
 
     void Update()
     {
-        bool isSprinting = Input.GetKey(KeyCode.LeftShift);
+        bool isFast = playerRigidbody != null && playerRigidbody.linearVelocity.magnitude >= speedThreshold;
 
-        float targetDistance = isSprinting ? sprintDistance : normalDistance;
+        float targetDistance = isFast ? sprintDistance : normalDistance;
 
         follow.CameraDistance = Mathf.Lerp(
             follow.CameraDistance,
