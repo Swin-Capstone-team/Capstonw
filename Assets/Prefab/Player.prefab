@@ -3047,14 +3047,18 @@ MonoBehaviour:
   walkSpeed: 4
   sprintSpeed: 8
   acceleration: 0.05
-  jumpForce: 4
+  jumpForce: 12
+  upwardMultiplier: 2
+  fallMultiplier: 2
+  lowJumpMultiplier: 3
   groundFriction: 8
-  airControl: 0
   groundCheckDistance: 1
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
   canMove: 1
+  airMaxSpeed: 7
+  airAcceleration: 15
   slideSpeedBoost: 2
   slideMinSlopeAngle: 10
   slideCooldown: 1
@@ -3110,7 +3114,7 @@ MonoBehaviour:
   releaseBoost: 2
   grappleIndicatorPrefab: {fileID: 6140398287122407268, guid: c235a6176978a1541a238729dbf6f4e2, type: 3}
   maximumWindUp: 10
-  slingForce: 4
+  slingForce: 6
   slingForwardBoost: 0.5
   slingUpwardBoost: 0.1
   slingMinYDir: 0.7
@@ -3213,8 +3217,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SprintCameraZoom
   vcam: {fileID: 0}
+  playerRigidbody: {fileID: 6132413323070933807}
   normalDistance: 5
-  sprintDistance: 3
+  sprintDistance: 4
+  speedThreshold: 10
   zoomSpeed: 5
 --- !u!114 &6367339942695658804
 MonoBehaviour:
@@ -3229,7 +3235,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SprintSpeedLines
   speedLines: {fileID: 0}
-  inputState: {fileID: 141076187796556624}
+  playerRigidbody: {fileID: 6132413323070933807}
+  speedThreshold: 10
 --- !u!1 &8026314750805339795
 GameObject:
   m_ObjectHideFlags: 0

@@ -32,8 +32,6 @@ public class PlayerInputState : MonoBehaviour
     public bool RightSwingPressedThisFrame => _actions.Player.RightSwing.WasPressedThisFrame();
     public bool RightSwingReleasedThisFrame => _actions.Player.RightSwing.WasReleasedThisFrame();
 
-    public bool AttackPressedThisFrame => _actions.Player.Attack.WasPressedThisFrame();
-
     public bool RestartPressedThisFrame => _actions.Player.Restart.WasPressedThisFrame();
 
 
@@ -67,7 +65,6 @@ public class PlayerInputState : MonoBehaviour
         LogActionPress(_actions.Player.Crouch, "Crouch");
         LogActionPress(_actions.Player.LeftSwing, "LeftSwing");
         LogActionPress(_actions.Player.RightSwing, "RightSwing");
-        LogActionPress(_actions.Player.Attack, "Attack");
     }
 }
 
