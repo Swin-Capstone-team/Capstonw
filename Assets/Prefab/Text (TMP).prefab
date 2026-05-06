@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4441868986788830000}
   - component: {fileID: 8985939336993482709}
   - component: {fileID: 3605795627944773550}
-  - component: {fileID: 3415043879750155366}
+  - component: {fileID: -4277098455175568861}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -107,9 +107,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '999
-
-'
+  m_text: 999
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -184,7 +182,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 8985939336993482709}
   m_maskType: 0
---- !u!114 &3415043879750155366
+--- !u!114 &-4277098455175568861
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -193,7 +191,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 9058765282153170658}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2c2cc8d6b45c5445b4f9b380fcc40aa, type: 3}
+  m_Script: {fileID: 11500000, guid: e32c48f200a7042a8ac300769f2a7b4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FloatingDamage
   moveSpeed: 1.5

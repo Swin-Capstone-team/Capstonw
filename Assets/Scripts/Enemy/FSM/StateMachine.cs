@@ -41,6 +41,11 @@ public class StateMachine
       if (state == _currentState)
          return;
       
+      // Log the change: Shows what the old state was and what the new one is
+      string oldStateName = _currentState?.GetType().Name ?? "None";
+      string newStateName = state?.GetType().Name ?? "None";
+      Debug.Log($"<color=cyan>State Change:</color> {oldStateName} -> {newStateName}");
+
       _currentState?.OnExit();
       _currentState = state;
       

@@ -1,44 +1,55 @@
 using UnityEngine;
-using System.Collections; // Required for Coroutines
+using System.Collections;
 
-[RequireComponent(typeof(Renderer))]
 public class EnemyHealth : Health
 {
     [Header("Enemy Feedback")]
-    public float flashDuration = 0.25f;
+    public float flashDuration = 0.2f;
     private Renderer rend;
-    private Color originalColor;
-    private float flashTimer;
     private Rigidbody rb;
-    
     private UnityEngine.AI.NavMeshAgent agent;
+    
+    private EnemyBase enemyBase; 
 
     protected override void Start()
     {
-        base.Start(); 
+        base.Start();
         rend = GetComponentInChildren<Renderer>();
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        enemyBase = GetComponent<EnemyBase>();
 
-        if (rend != null) originalColor = rend.material.color;
-        
-        if (rb != null) rb.isKinematic = true;
+        if (rb != null) rb.isKinematic = true; 
     }
 
-    public void TakeHit(float damage, Vector3 dir, float force)
+    public override void TakeDamage(DamageInfo info)
     {
-        TakeDamage(damage); 
+        base.TakeDamage(info);
 
-        if (rend != null)
+        if (rend != null) 
         {
-            rend.material.color = Color.red;
-            flashTimer = flashDuration;
+            StopCoroutine(nameof(FlashRoutine)); 
+            StartCoroutine(FlashRoutine());
         }
 
         if (rb != null && agent != null)
         {
-            StopAllCoroutines(); 
-            StartCoroutine(HandleKnockback(dir, force));
+            StartCoroutine(HandleKnockback(info.direction, info.force));
+        }
+    }
+
+    private IEnumerator FlashRoutine()
+    {
+        rend.material.color = Color.red; 
+        yield return new WaitForSeconds(flashDuration);
+
+        if (enemyBase != null)
+        {
+            rend.material.color = enemyBase.CurrentStateColor;
+        }
+        else
+        {
+            rend.material.color = Color.grey;
         }
     }
 
@@ -52,21 +63,10 @@ public class EnemyHealth : Health
 
         yield return new WaitForFixedUpdate();
 
-        while (rb.linearVelocity.magnitude > 0.2f)
-        {
-            yield return null;
-        }
+        while (rb.linearVelocity.magnitude > 0.2f) yield return null;
 
         rb.isKinematic = true;
-        agent.enabled = true;
-    }
-
-    void Update()
-    {
-        if (flashTimer > 0f)
-        {
-            flashTimer -= Time.deltaTime;
-            if (flashTimer <= 0f && rend != null) rend.material.color = originalColor;
-        }
+        
+        if (currentHealth > 0) agent.enabled = true; 
     }
 }

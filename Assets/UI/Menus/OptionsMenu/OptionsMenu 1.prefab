@@ -73,54 +73,45 @@ MonoBehaviour:
   valueContainerClass: controlOptionSettingsContainer
   listeningText: Press any key...
   unboundText: None
+  backAction: {fileID: 7727032971491509709, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   entries:
   - rowId: MOVE_FORWARD
-    uiLabel: MOVE FORWARD
     actionReference: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     compositePartName: Up
     bindingGroup: 
   - rowId: MOVE_BACKWARD
-    uiLabel: MOVE BACKWARD
     actionReference: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     compositePartName: Down
     bindingGroup: 
   - rowId: MOVE_LEFT
-    uiLabel: MOVE LEFT
     actionReference: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     compositePartName: Left
     bindingGroup: 
   - rowId: MOVE_RIGHT
-    uiLabel: MOVE RIGHT
     actionReference: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     compositePartName: Right
     bindingGroup: 
   - rowId: INTERACT
-    uiLabel: INTERACT
     actionReference: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     compositePartName: 
     bindingGroup: 
   - rowId: JUMP
-    uiLabel: JUMP
     actionReference: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     compositePartName: 
     bindingGroup: 
   - rowId: RUN
-    uiLabel: RUN
     actionReference: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     compositePartName: 
     bindingGroup: 
   - rowId: TOGGLE_WALK
-    uiLabel: TOGGLE WALK
     actionReference: {fileID: 0}
     compositePartName: 
     bindingGroup: 
   - rowId: MELEE
-    uiLabel: MELEE
     actionReference: {fileID: 1120369429361536294, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     compositePartName: 
     bindingGroup: 
   - rowId: SHOOT
-    uiLabel: SHOOT
-    actionReference: {fileID: 1120369429361536294, guid: 60af052f734c37b22b3f0d83b52b6b91, type: 3}
+    actionReference: {fileID: 0}
     compositePartName: 
     bindingGroup: 

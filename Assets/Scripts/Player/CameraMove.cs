@@ -10,6 +10,18 @@ public class CameraMove : MonoBehaviour
     private float yaw;
     private float pitch;
 
+    private PlayerInputState _input;
+
+    void Awake()
+    {
+        _input ??= GetComponentInParent<PlayerInputState>();
+
+        if (_input != null) return;
+
+        Debug.LogError("PlayerMove requires PlayerInputState on this object or a parent.", this);
+        enabled = false;
+    }
+
     void Start()
     {
         Vector3 angles = transform.localEulerAngles;
@@ -22,14 +34,11 @@ public class CameraMove : MonoBehaviour
 
     void LateUpdate()
     {
-        if (Mouse.current == null) return;
-
-        Vector2 mouseDelta = Mouse.current.delta.ReadValue();
-
-        yaw += mouseDelta.x * sensitivity;
-        pitch -= mouseDelta.y * sensitivity;
+        yaw += _input.Look.x * sensitivity;
+        pitch -= _input.Look.y * sensitivity;
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
 
-        transform.localRotation = Quaternion.Euler(pitch, yaw, 0f);
+        // transform.localRotation = Quaternion.Euler(pitch, yaw, 0f);
+        transform.localRotation = Quaternion.Euler(pitch, 0f, 0f);
     }
 }

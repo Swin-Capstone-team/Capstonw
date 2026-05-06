@@ -4,11 +4,10 @@ using UnityEngine;
 public class PlayerHealth : Health
 {
     public Animator animator;
-    public float hitStunTime = 0.2f;
-
-    private bool isDead = false;
-    private float hitTimer = 0f;
+    public float hitStunTime = 0.25f;
     private PlayerMove move;
+    public float currentHealth;
+    private float hitTimer = 0f;
 
     protected override void Start()
     {
@@ -21,44 +20,27 @@ public class PlayerHealth : Health
         if (hitTimer > 0f)
         {
             hitTimer -= Time.deltaTime;
-
-            if (hitTimer <= 0f && move != null && !isDead)
-            {
-                move.enabled = true;
-            }
+            // Restore movement control after hitstun ends
+            if (hitTimer <= 0f && move != null && !isDead) move.canMove = true;
         }
-
-        // Test keys
-        if (Input.GetKeyDown(KeyCode.K))
+        if (currentHealth <= 0f && !isDead)
         {
-            TakeDamage(1000f);
-        }
-
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            TakeDamage(10f);
+            Die();
         }
     }
 
-    public override void TakeDamage(float damage)
+    public override void TakeDamage(DamageInfo info)
     {
         if (isDead) return;
 
-        // small damage = hit animation
-        if (damage < 1000f && animator != null)
-        {
-            animator.ResetTrigger("Hit");
-            animator.SetTrigger("Hit");
-        }
+        // Trigger the Hit animation
+        if (animator != null) animator.SetTrigger("Hit");
 
+        // Disable movement for a short duration
         hitTimer = hitStunTime;
+        if (move != null) move.canMove = false;
 
-        if (move != null)
-        {
-            move.enabled = false;
-        }
-
-        base.TakeDamage(damage);
+        base.TakeDamage(info);
     }
 
     protected override void Die()
@@ -66,15 +48,7 @@ public class PlayerHealth : Health
         if (isDead) return;
         isDead = true;
 
-        if (animator != null)
-        {
-            animator.ResetTrigger("Hit");
-            animator.SetTrigger("Die");
-        }
-
-        if (move != null)
-        {
-            move.enabled = false;
-        }
+        if (animator != null) animator.SetTrigger("Die");
+        if (move != null) move.canMove = false;
     }
 }

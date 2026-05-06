@@ -1,55 +1,52 @@
 using UnityEngine;
+using UnityEngine.Events;
 
-public class Health : MonoBehaviour
+public class Health : MonoBehaviour, IDamageable
 {
+    [Header("Base Health Settings")]
     public float maxHealth = 100f;
     public GameObject damageTextPrefab;
     public Transform damageTextSpawnPoint;
 
-    private float currentHealth;
     public float CurrentHealth => currentHealth;
+
+    [Header("Events")]
+    public UnityEvent<float> OnHealthChanged;
+
+    protected float currentHealth;
+    protected bool isDead = false;
 
     protected virtual void Start()
     {
         currentHealth = maxHealth;
+        OnHealthChanged?.Invoke(currentHealth);
     }
 
-    public virtual void TakeDamage(float damage)
+    // Required by IDamageable. 'virtual' allows subclasses to add their own logic.
+    public virtual void TakeDamage(DamageInfo info)
     {
-        currentHealth -= damage;
+        if (isDead) return;
+
+        currentHealth -= info.amount;
         currentHealth = Mathf.Max(currentHealth, 0f);
 
+        OnHealthChanged?.Invoke(currentHealth);
+
+        // Spawn floating text if a prefab is assigned
         if (damageTextPrefab != null)
         {
-            Vector3 spawnPos = transform.position + Vector3.up * 0.1f;
-
-            if (damageTextSpawnPoint != null)
-            {
-                spawnPos = damageTextSpawnPoint.position;
-            }
-
+            Vector3 spawnPos = damageTextSpawnPoint != null ? damageTextSpawnPoint.position : transform.position + Vector3.up;
             GameObject textObj = Instantiate(damageTextPrefab, spawnPos, Quaternion.identity);
-
-            FloatingDamage floatingDamage = textObj.GetComponent<FloatingDamage>();
-            if (floatingDamage != null)
-            {
-                floatingDamage.SetText(damage.ToString("0"));
-            }
+            if (textObj.TryGetComponent(out FloatingDamage fd)) fd.SetText(info.amount.ToString("0"));
         }
 
-        if (currentHealth <= 0f)
-        {
-            Die();
-        }
-    }
-
-    public void ResetHealth()
-    {
-        currentHealth = maxHealth;
+        if (currentHealth <= 0f) Die();
     }
 
     protected virtual void Die()
     {
+        if (isDead) return;
+        isDead = true;
         Destroy(gameObject);
     }
 }
