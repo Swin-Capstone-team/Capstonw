@@ -52,9 +52,8 @@ public class PlayerMove : MonoBehaviour
     public float wallPushUpForce = 3f;
 
     [Header("Look Settings")]
-    public float mouseSensitivity = 100f;
+    public Transform orientation;
     public Transform playerCamera;
-    public float lookDamping = 0.15f;
     
     [Header("Animation Settings")]
     public Animator animator;
@@ -102,7 +101,6 @@ public class PlayerMove : MonoBehaviour
     
     void Update()
     {
-        HandleLook();
         GroundCheck();
         
         UpdateTimers();
@@ -164,7 +162,15 @@ public class PlayerMove : MonoBehaviour
     {
         float moveX = _input.Move.x;
         float moveZ = _input.Move.y;
-        inputDir = (transform.right * moveX + transform.forward * moveZ).normalized;
+        
+        if (orientation != null)
+        {
+            inputDir = (orientation.right * moveX + orientation.forward * moveZ).normalized;
+        }
+        else
+        {
+            inputDir = (transform.right * moveX + transform.forward * moveZ).normalized;
+        }
     }
 
     private void HandleCrouchInput()
@@ -210,22 +216,6 @@ public class PlayerMove : MonoBehaviour
         }
 
         rb.useGravity = !isWallRunning;
-    }
-
-    void HandleLook()
-    {
-        float mouseX = _input.Look.x * mouseSensitivity;
-        float mouseY = _input.Look.y * mouseSensitivity;
-
-        targetYawRotation += mouseX;
-        targetXRotation -= mouseY;
-        targetXRotation = Mathf.Clamp(targetXRotation, -90f, 90f);
-
-        yawRotation = targetYawRotation;
-        xRotation = Mathf.Lerp(xRotation, targetXRotation, lookDamping);
-
-        transform.localRotation = Quaternion.Euler(0f, yawRotation, 0f);
-        playerCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 
     void HandleStandardMovement()
@@ -539,7 +529,8 @@ public class PlayerMove : MonoBehaviour
 
     void UpdateAnimations()
     {
-        Vector3 localVel = transform.InverseTransformDirection(rb.linearVelocity);
+        Transform refTransform = orientation != null ? orientation : transform;
+        Vector3 localVel = refTransform.InverseTransformDirection(rb.linearVelocity);
 
         animator.SetBool("IsMoving", _input.Move.sqrMagnitude > 0.01f);
 
@@ -549,12 +540,13 @@ public class PlayerMove : MonoBehaviour
         animator.SetBool("IsGrounded", grounded);
         animator.SetFloat("VerticalVelocity", rb.linearVelocity.y);
 
-        animator.SetBool("IsTurning", Mathf.Abs(_input.Look.x) > 0.1f);
-
-        float rawTurnRate = (yawRotation - lastYaw) / Time.deltaTime;
-        float normalizedTurn = Mathf.Clamp(rawTurnRate / 20f, -1f, 1f);
+        float currentYaw = refTransform.eulerAngles.y;
+        float rawTurnRate = Mathf.DeltaAngle(lastYaw, currentYaw) / Time.deltaTime;
+        animator.SetBool("IsTurning", Mathf.Abs(rawTurnRate) > 5f);
+        
+        float normalizedTurn = Mathf.Clamp(rawTurnRate / 180f, -1f, 1f);
         animator.SetFloat("Turn", normalizedTurn, 0.1f, Time.deltaTime);
 
-        lastYaw = yawRotation;
+        lastYaw = currentYaw;
     }
 }

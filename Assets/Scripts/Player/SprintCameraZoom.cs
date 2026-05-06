@@ -3,10 +3,8 @@ using Cinemachine;
 
 public class SprintCameraZoom : MonoBehaviour
 {
-    public CinemachineVirtualCamera vcam;
+    public CinemachineFreeLook follow;
     public Rigidbody playerRigidbody;
-
-    private Cinemachine3rdPersonFollow follow;
 
     [Header("Zoom Settings")]
     public float normalDistance = 5f;
@@ -14,19 +12,29 @@ public class SprintCameraZoom : MonoBehaviour
     public float speedThreshold = 10f;
     public float zoomSpeed = 5f;
 
-    void Start()
-    {
-        follow = vcam.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
-    }
-
     void Update()
     {
         bool isFast = playerRigidbody != null && playerRigidbody.linearVelocity.magnitude >= speedThreshold;
 
         float targetDistance = isFast ? sprintDistance : normalDistance;
 
-        follow.CameraDistance = Mathf.Lerp(
-            follow.CameraDistance,
+        follow.m_Orbits[0].m_Radius = Mathf.Lerp(
+            follow.m_Orbits[0].m_Radius,
+            targetDistance,
+            Time.deltaTime * zoomSpeed
+        );
+        follow.m_Orbits[1].m_Radius = Mathf.Lerp(
+            follow.m_Orbits[1].m_Radius,
+            targetDistance,
+            Time.deltaTime * zoomSpeed
+        );
+        follow.m_Orbits[2].m_Radius = Mathf.Lerp(
+            follow.m_Orbits[2].m_Radius,
+            targetDistance,
+            Time.deltaTime * zoomSpeed
+        );
+        follow.m_Orbits[2].m_Radius = Mathf.Lerp(
+            follow.m_Orbits[2].m_Radius,
             targetDistance,
             Time.deltaTime * zoomSpeed
         );
