@@ -38,6 +38,10 @@ public class PlayerMove : MonoBehaviour
     public float slideStopSpeed = 0.05f;
     public float slideStopSurfaceAngle = 60f;
     public float slideStopUphillAngle = 25f;
+    private bool queuedSlideOnLand = false;
+    public float slideRequireSpeed = 0f; // if <=0, defaults to walkSpeed at Start()
+    private bool sprintLatched = false;
+    public float autoSprintSpeed = 0f; // if <=0, defaults to walkSpeed at Start()
 
     [Header("Wall Run Settings")]
     private Vector3 wallRunDirection;
@@ -97,6 +101,8 @@ public class PlayerMove : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         slideRefresh = 0f;
+        if (slideRequireSpeed <= 0f) slideRequireSpeed = walkSpeed;
+        if (autoSprintSpeed <= 0f) autoSprintSpeed = walkSpeed;
     }
     
     void Update()
@@ -171,11 +177,24 @@ public class PlayerMove : MonoBehaviour
         {
             inputDir = (transform.right * moveX + transform.forward * moveZ).normalized;
         }
+
+        // Latch sprint when player holds sprint while moving; clear when movement stops
+        if (_input.SprintHeld && inputDir.sqrMagnitude > 0.01f)
+        {
+            sprintLatched = true;
+        }
+
+        if (inputDir.sqrMagnitude <= 0.01f)
+        {
+            sprintLatched = false;
+        }
     }
 
     private void HandleCrouchInput()
     {
-        if (_input.CrouchPressedThisFrame && !isSliding && slideRefresh <= 0f && _input.SprintHeld)
+        float horizSpeed = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z).magnitude;
+
+        if (_input.CrouchPressedThisFrame && !isSliding && slideRefresh <= 0f && (_input.SprintHeld || sprintLatched || horizSpeed >= slideRequireSpeed))
         {
             if (!grounded && wallDetector.nearWall)
             {
@@ -190,6 +209,20 @@ public class PlayerMove : MonoBehaviour
                     StartSlide(slopeAngle);
                 }
             }
+            else
+            {
+                // Player pressed crouch while airborne -> queue slide on landing if moving fast enough or sprinting (latched)
+                if (_input.SprintHeld || sprintLatched || horizSpeed >= slideRequireSpeed)
+                {
+                    queuedSlideOnLand = true;
+                }
+            }
+        }
+
+        // Cancel queued slide if crouch released before landing
+        if (_input.CrouchReleasedThisFrame)
+        {
+            queuedSlideOnLand = false;
         }
     }
 
@@ -268,7 +301,8 @@ public class PlayerMove : MonoBehaviour
 
     private void HandleGroundAcceleration(Vector3 currentVelocity)
     {
-        float targetSpeed = _input.SprintHeld ? sprintSpeed : walkSpeed;
+        bool isSprinting = _input.SprintHeld || sprintLatched;
+        float targetSpeed = isSprinting ? sprintSpeed : walkSpeed;
         if(currentSpeed < targetSpeed) 
         {
             currentSpeed += acceleration * (targetSpeed/walkSpeed);
@@ -434,6 +468,8 @@ public class PlayerMove : MonoBehaviour
             rb.AddForce(transform.forward * slideStartHorizontalSpeed, ForceMode.Impulse);
             downhillSlide = currentSlopeAngle > slideMinSlopeAngle;
         }
+        // Ensure movement systems know our current horizontal speed (preserve momentum)
+        currentSpeed = slideStartHorizontalSpeed;
     }
 
     void WallRun()
@@ -502,6 +538,27 @@ public class PlayerMove : MonoBehaviour
             }
             jumpedThisAir = false;
             lowestAirVelocityY = 0f;
+
+            // Auto-latch sprint on landing if horizontal speed is high enough
+            float horizSpeedLanding = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z).magnitude;
+            if (horizSpeedLanding >= autoSprintSpeed)
+            {
+                sprintLatched = true;
+            }
+
+            // If player queued a slide while airborne, try to start it on landing
+            if (queuedSlideOnLand && slideRefresh <= 0f)
+            {
+                if (_input.SprintHeld || sprintLatched || horizSpeedLanding >= slideRequireSpeed)
+                {
+                    float slopeAngle = GetGroundSlopeAngle();
+                    if (CanStartSlide(slopeAngle))
+                    {
+                        StartSlide(slopeAngle);
+                    }
+                }
+                queuedSlideOnLand = false;
+            }
         }
 
         if (grounded)
