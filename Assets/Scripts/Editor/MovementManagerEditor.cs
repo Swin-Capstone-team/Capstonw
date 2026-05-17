@@ -4,45 +4,36 @@ using UnityEngine;
 [CustomEditor(typeof(MovementManager))]
 public class MovementManagerEditor : Editor
 {
-    private SerializedProperty runtimeDebugProperty;
-
-    private void OnEnable()
-    {
-        runtimeDebugProperty = serializedObject.FindProperty("runtimeDebug");
-    }
-
     public override void OnInspectorGUI()
     {
-        serializedObject.Update();
+        DrawDefaultInspector();
 
-        DrawPropertiesExcluding(serializedObject, "runtimeDebug");
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Runtime Debug", EditorStyles.boldLabel);
 
-        if (runtimeDebugProperty != null)
+        using (new EditorGUI.DisabledScope(true))
         {
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Runtime Debug", EditorStyles.boldLabel);
-
-            using (new EditorGUI.DisabledScope(true))
-            {
-                DrawRuntimeDebugFields();
-            }
+            DrawRuntimeDebugFields((MovementManager)target);
         }
-
-        serializedObject.ApplyModifiedProperties();
     }
 
-    private void DrawRuntimeDebugFields()
+    public override bool RequiresConstantRepaint()
+    {
+        return Application.isPlaying;
+    }
+
+    private static void DrawRuntimeDebugFields(MovementManager manager)
     {
         EditorGUI.indentLevel++;
-        EditorGUILayout.PropertyField(runtimeDebugProperty.FindPropertyRelative("configuredSpeed"));
-        EditorGUILayout.PropertyField(runtimeDebugProperty.FindPropertyRelative("horizontalSpeed"));
-        EditorGUILayout.PropertyField(runtimeDebugProperty.FindPropertyRelative("verticalSpeed"));
-        EditorGUILayout.PropertyField(runtimeDebugProperty.FindPropertyRelative("slopeAngle"));
-        EditorGUILayout.PropertyField(runtimeDebugProperty.FindPropertyRelative("grounded"));
-        EditorGUILayout.PropertyField(runtimeDebugProperty.FindPropertyRelative("inAir"));
-        EditorGUILayout.PropertyField(runtimeDebugProperty.FindPropertyRelative("sliding"));
-        EditorGUILayout.PropertyField(runtimeDebugProperty.FindPropertyRelative("queuedSlideOnLand"));
-        EditorGUILayout.PropertyField(runtimeDebugProperty.FindPropertyRelative("currentState"));
+        EditorGUILayout.FloatField("Configured Speed", manager.CurrentSpeed);
+        EditorGUILayout.FloatField("Horizontal Speed", manager.HorizontalSpeed);
+        EditorGUILayout.FloatField("Vertical Speed", manager.VerticalSpeed);
+        EditorGUILayout.FloatField("Slope Angle", manager.CurrentGroundSlopeAngle);
+        EditorGUILayout.Toggle("Grounded", manager.IsGrounded);
+        EditorGUILayout.Toggle("In Air", !manager.IsGrounded);
+        EditorGUILayout.Toggle("Sliding", manager.IsSliding);
+        EditorGUILayout.Toggle("Queued Slide On Land", manager.HasQueuedSlideOnLand);
+        EditorGUILayout.TextField("Current State", manager.CurrentStateName);
         EditorGUI.indentLevel--;
     }
 }

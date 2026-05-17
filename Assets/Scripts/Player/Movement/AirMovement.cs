@@ -29,9 +29,9 @@ public class AirMovement : MonoBehaviour, IMovementState
     {
         if (mgr == null) return;
 
-        if (mgr.grappling && !mgr.slingshotting && !mgr.grounded)
+        if (mgr.IsGrappling && !mgr.IsSlingshotting && !mgr.IsGrounded)
         {
-            mgr.currentSpeed = Mathf.Min(mgr.Rb.linearVelocity.magnitude, mgr.Settings.airMaxSpeed);
+            mgr.SetCurrentSpeed(Mathf.Min(mgr.Rb.linearVelocity.magnitude, mgr.Settings.airMaxSpeed));
             return;
         }
 

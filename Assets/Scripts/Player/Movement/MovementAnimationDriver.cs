@@ -52,7 +52,7 @@ public sealed class MovementAnimationDriver
         animator.SetBool(IsMovingHash, isMoving);
         animator.SetFloat(VelocityXHash, localVelocity.x / speedNormalization, dampTime, Time.deltaTime);
         animator.SetFloat(VelocityZHash, localVelocity.z / speedNormalization, dampTime, Time.deltaTime);
-        animator.SetBool(IsGroundedHash, manager.grounded);
+        animator.SetBool(IsGroundedHash, manager.IsGrounded);
         animator.SetFloat(VerticalVelocityHash, manager.Rb.linearVelocity.y);
 
         float currentYaw = referenceTransform.eulerAngles.y;

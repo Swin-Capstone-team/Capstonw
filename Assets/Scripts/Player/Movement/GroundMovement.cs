@@ -28,7 +28,7 @@ public class GroundMovement : MonoBehaviour, IMovementState
         // Latch sprint when held while moving
         if (mgr.Input.SprintHeld && hasMoveInput)
         {
-            mgr.sprintLatched = true;
+            mgr.SetSprintLatched(true);
         }
 
         if (mgr.Input.CrouchPressedThisFrame)
@@ -39,7 +39,7 @@ public class GroundMovement : MonoBehaviour, IMovementState
         // Clear latch when no input
         if (!hasMoveInput)
         {
-            mgr.sprintLatched = false;
+            mgr.SetSprintLatched(false);
         }
     }
 
@@ -48,13 +48,13 @@ public class GroundMovement : MonoBehaviour, IMovementState
         if (mgr == null) return;
 
         Vector3 currentHorizontal = new Vector3(mgr.Rb.linearVelocity.x, 0f, mgr.Rb.linearVelocity.z);
-        bool isSprinting = (mgr.Input != null && mgr.Input.SprintHeld) || mgr.sprintLatched;
+        bool isSprinting = (mgr.Input != null && mgr.Input.SprintHeld) || mgr.IsSprintLatched;
         float targetSpeed = isSprinting ? mgr.Settings.sprintSpeed : mgr.Settings.walkSpeed;
 
         // Handle acceleration
-        if (mgr.currentSpeed < targetSpeed)
+        if (mgr.CurrentSpeed < targetSpeed)
         {
-            mgr.currentSpeed += mgr.Settings.acceleration * (targetSpeed / mgr.Settings.walkSpeed);
+            mgr.SetCurrentSpeed(mgr.CurrentSpeed + mgr.Settings.acceleration * (targetSpeed / mgr.Settings.walkSpeed));
         }
 
         // Handle friction when exceeding target speed
@@ -68,7 +68,7 @@ public class GroundMovement : MonoBehaviour, IMovementState
         // Apply movement force
         if (lastInputDir.sqrMagnitude > 0.01f)
         {
-            Vector3 desiredVel = lastInputDir * mgr.currentSpeed;
+            Vector3 desiredVel = lastInputDir * mgr.CurrentSpeed;
             Vector3 forceDir = desiredVel - currentHorizontal;
             mgr.Rb.AddForce(forceDir * mgr.Settings.groundMoveForce, ForceMode.Force);
         }
@@ -77,7 +77,7 @@ public class GroundMovement : MonoBehaviour, IMovementState
             // No input but still moving: apply friction
             Vector3 frictionForce = -currentHorizontal * mgr.Settings.groundFriction;
             mgr.Rb.AddForce(frictionForce, ForceMode.Acceleration);
-            mgr.currentSpeed = currentHorizontal.magnitude;
+            mgr.SetCurrentSpeed(currentHorizontal.magnitude);
         }
     }
 }

@@ -17084,16 +17084,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b78f82dbf133c0b258ed6d09b4c4273f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementManager
-  runtimeDebug:
-    configuredSpeed: 0
-    horizontalSpeed: 0
-    verticalSpeed: 0
-    slopeAngle: 0
-    grounded: 0
-    inAir: 0
-    sliding: 0
-    queuedSlideOnLand: 0
-    currentState: 
 --- !u!114 &1416208332
 MonoBehaviour:
   m_ObjectHideFlags: 0
