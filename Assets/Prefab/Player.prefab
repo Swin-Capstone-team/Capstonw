@@ -2733,7 +2733,11 @@ GameObject:
   - component: {fileID: 7943722937436230036}
   - component: {fileID: 590864509278061438}
   - component: {fileID: 141076187796556624}
-  - component: {fileID: 730152704774735949}
+  - component: {fileID: 8469938161049583250}
+  - component: {fileID: 7611935248212996021}
+  - component: {fileID: 7221937065167183172}
+  - component: {fileID: 4530901935083065379}
+  - component: {fileID: 5700712452637848863}
   - component: {fileID: 2242431794466313390}
   - component: {fileID: 6159800898551102946}
   - component: {fileID: 9172992868836322229}
@@ -2859,7 +2863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputState
   logActionPresses: 0
---- !u!114 &730152704774735949
+--- !u!114 &8469938161049583250
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2868,39 +2872,90 @@ MonoBehaviour:
   m_GameObject: {fileID: 8021186322358567283}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59a012f0b02de064294a28cd1cc7caf4, type: 3}
+  m_Script: {fileID: 11500000, guid: b8f5f25a94b3ce8188dd903e19abfeb0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovementSettings
+  orientation: {fileID: 5336109834541880313}
+  animator: {fileID: 690372523388303043}
+  wallDetector: {fileID: 8791464272692034769}
   walkSpeed: 4
-  sprintSpeed: 8
+  sprintSpeed: 12
   acceleration: 0.05
-  jumpForce: 12
-  upwardMultiplier: 2
-  fallMultiplier: 2
-  lowJumpMultiplier: 3
   groundFriction: 8
-  groundCheckDistance: 1
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  canMove: 1
+  groundMoveForce: 10
+  moveInputThreshold: 0.1
   airMaxSpeed: 7
   airAcceleration: 15
   slideSpeedBoost: 2
-  slideMinSlopeAngle: 10
   slideCooldown: 1
   slideDecayDuration: 3
   slideStopSpeed: 0.1
   slideStopSurfaceAngle: 60
   slideStopUphillAngle: 25
-  wallStickForce: 10
-  wallDetector: {fileID: 8791464272692034769}
-  wallPushAwayForce: 1.5
-  wallPushUpForce: 1
-  orientation: {fileID: 5336109834541880313}
-  playerCamera: {fileID: 0}
-  animator: {fileID: 690372523388303043}
-  cameraShake: {fileID: 0}
+  slideRequireSpeed: 0
+  autoSprintSpeed: 0
+  flatGroundAngleThreshold: 2
+  jumpForce: 12
+  wallPushAwayForce: 5
+  wallPushUpForce: 3
+  wallJumpDirectionMultiplier: 1.5
+  fallMultiplier: 3.5
+  lowJumpMultiplier: 4.5
+  upwardMultiplier: 2
+  animationTurnRateThreshold: 5
+  animationDampTime: 0.1
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 1
+  groundCheckDistance: 0.5
+--- !u!114 &7611935248212996021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8021186322358567283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b78f82dbf133c0b258ed6d09b4c4273f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovementManager
+--- !u!114 &7221937065167183172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8021186322358567283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea2035a5f6454cc4b9a8fefef7031d50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GroundMovement
+--- !u!114 &4530901935083065379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8021186322358567283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46503dd22e6d5f98a951fa63facee2ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AirMovement
+--- !u!114 &5700712452637848863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8021186322358567283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bda9fcc88476c6589af020eed48ebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlideController
 --- !u!114 &2242431794466313390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2940,7 +2995,7 @@ MonoBehaviour:
   releaseBoost: 2
   grappleIndicatorPrefab: {fileID: 6140398287122407268, guid: c235a6176978a1541a238729dbf6f4e2, type: 3}
   maximumWindUp: 5
-  slingForce: 12
+  slingForce: 18
   slingForwardBoost: 0.5
   slingUpwardBoost: 0.1
   slingMinYDir: 0.7
@@ -2951,7 +3006,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8021186322358567283}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2484d3ff0fa47f24088845356147995b, type: 3}
   m_Name: 
