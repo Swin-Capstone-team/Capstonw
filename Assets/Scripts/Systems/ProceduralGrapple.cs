@@ -32,9 +32,9 @@ public class ProceduralGrapple : MonoBehaviour
     [Tooltip("Name prefix for created anchor objects.")]
     public string anchorNamePrefix = "GrappleAnchor_";
 
-    /// <summary>
-    /// Removes previously generated anchors under this object's generated parent.
-    /// </summary>
+    
+    // Removes previously generated anchors under this object's generated parent.
+    
     public void ClearGeneratedAnchors()
     {
         Transform parent = transform.Find(generatedParentName);
@@ -54,9 +54,7 @@ public class ProceduralGrapple : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Generates point-based GrappleAnchor children from this object's MeshFilter.
-    /// </summary>
+    // Generates point-based GrappleAnchor children from this object's MeshFilter.
     public int GenerateAnchors()
     {
         MeshFilter meshFilter = GetComponent<MeshFilter>();
@@ -160,9 +158,8 @@ public class ProceduralGrapple : MonoBehaviour
         return true;
     }
 
-    /// <summary>
+    
     /// Deterministic-ish triangle sampling. Good enough for production testing without random changing every click.
-    /// </summary>
     private static Vector3 SamplePointOnTriangle(Vector3 a, Vector3 b, Vector3 c, int sampleIndex, int sampleCount)
     {
         if (sampleCount <= 1)
