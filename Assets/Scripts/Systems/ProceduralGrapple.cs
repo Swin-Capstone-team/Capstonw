@@ -75,7 +75,7 @@ public class ProceduralGrapple : MonoBehaviour
 
         GameObject parentObject = new GameObject(generatedParentName);
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR        //Undo created grapple anchors around the map
         if (!Application.isPlaying)
             UnityEditor.Undo.RegisterCreatedObjectUndo(parentObject, "Create Generated Grapple Anchors Parent");
 #endif
