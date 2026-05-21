@@ -275,7 +275,8 @@ public class Swinging : MonoBehaviour
         Vector3 direction = (midPoint - transform.position).normalized;
         if (direction.y < slingMinYDir) direction.y = slingMinYDir; // Prevent launching into the ground
         direction = (direction + cam.forward * slingForwardBoost + Vector3.up * slingUpwardBoost).normalized;
-        Vector3 force = direction * (transform.position - initialPosition).magnitude;
+        float dist = (transform.position - initialPosition).magnitude;
+        Vector3 force = (dist - 1.6f)/(dist - 0.6f) * direction;
         rb.AddForce(force * slingForce, ForceMode.Impulse);
     }
 

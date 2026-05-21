@@ -2919,9 +2919,9 @@ MonoBehaviour:
   rightGunTip: {fileID: 9111951546681798067}
   cam: {fileID: 0}
   player: {fileID: 2028740325759082492}
-  Grappleable:
+  BlockGrapples:
     serializedVersion: 2
-    m_Bits: 9
+    m_Bits: 0
   IsUsingGrappleAnchor: 1
   jointSpring: 2
   jointDamper: 0.5
@@ -2940,7 +2940,7 @@ MonoBehaviour:
   releaseBoost: 2
   grappleIndicatorPrefab: {fileID: 6140398287122407268, guid: c235a6176978a1541a238729dbf6f4e2, type: 3}
   maximumWindUp: 5
-  slingForce: 12
+  slingForce: 83
   slingForwardBoost: 0.5
   slingUpwardBoost: 0.1
   slingMinYDir: 0.7
