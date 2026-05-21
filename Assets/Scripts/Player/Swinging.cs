@@ -18,7 +18,8 @@ public class Swinging : MonoBehaviour
     public LineRenderer llr;
     public LineRenderer rlr;
     public Transform leftGunTip, rightGunTip, cam, player;
-    public LayerMask Grappleable;
+    [Tooltip("These layers will prevent grapple targeting through them")]
+    public LayerMask BlockGrapples;
     private Vector3 leftGrapplePosition;
     private Vector3 rightGrapplePosition;
 
@@ -157,9 +158,9 @@ public class Swinging : MonoBehaviour
         else
         {
             RaycastHit hit;
-            hasLeftTarget = Physics.Raycast(cam.position, Quaternion.AngleAxis(-targetingSpread, Vector3.up) * cam.forward, out hit, maxSwingDistance, Grappleable);
+            hasLeftTarget = Physics.Raycast(cam.position, Quaternion.AngleAxis(-targetingSpread, Vector3.up) * cam.forward, out hit, maxSwingDistance, BlockGrapples);
             currentTargetPointLeft = hit.point;
-            hasRightTarget = Physics.Raycast(cam.position, Quaternion.AngleAxis(targetingSpread, Vector3.up) * cam.forward, out hit, maxSwingDistance, Grappleable);
+            hasRightTarget = Physics.Raycast(cam.position, Quaternion.AngleAxis(targetingSpread, Vector3.up) * cam.forward, out hit, maxSwingDistance, BlockGrapples);
             currentTargetPointRight = hit.point;
         }
         hasTarget = hasLeftTarget || hasRightTarget;
@@ -441,8 +442,12 @@ public class Swinging : MonoBehaviour
 
                 Vector3 toPoint = point - camPos;
                 float distance = toPoint.magnitude;
+                Vector3 dir = toPoint.normalized;
 
-                if (Physics.Raycast(camPos, toPoint.normalized, out RaycastHit hit, distance, Grappleable))
+                if (distance > maxTargetDistance)
+                    continue;
+
+                if (Physics.Raycast(camPos, dir, out RaycastHit hit, distance, BlockGrapples))
                 {
                     float penetrationAllowance = 0.35f;
 
@@ -450,10 +455,6 @@ public class Swinging : MonoBehaviour
                         continue;
                 }
 
-                if (distance > maxTargetDistance)
-                    continue;
-
-                Vector3 dir = toPoint.normalized;
 
                 float angle = Vector3.Angle(Quaternion.AngleAxis(offsetAngle, Vector3.up) * camForward, dir);
                 if (angle > maxTargetAngle)
@@ -743,7 +744,7 @@ public class Swinging : MonoBehaviour
     public bool CanGrapple()
     {
         RaycastHit hit;
-        return Physics.Raycast(cam.position, cam.forward, out hit, maxSwingDistance, Grappleable);
+        return Physics.Raycast(cam.position, cam.forward, out hit, maxSwingDistance, BlockGrapples);
     }
 
     Vector3 GetBoostDir()

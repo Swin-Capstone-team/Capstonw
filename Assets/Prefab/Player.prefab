@@ -2921,7 +2921,7 @@ MonoBehaviour:
   player: {fileID: 2028740325759082492}
   Grappleable:
     serializedVersion: 2
-    m_Bits: 79
+    m_Bits: 9
   IsUsingGrappleAnchor: 1
   jointSpring: 2
   jointDamper: 0.5
