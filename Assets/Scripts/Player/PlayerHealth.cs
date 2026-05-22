@@ -6,7 +6,6 @@ public class PlayerHealth : Health
     public Animator animator;
     public float hitStunTime = 0.25f;
     private PlayerMove move;
-    public float currentHealth;
     private float hitTimer = 0f;
 
     protected override void Start()
@@ -22,10 +21,6 @@ public class PlayerHealth : Health
             hitTimer -= Time.deltaTime;
             // Restore movement control after hitstun ends
             if (hitTimer <= 0f && move != null && !isDead) move.canMove = true;
-        }
-        if (currentHealth <= 0f && !isDead)
-        {
-            Die();
         }
     }
 

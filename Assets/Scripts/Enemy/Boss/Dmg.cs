@@ -20,7 +20,8 @@ public class Dmg : MonoBehaviour
     {
         if (other.gameObject.tag == "Player") // Check if the collided object is the player
         {
-            playerHealth.currentHealth -= damageAmount; // Inflict damage to the player
+            DamageInfo info = new DamageInfo{ amount = damageAmount }; // Create a DamageInfo instance
+            playerHealth.TakeDamage(info); // Inflict damage to the player
             Debug.Log("Player hit! Damage inflicted: " + damageAmount);
         }
     }

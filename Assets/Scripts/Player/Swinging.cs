@@ -53,7 +53,7 @@ public class Swinging : MonoBehaviour
     [Header("Targeting")]
     public float maxTargetDistance = 25f;
     public float maxTargetAngle = 20f; // degrees from center of screen +/- targeting spread 
-    public float targetingSpread = 20f; // angle away from the center of screen for split grapple targeting
+    public float targetingSpread = 10f; // angle away from the center of screen for split grapple targeting
 
     private Vector3 currentTargetPointRight;
     private Vector3 currentTargetPointLeft;
@@ -68,8 +68,11 @@ public class Swinging : MonoBehaviour
 
     [Header("Indicator")]
     public GameObject grappleIndicatorPrefab;
-    private GameObject grappleIndicatorInstanceRed;
-    private GameObject grappleIndicatorInstanceBlue;
+    private GameObject grappleIndicatorInstance1;
+    private GameObject grappleIndicatorInstance2;
+
+    public float breathingSpeed = 3f;
+    public float breathingAmount = 0.15f;  
 
     [Header("Slingshot")]
     public float maximumWindUp;
@@ -106,12 +109,11 @@ public class Swinging : MonoBehaviour
 
         if (grappleIndicatorPrefab != null)
         {
-            grappleIndicatorInstanceRed = Instantiate(grappleIndicatorPrefab);
-            grappleIndicatorInstanceBlue = Instantiate(grappleIndicatorPrefab);
-            Image image = grappleIndicatorInstanceBlue.GetComponent<Image>();
-            image.color = new Color32(62, 62, 203, 196);
-            grappleIndicatorInstanceRed.SetActive(false);
-            grappleIndicatorInstanceBlue.SetActive(false);
+            grappleIndicatorInstance1 = Instantiate(grappleIndicatorPrefab);
+            grappleIndicatorInstance2 = Instantiate(grappleIndicatorPrefab);
+            
+            grappleIndicatorInstance1.SetActive(false);
+            grappleIndicatorInstance2.SetActive(false);
         }
     }
 
@@ -167,8 +169,8 @@ public class Swinging : MonoBehaviour
 
     private void HandleIndicators()
     {
-        UpdateIndicator(hasLeftTarget, currentTargetPointLeft, grappleIndicatorInstanceBlue, leftJoint);
-        UpdateIndicator(hasRightTarget, currentTargetPointRight, grappleIndicatorInstanceRed, rightJoint);
+        UpdateIndicator(hasLeftTarget, currentTargetPointLeft, grappleIndicatorInstance2, leftJoint);
+        UpdateIndicator(hasRightTarget, currentTargetPointRight, grappleIndicatorInstance1, rightJoint);
     }
 
     private void HandleSwingInput()
@@ -278,16 +280,16 @@ public class Swinging : MonoBehaviour
         rb.AddForce(force * slingForce, ForceMode.Impulse);
     }
 
-    void OnDrawGizmos()
-    {
-        if (hasTarget)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(currentTargetPointRight, 0.3f);
-            Gizmos.color = Color.blue;
-            Gizmos.DrawSphere(currentTargetPointLeft, 0.3f);
-        }
-    }
+    // void OnDrawGizmos()
+    // {
+    //     if (hasTarget)
+    //     {
+    //         Gizmos.color = Color.red;
+    //         Gizmos.DrawSphere(currentTargetPointRight, 0.3f);
+    //         Gizmos.color = Color.blue;
+    //         Gizmos.DrawSphere(currentTargetPointLeft, 0.3f);
+    //     }
+    // }
 
     void LateUpdate()
     {
@@ -477,8 +479,7 @@ public class Swinging : MonoBehaviour
 
     void UpdateIndicator(bool hasTarget, Vector3 currentTargetPoint, GameObject grappleIndicatorInstance, SpringJoint joint)
     {
-        if (grappleIndicatorInstance == null)
-            return;
+        if (grappleIndicatorInstance == null) return;
 
         if (joint != null)
         {
@@ -488,12 +489,25 @@ public class Swinging : MonoBehaviour
 
         if (hasTarget)
         {
+            // grappleIndicatorInstance.SetActive(true);
+
+            // Vector3 offsetDir = (cam.position - currentTargetPoint).normalized;
+            // grappleIndicatorInstance.transform.position = currentTargetPoint + offsetDir * 0.4f;
+
+            // grappleIndicatorInstance.transform.forward = cam.forward;
+
             grappleIndicatorInstance.SetActive(true);
 
+            // Position it slightly off the wall toward the camera
             Vector3 offsetDir = (cam.position - currentTargetPoint).normalized;
             grappleIndicatorInstance.transform.position = currentTargetPoint + offsetDir * 0.4f;
 
+            // Force the PNG to face the player camera
             grappleIndicatorInstance.transform.forward = cam.forward;
+
+            // Apply the breathing effect (Pulsing Scale)
+            float pulse = 1f + Mathf.Sin(Time.time * breathingSpeed) * breathingAmount;
+            grappleIndicatorInstance.transform.localScale = new Vector3(pulse, pulse, 1f);
         }
         else
         {
