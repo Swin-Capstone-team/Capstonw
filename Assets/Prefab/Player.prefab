@@ -2733,16 +2733,15 @@ GameObject:
   - component: {fileID: 7943722937436230036}
   - component: {fileID: 590864509278061438}
   - component: {fileID: 141076187796556624}
-  - component: {fileID: 8469938161049583250}
-  - component: {fileID: 7611935248212996021}
-  - component: {fileID: 7221937065167183172}
-  - component: {fileID: 4530901935083065379}
-  - component: {fileID: 5700712452637848863}
+  - component: {fileID: 8411037377658125586}
+  - component: {fileID: 7094485138350941354}
+  - component: {fileID: 226275935416957272}
+  - component: {fileID: 7559777470644766541}
+  - component: {fileID: 4814829223031222608}
   - component: {fileID: 2242431794466313390}
   - component: {fileID: 6159800898551102946}
   - component: {fileID: 9172992868836322229}
   - component: {fileID: 2221325639409464096}
-  - component: {fileID: 7279432708165357114}
   - component: {fileID: 6367339942695658804}
   m_Layer: 6
   m_Name: Player
@@ -2863,7 +2862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputState
   logActionPresses: 0
---- !u!114 &8469938161049583250
+--- !u!114 &8411037377658125586
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2886,9 +2885,9 @@ MonoBehaviour:
   moveInputThreshold: 0.1
   airMaxSpeed: 7
   airAcceleration: 15
-  slideSpeedBoost: 2
-  slideCooldown: 1
-  slideDecayDuration: 3
+  slideSpeedBoost: 1.5
+  slideCooldown: 0.5
+  slideDecayDuration: 1.5
   slideStopSpeed: 0.1
   slideStopSurfaceAngle: 60
   slideStopUphillAngle: 25
@@ -2908,7 +2907,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   groundCheckDistance: 0.5
---- !u!114 &7611935248212996021
+--- !u!114 &7094485138350941354
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2920,7 +2919,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b78f82dbf133c0b258ed6d09b4c4273f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovementManager
---- !u!114 &7221937065167183172
+--- !u!114 &226275935416957272
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2932,7 +2931,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea2035a5f6454cc4b9a8fefef7031d50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundMovement
---- !u!114 &4530901935083065379
+--- !u!114 &7559777470644766541
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2944,7 +2943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46503dd22e6d5f98a951fa63facee2ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AirMovement
---- !u!114 &5700712452637848863
+--- !u!114 &4814829223031222608
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3006,7 +3005,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8021186322358567283}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2484d3ff0fa47f24088845356147995b, type: 3}
   m_Name: 
@@ -3085,24 +3084,6 @@ MonoBehaviour:
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: 0, y: -1, z: 0}
---- !u!114 &7279432708165357114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8021186322358567283}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4de318b09eed18e4db1b289aa0585075, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SprintCameraZoom
-  follow: {fileID: 0}
-  playerRigidbody: {fileID: 6132413323070933807}
-  normalDistance: 5
-  sprintDistance: 4
-  speedThreshold: 10
-  zoomSpeed: 5
 --- !u!114 &6367339942695658804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3117,7 +3098,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SprintSpeedLines
   speedLines: {fileID: 0}
   playerRigidbody: {fileID: 6132413323070933807}
-  speedThreshold: 10
+  speedThreshold: 18
 --- !u!1 &8026314750805339795
 GameObject:
   m_ObjectHideFlags: 0

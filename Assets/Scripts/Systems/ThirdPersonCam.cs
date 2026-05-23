@@ -33,6 +33,7 @@ public class ThirdPersonCam : MonoBehaviour
 
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         SwitchCameraStyle(currentStyle);
     }
 

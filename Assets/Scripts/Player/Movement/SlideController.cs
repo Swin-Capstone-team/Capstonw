@@ -48,9 +48,11 @@ public class SlideController : MonoBehaviour, IMovementState
 
         slideDecayElapsed += Time.fixedDeltaTime;
         float decayT = Mathf.Clamp01(slideDecayElapsed / manager.Settings.slideDecayDuration);
-        float targetHorizontalSpeed = Mathf.Lerp(slideStartHorizontalSpeed, 0f, decayT);
+        
+        float lowerConstant = manager.Settings.walkSpeed;
+        float targetHorizontalSpeed = Mathf.Lerp(slideStartHorizontalSpeed, lowerConstant, decayT);
 
-        if (targetHorizontalSpeed <= manager.Settings.slideStopSpeed || horizontalMagnitude < MinHorizontalSpeed)
+        if (horizontalMagnitude < MinHorizontalSpeed)
         {
             StopAndReturnToLocomotion();
             return;
@@ -152,7 +154,20 @@ public class SlideController : MonoBehaviour, IMovementState
         Vector3 currentVel = manager.Rb.linearVelocity;
         Vector3 horizontalVel = new Vector3(currentVel.x, 0f, currentVel.z);
         float currentHorizontalSpeed = horizontalVel.magnitude;
-        slideStartHorizontalSpeed = Mathf.Max(currentHorizontalSpeed * manager.Settings.slideSpeedBoost, manager.EffectiveSlideRequireSpeed);
+
+        float maxBoostSpeed = manager.Settings.sprintSpeed * manager.Settings.slideSpeedBoost;
+        float targetBoostSpeed = currentHorizontalSpeed * manager.Settings.slideSpeedBoost;
+
+        if (currentHorizontalSpeed > maxBoostSpeed)
+        {
+            targetBoostSpeed = Mathf.Max(currentHorizontalSpeed, maxBoostSpeed);
+        }
+        else
+        {
+            targetBoostSpeed = Mathf.Min(targetBoostSpeed, maxBoostSpeed);
+        }
+
+        slideStartHorizontalSpeed = Mathf.Max(targetBoostSpeed, manager.EffectiveSlideRequireSpeed);
 
         if (currentHorizontalSpeed > MinDirectionSpeed)
         {

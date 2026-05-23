@@ -38,13 +38,13 @@ public class MovementSettings : MonoBehaviour
 
     [Header("Slide")]
     [Min(0f)]
-    public float slideSpeedBoost = 1f;
+    public float slideSpeedBoost = 1.5f;
 
     [Min(0f)]
-    public float slideCooldown = 2.5f;
+    public float slideCooldown = 0.5f;
 
     [Min(0.01f)]
-    public float slideDecayDuration = 2.5f;
+    public float slideDecayDuration = 1.5f;
 
     [Min(0f)]
     public float slideStopSpeed = 0.05f;
