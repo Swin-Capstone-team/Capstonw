@@ -75,18 +75,11 @@ public class LevelManager : MonoBehaviour
         room.OnRoomExited += HandleRoomExited;
     }
 
-    /// <summary>
-    /// Fires the moment the player touches the Entrance trigger of a new room.
-    /// </summary>
     private void HandleRoomEntered(Level enteredRoom)
     {
-        // Start the timer specifically for this room
         gameTimer.StartTimerForLevel(enteredRoom);
     }
 
-    /// <summary>
-    /// Fires the moment the player touches the Exit trigger of the room.
-    /// </summary>
     private void HandleRoomExited(Level completedRoom)
     {
         // 1. Unsubscribe to prevent memory leaks
@@ -95,15 +88,15 @@ public class LevelManager : MonoBehaviour
 
         // 2. Notify systems about the completion
         gameTimer.RecordLevelCompletion(completedRoom);
+        
+        // 3. ONLY spawn the next sequence if we just beat a main parkour room
         if (!completedRoom.isHallway)
         {
             uiManager.IncrementLevelsBeaten();
+            SpawnNextSequence();
         }
 
-        // 3. Generate the track ahead
-        SpawnNextSequence();
-
-        // 4. Cleanup old rooms safely
+        // 4. Cleanup old rooms safely (this still runs for hallways so we don't leave them behind)
         int exitedIndex = activeRooms.IndexOf(completedRoom);
         CleanupOldRooms(exitedIndex);
     }

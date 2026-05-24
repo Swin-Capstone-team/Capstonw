@@ -4310,6 +4310,8 @@ MonoBehaviour:
   - {fileID: 4282723140107944820, guid: 99f2feed0e46e445aad004e423d5d629, type: 3}
   - {fileID: 4282723140107944820, guid: bbd06a9fcc58c46bebebb26e639e7b42, type: 3}
   - {fileID: 4282723140107944820, guid: ed6cdd57f690b4bf9a5a1a15b893ba93, type: 3}
+  - {fileID: 4282723140107944820, guid: 8ad7969eef7dd4d92af0318a04260b21, type: 3}
+  - {fileID: 4282723140107944820, guid: 0489df03279af4b12b6e8d7e47dbbb95, type: 3}
   hallwayPrefabs:
   - {fileID: 4503921314214504493, guid: fcbcb00cc01094de0a05544b216ea0a5, type: 3}
   roomsToKeepAhead: 3
@@ -5675,7 +5677,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1177411194}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.4269054, y: -4.693918e-15, z: -2.2159318e-15, w: 0.9042963}
+  m_LocalRotation: {x: -0.42690542, y: 0.00000005241446, z: 0.000000024744121, w: 0.9042963}
   m_LocalPosition: {x: 0, y: -5, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
