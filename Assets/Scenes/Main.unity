@@ -14022,6 +14022,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8791464272692034769, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: wallTags.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8791464272692034769, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: 'wallTags.Array.data[0]'
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 8791464272692034769, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: 'wallTags.Array.data[1]'
+      value: Jumpable
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

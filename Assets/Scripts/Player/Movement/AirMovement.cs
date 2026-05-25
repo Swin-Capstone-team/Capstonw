@@ -29,24 +29,27 @@ public class AirMovement : MonoBehaviour, IMovementState
     {
         if (mgr == null) return;
 
+        // Drag handling (in air)
+        mgr.Rb.linearDamping = 0f;
+
         if (mgr.IsGrappling && !mgr.IsSlingshotting && !mgr.IsGrounded)
         {
-            mgr.SetCurrentSpeed(Mathf.Min(mgr.Rb.linearVelocity.magnitude, mgr.Settings.airMaxSpeed));
             return;
         }
 
-        Vector3 currentHorizontal = new Vector3(mgr.Rb.linearVelocity.x, 0f, mgr.Rb.linearVelocity.z);
-
-        // Air strafing: add acceleration in input direction if below max
+        // Apply air movement force
         if (lastInputDir.sqrMagnitude > 0.01f)
         {
-            float projVel = Vector3.Dot(currentHorizontal, lastInputDir);
-            float addSpeed = mgr.Settings.airMaxSpeed - projVel;
+            // Use walkSpeed as base, apply airMultiplier
+            mgr.Rb.AddForce(lastInputDir.normalized * mgr.Settings.walkSpeed * 10f * mgr.Settings.airMultiplier, ForceMode.Force);
+        }
 
-            if (addSpeed > 0)
-            {
-                mgr.Rb.AddForce(lastInputDir * mgr.Settings.airAcceleration, ForceMode.Acceleration);
-            }
+        // Speed Control
+        Vector3 flatVel = new Vector3(mgr.Rb.linearVelocity.x, 0f, mgr.Rb.linearVelocity.z);
+        if (flatVel.magnitude > mgr.Settings.airMaxSpeed)
+        {
+            Vector3 limitedVel = flatVel.normalized * mgr.Settings.airMaxSpeed;
+            mgr.Rb.linearVelocity = new Vector3(limitedVel.x, mgr.Rb.linearVelocity.y, limitedVel.z);
         }
     }
 }
