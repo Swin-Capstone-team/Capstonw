@@ -18564,21 +18564,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterController
   Motor: {fileID: 720589268}
+  SprintMultiplier: 1.5
+  SprintAcceleration: 5
   MaxStableMoveSpeed: 10
   StableMovementSharpness: 15
-  OrientationSharpness: 10
-  OrientationMethod: 0
-  MaxAirMoveSpeed: 15
-  AirAccelerationSpeed: 15
-  Drag: 0.1
-  AllowJumpingWhenSliding: 0
-  JumpUpSpeed: 10
-  JumpScalableForwardSpeed: 10
-  JumpPreGroundingGraceTime: 0
-  JumpPostGroundingGraceTime: 0
+  OrientationSharpness: 20
+  OrientationMethod: 1
+  MaxAirMoveSpeed: 10
+  AirAccelerationSpeed: 30
+  Drag: 0
+  AllowJumpingWhenSliding: 1
+  JumpUpSpeed: 15
+  JumpScalableForwardSpeed: 0
+  JumpPreGroundingGraceTime: 0.15
+  JumpPostGroundingGraceTime: 0.2
   IgnoredColliders: []
-  BonusOrientationMethod: 0
-  BonusOrientationSharpness: 10
+  BonusOrientationMethod: 1
+  BonusOrientationSharpness: 20
   Gravity: {x: 0, y: -30, z: 0}
   MeshRoot: {fileID: 81961190}
   CameraFollowPoint: {fileID: 522699526}
@@ -48947,8 +48949,8 @@ MeshFilter:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 720589267}
   - {fileID: 1896744419}
+  - {fileID: 720589267}
   - {fileID: 2056275075}
   - {fileID: 747071576}
   - {fileID: 900222770}

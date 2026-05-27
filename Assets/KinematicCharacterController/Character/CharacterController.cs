@@ -23,6 +23,7 @@ public struct PlayerCharacterInputs
     public bool JumpDown;
     public bool CrouchDown;
     public bool CrouchUp;
+    public bool IsSprinting;
 }
 
 public struct AICharacterInputs
@@ -42,6 +43,10 @@ public class CharacterController : MonoBehaviour, ICharacterController
 {
     public KinematicCharacterMotor Motor;
 
+        [Header("Sprinting")]
+        public float SprintMultiplier = 1.5f;
+        public float SprintAcceleration = 5f;
+
         [Header("Stable Movement")]
         public float MaxStableMoveSpeed = 10f;
         public float StableMovementSharpness = 15f;
@@ -58,7 +63,13 @@ public class CharacterController : MonoBehaviour, ICharacterController
         public float JumpUpSpeed = 10f;
         public float JumpScalableForwardSpeed = 10f;
         public float JumpPreGroundingGraceTime = 0f;
-        public float JumpPostGroundingGraceTime = 0f;
+        public float JumpPostGroundingGraceTime = 0.2f;
+
+        [Header("Vaulting")]
+        public bool EnableVaulting = true;
+        public float MaxVaultHeight = 1.5f;
+        public float VaultCheckForwardDistance = 0.6f;
+        public float VaultSpeed = 4f;
 
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
@@ -83,6 +94,8 @@ public class CharacterController : MonoBehaviour, ICharacterController
         private Vector3 _internalVelocityAdd = Vector3.zero;
         private bool _shouldBeCrouching = false;
         private bool _isCrouching = false;
+        private bool _isSprinting = false;
+        private float _currentSprintMultiplier = 1f;
 
         private Vector3 lastInnerNormal = Vector3.zero;
         private Vector3 lastOuterNormal = Vector3.zero;
@@ -192,6 +205,9 @@ public class CharacterController : MonoBehaviour, ICharacterController
                             _shouldBeCrouching = false;
                         }
 
+                        // Sprinting input
+                        _isSprinting = inputs.IsSprinting;
+
                         break;
                     }
             }
@@ -282,6 +298,10 @@ public class CharacterController : MonoBehaviour, ICharacterController
             {
                 case CharacterState.Default:
                     {
+                        // Calculate smooth sprint multiplier transition
+                        float targetSprintMultiplier = _isSprinting ? SprintMultiplier : 1f;
+                        _currentSprintMultiplier = Mathf.MoveTowards(_currentSprintMultiplier, targetSprintMultiplier, SprintAcceleration * deltaTime);
+
                         // Ground movement
                         if (Motor.GroundingStatus.IsStableOnGround)
                         {
@@ -295,7 +315,8 @@ public class CharacterController : MonoBehaviour, ICharacterController
                             // Calculate target velocity
                             Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
                             Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
-                            Vector3 targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
+                            float currentMaxSpeed = MaxStableMoveSpeed * _currentSprintMultiplier;
+                            Vector3 targetMovementVelocity = reorientedInput * currentMaxSpeed;
 
                             // Smooth movement Velocity
                             currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
@@ -310,11 +331,13 @@ public class CharacterController : MonoBehaviour, ICharacterController
 
                                 Vector3 currentVelocityOnInputsPlane = Vector3.ProjectOnPlane(currentVelocity, Motor.CharacterUp);
 
+                                float currentMaxAirSpeed = MaxAirMoveSpeed * _currentSprintMultiplier;
+
                                 // Limit air velocity from inputs
-                                if (currentVelocityOnInputsPlane.magnitude < MaxAirMoveSpeed)
+                                if (currentVelocityOnInputsPlane.magnitude < currentMaxAirSpeed)
                                 {
                                     // clamp addedVel to make total vel not exceed max vel on inputs plane
-                                    Vector3 newTotal = Vector3.ClampMagnitude(currentVelocityOnInputsPlane + addedVelocity, MaxAirMoveSpeed);
+                                    Vector3 newTotal = Vector3.ClampMagnitude(currentVelocityOnInputsPlane + addedVelocity, currentMaxAirSpeed);
                                     addedVelocity = newTotal - currentVelocityOnInputsPlane;
                                 }
                                 else
@@ -347,6 +370,39 @@ public class CharacterController : MonoBehaviour, ICharacterController
                             currentVelocity *= (1f / (1f + (Drag * deltaTime)));
                         }
 
+                        // === Vaulting / Step Assistance ===
+                        if (EnableVaulting && _moveInputVector.sqrMagnitude > 0f)
+                        {
+                            Vector3 shinHeight = Motor.TransientPosition + (Motor.CharacterUp * 0.2f);
+                            
+                            // 1. Raycast forward from shin height to detect if there's a wall or obstacle directly in our path
+                            if (Physics.Raycast(shinHeight, _moveInputVector.normalized, out RaycastHit frontHit, VaultCheckForwardDistance, Motor.CollidableLayers, QueryTriggerInteraction.Ignore))
+                            {
+                                // 2. Obstacle detected! Now we raycast downwards just past the edge of the obstacle to find its flat top surface.
+                                Vector3 topCheckStart = frontHit.point + (_moveInputVector.normalized * 0.1f) + (Motor.CharacterUp * MaxVaultHeight);
+                                
+                                if (Physics.Raycast(topCheckStart, -Motor.CharacterUp, out RaycastHit topHit, MaxVaultHeight, Motor.CollidableLayers, QueryTriggerInteraction.Ignore))
+                                {
+                                    // 3. Check how tall this obstacle is relative to the player's feet
+                                    float obstacleHeight = Vector3.Dot(topHit.point - Motor.TransientPosition, Motor.CharacterUp);
+
+                                    // 4. If the obstacle is a valid candidate for vaulting (not just flat ground and not a skyscraper)
+                                    if (obstacleHeight > 0.1f && obstacleHeight <= MaxVaultHeight)
+                                    {
+                                        // 5. Utilize KCC's collision engine properly! 
+                                        // Instead of accumulating velocity every frame (which creates a cannon jump), 
+                                        // we temporarily lock the vertical velocity to a steady "VaultSpeed" to orchestrate a smooth lift.
+                                        float currentVerticalSpeed = Vector3.Dot(currentVelocity, Motor.CharacterUp);
+                                        if (currentVerticalSpeed < VaultSpeed)
+                                        {
+                                            currentVelocity -= Motor.CharacterUp * currentVerticalSpeed; // Cancel current vertical velocity
+                                            currentVelocity += Motor.CharacterUp * VaultSpeed;           // Apply steady lifting speed
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         // Handle jumping
                         _jumpedThisFrame = false;
                         _timeSinceJumpRequested += deltaTime;
@@ -367,8 +423,9 @@ public class CharacterController : MonoBehaviour, ICharacterController
                                 Motor.ForceUnground();
 
                                 // Add to the return velocity and reset jump state
+                                float currentJumpForwardSpeed = JumpScalableForwardSpeed * _currentSprintMultiplier;
                                 currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
-                                currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
+                                currentVelocity += (_moveInputVector * currentJumpForwardSpeed);
                                 _jumpRequested = false;
                                 _jumpConsumed = true;
                                 _jumpedThisFrame = true;
