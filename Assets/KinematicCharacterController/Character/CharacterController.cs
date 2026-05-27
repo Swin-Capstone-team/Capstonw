@@ -49,6 +49,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
 
         [Header("Stable Movement")]
         public float MaxStableMoveSpeed = 10f;
+        public float MaxCrouchMoveSpeed = 4f;
         public float StableMovementSharpness = 15f;
         public float OrientationSharpness = 10f;
         public OrientationMethod OrientationMethod = OrientationMethod.TowardsCamera;
@@ -70,6 +71,20 @@ public class CharacterController : MonoBehaviour, ICharacterController
         public float MaxVaultHeight = 1.5f;
         public float VaultCheckForwardDistance = 0.6f;
         public float VaultSpeed = 4f;
+
+        [Header("Sliding")]
+        public bool EnableSliding = true;
+        public float SlideEnterSpeedThreshold = 6f;
+        public float SlideInitialBoost = 4f;
+        public float MaxSlideSpeed = 22f;
+        public float SlideSteerMultiplier = 5f;
+        public float SlideGravityAcceleration = 1f;
+        public float SlideFriction = 14f;
+        [Range(0f, 1f)] public float WallSlideBrakeFriction = 0.8f;
+
+        [Header("Bunny Hop Decay")]
+        public float SlideJumpDecayMultiplier = 0.6f;
+        public float SlideRechargeTime = 1.5f;
 
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
@@ -96,7 +111,11 @@ public class CharacterController : MonoBehaviour, ICharacterController
         private bool _isCrouching = false;
         private bool _isSprinting = false;
         private float _currentSprintMultiplier = 1f;
+        private bool _isSliding = false;
 
+        private int _consecutiveSlideJumps = 0;
+        private float _continuousSprintTimer = 0f;
+        
         private Vector3 lastInnerNormal = Vector3.zero;
         private Vector3 lastOuterNormal = Vector3.zero;
 
@@ -298,6 +317,20 @@ public class CharacterController : MonoBehaviour, ICharacterController
             {
                 case CharacterState.Default:
                     {
+                        // Handle Sprint recharge logic
+                        if (_isSprinting && Motor.GroundingStatus.IsStableOnGround && !_isSliding)
+                        {
+                            _continuousSprintTimer += deltaTime;
+                            if (_continuousSprintTimer >= SlideRechargeTime)
+                            {
+                                _consecutiveSlideJumps = 0;
+                            }
+                        }
+                        else
+                        {
+                            _continuousSprintTimer = 0f;
+                        }
+
                         // Calculate smooth sprint multiplier transition
                         float targetSprintMultiplier = _isSprinting ? SprintMultiplier : 1f;
                         _currentSprintMultiplier = Mathf.MoveTowards(_currentSprintMultiplier, targetSprintMultiplier, SprintAcceleration * deltaTime);
@@ -307,19 +340,88 @@ public class CharacterController : MonoBehaviour, ICharacterController
                         {
                             float currentVelocityMagnitude = currentVelocity.magnitude;
 
+                            // === Sliding Entry / Exit Logic ===
+                            if (EnableSliding && _shouldBeCrouching)
+                            {
+                                // Trigger slide if moving fast enough
+                                if (!_isSliding && currentVelocityMagnitude >= SlideEnterSpeedThreshold)
+                                {
+                                    _isSliding = true;
+
+                                    // Calculate decayed boost
+                                    float currentBoost = SlideInitialBoost * Mathf.Pow(SlideJumpDecayMultiplier, _consecutiveSlideJumps);
+
+                                    // Add immediate flat velocity boost in direction of movement
+                                    if (currentVelocityMagnitude > 0f)
+                                    {
+                                        currentVelocity += currentVelocity.normalized * currentBoost;
+                                        // Cap the speed right after boosting to prevent infinite speed scaling from bunny hopping
+                                        currentVelocity = Vector3.ClampMagnitude(currentVelocity, MaxSlideSpeed);
+                                        currentVelocityMagnitude = currentVelocity.magnitude; // update magnitude checks
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                _isSliding = false;
+                            }
+
+                            // If we slow down too much during a slide, gracefully exit slide into normal crouch
+                            if (_isSliding && currentVelocityMagnitude < SlideEnterSpeedThreshold - 1f)
+                            {
+                                _isSliding = false;
+                            }
+
                             Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
 
                             // Reorient velocity on slope
                             currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) * currentVelocityMagnitude;
 
-                            // Calculate target velocity
-                            Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
-                            Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
-                            float currentMaxSpeed = MaxStableMoveSpeed * _currentSprintMultiplier;
-                            Vector3 targetMovementVelocity = reorientedInput * currentMaxSpeed;
+                            if (_isSliding)
+                            {
+                                // 1. Downhill / Uphill Acceleration 
+                                // Projecting gravity onto the ground plane perfectly aligns with the downslope vector.
+                                // If running uphill, this vector naturally points backwards, automatically applying negative acceleration!
+                                Vector3 downhillVector = Vector3.ProjectOnPlane(Gravity, effectiveGroundNormal);
+                                currentVelocity += downhillVector * SlideGravityAcceleration * deltaTime;
 
-                            // Smooth movement Velocity
-                            currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
+                                // 2. Steerability (Accelerate in input direction without killing slide momentum)
+                                if (_moveInputVector.sqrMagnitude > 0f)
+                                {
+                                    float preSteerMagnitude = currentVelocity.magnitude;
+
+                                    Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
+                                    Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
+                                    
+                                    currentVelocity += reorientedInput * SlideSteerMultiplier * deltaTime;
+
+                                    // Prevent steering from adding free acceleration (only redirects momentum)
+                                    if (currentVelocity.magnitude > preSteerMagnitude)
+                                    {
+                                        currentVelocity = currentVelocity.normalized * preSteerMagnitude;
+                                    }
+                                }
+
+                                // 3. Friction
+                                // Cleanly decelerate to exactly zero using MoveTowards instead of subtracting vectors 
+                                currentVelocity = Vector3.MoveTowards(currentVelocity, Vector3.zero, SlideFriction * deltaTime);
+
+                                // 4. Hard Cap Speed to prevent infinite acceleration loops
+                                currentVelocity = Vector3.ClampMagnitude(currentVelocity, MaxSlideSpeed);
+                            }
+                            else
+                            {
+                                // Calculate target velocity
+                                Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
+                                Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized * _moveInputVector.magnitude;
+                                
+                                float currentMaxSpeed = _shouldBeCrouching ? MaxCrouchMoveSpeed : (MaxStableMoveSpeed * _currentSprintMultiplier);
+
+                                Vector3 targetMovementVelocity = reorientedInput * currentMaxSpeed;
+
+                                // Smooth movement Velocity
+                                currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1f - Mathf.Exp(-StableMovementSharpness * deltaTime));
+                            }
                         }
                         // Air movement
                         else
@@ -366,6 +468,26 @@ public class CharacterController : MonoBehaviour, ICharacterController
                             // Gravity
                             currentVelocity += Gravity * deltaTime;
 
+                            // === Wall Slide Friction ===
+                            if (_shouldBeCrouching && Motor.GroundingStatus.FoundAnyGround && !Motor.GroundingStatus.IsStableOnGround)
+                            {
+                                // We are pressing crouch against a steep unstable wall.
+                                Vector3 fallDirection = Gravity.normalized;
+                                Vector3 fallVelocity = Vector3.Project(currentVelocity, fallDirection);
+                                
+                                if (Vector3.Dot(fallVelocity, fallDirection) > 0f) // Only brake if we are falling downwards
+                                {
+                                    // Physically brake the character's *current* fall speed down to a slow crawl (2 m/s)
+                                    Vector3 targetFallVelocity = fallDirection * 2f; 
+                                    if (fallVelocity.magnitude > targetFallVelocity.magnitude)
+                                    {
+                                        Vector3 newFallVelocity = Vector3.Lerp(fallVelocity, targetFallVelocity, WallSlideBrakeFriction * 10f * deltaTime);
+                                        currentVelocity -= fallVelocity;     // Remove old fast fall
+                                        currentVelocity += newFallVelocity;  // Inject slow, controlled fall
+                                    }
+                                }
+                            }
+
                             // Drag
                             currentVelocity *= (1f / (1f + (Drag * deltaTime)));
                         }
@@ -389,9 +511,6 @@ public class CharacterController : MonoBehaviour, ICharacterController
                                     // 4. If the obstacle is a valid candidate for vaulting (not just flat ground and not a skyscraper)
                                     if (obstacleHeight > 0.1f && obstacleHeight <= MaxVaultHeight)
                                     {
-                                        // 5. Utilize KCC's collision engine properly! 
-                                        // Instead of accumulating velocity every frame (which creates a cannon jump), 
-                                        // we temporarily lock the vertical velocity to a steady "VaultSpeed" to orchestrate a smooth lift.
                                         float currentVerticalSpeed = Vector3.Dot(currentVelocity, Motor.CharacterUp);
                                         if (currentVerticalSpeed < VaultSpeed)
                                         {
@@ -406,6 +525,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
                         // Handle jumping
                         _jumpedThisFrame = false;
                         _timeSinceJumpRequested += deltaTime;
+
                         if (_jumpRequested)
                         {
                             // See if we actually are allowed to jump
@@ -426,6 +546,14 @@ public class CharacterController : MonoBehaviour, ICharacterController
                                 float currentJumpForwardSpeed = JumpScalableForwardSpeed * _currentSprintMultiplier;
                                 currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
                                 currentVelocity += (_moveInputVector * currentJumpForwardSpeed);
+                                
+                                // Gracefully exit slide when jumping so we must re-enter upon landing
+                                if (_isSliding)
+                                {
+                                    _isSliding = false;
+                                    _consecutiveSlideJumps++;
+                                }
+
                                 _jumpRequested = false;
                                 _jumpConsumed = true;
                                 _jumpedThisFrame = true;
