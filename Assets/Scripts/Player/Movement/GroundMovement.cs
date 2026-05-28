@@ -47,37 +47,24 @@ public class GroundMovement : MonoBehaviour, IMovementState
     {
         if (mgr == null) return;
 
-        Vector3 currentHorizontal = new Vector3(mgr.Rb.linearVelocity.x, 0f, mgr.Rb.linearVelocity.z);
         bool isSprinting = (mgr.Input != null && mgr.Input.SprintHeld) || mgr.IsSprintLatched;
         float targetSpeed = isSprinting ? mgr.Settings.sprintSpeed : mgr.Settings.walkSpeed;
 
-        // Handle acceleration
-        if (mgr.CurrentSpeed < targetSpeed)
-        {
-            mgr.SetCurrentSpeed(mgr.CurrentSpeed + mgr.Settings.acceleration * (targetSpeed / mgr.Settings.walkSpeed));
-        }
-
-        // Handle friction when exceeding target speed
-        float horizSpeedSqr = new Vector2(currentHorizontal.x, currentHorizontal.z).sqrMagnitude;
-        if (horizSpeedSqr > targetSpeed * targetSpeed)
-        {
-            Vector3 frictionForce = -currentHorizontal * mgr.Settings.groundFriction;
-            mgr.Rb.AddForce(frictionForce, ForceMode.Acceleration);
-        }
+        // Drag handling (on ground)
+        mgr.Rb.linearDamping = mgr.Settings.groundFriction;
 
         // Apply movement force
         if (lastInputDir.sqrMagnitude > 0.01f)
         {
-            Vector3 desiredVel = lastInputDir * mgr.CurrentSpeed;
-            Vector3 forceDir = desiredVel - currentHorizontal;
-            mgr.Rb.AddForce(forceDir * mgr.Settings.groundMoveForce, ForceMode.Force);
+            mgr.Rb.AddForce(lastInputDir.normalized * targetSpeed * 10f, ForceMode.Force);
         }
-        else if (horizSpeedSqr > 0.0001f)
+
+        // Speed Control
+        Vector3 flatVel = new Vector3(mgr.Rb.linearVelocity.x, 0f, mgr.Rb.linearVelocity.z);
+        if (flatVel.magnitude > targetSpeed)
         {
-            // No input but still moving: apply friction
-            Vector3 frictionForce = -currentHorizontal * mgr.Settings.groundFriction;
-            mgr.Rb.AddForce(frictionForce, ForceMode.Acceleration);
-            mgr.SetCurrentSpeed(currentHorizontal.magnitude);
+            Vector3 limitedVel = flatVel.normalized * targetSpeed;
+            mgr.Rb.linearVelocity = new Vector3(limitedVel.x, mgr.Rb.linearVelocity.y, limitedVel.z);
         }
     }
 }

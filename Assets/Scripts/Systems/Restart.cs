@@ -21,6 +21,7 @@ public class Restart : MonoBehaviour
         if (_input.RestartPressedThisFrame)
         {
             Debug.Log("Restarting level...");
+            Time.timeScale = 1f; // Ensure time is running before restarting
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
         }
     }
