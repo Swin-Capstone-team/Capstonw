@@ -5,12 +5,12 @@ using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 using Image = UnityEngine.UI.Image;
-[RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
+[RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(MovementManager))]
 [DisallowMultipleComponent]
 
 public class Swinging : MonoBehaviour
 {
-    private PlayerMove playermove;
+    private MovementManager movementManager;
     private PlayerInputState inputState;
     private Rigidbody rb;
 
@@ -90,17 +90,24 @@ public class Swinging : MonoBehaviour
     void Awake()
     {
         inputState ??= GetComponentInParent<PlayerInputState>();
+        movementManager ??= GetComponent<MovementManager>();
 
-        if (inputState != null) return;
+        if (inputState == null)
+        {
+            Debug.LogError("Swinging requires PlayerInputState on this object or a parent.", this);
+            enabled = false;
+        }
 
-        Debug.LogError("Swinging requires PlayerInputState on this object or a parent.", this);
-        enabled = false;
+        if (movementManager == null)
+        {
+            Debug.LogError("Swinging requires MovementManager on the same GameObject.", this);
+            enabled = false;
+        }
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        playermove = GetComponent<PlayerMove>();
         if (!enabled) return;
         rb = GetComponent<Rigidbody>();
 
@@ -176,13 +183,13 @@ public class Swinging : MonoBehaviour
         if (inputState.LeftSwingPressedThisFrame)
         {
             StartSwing(currentTargetPointLeft, leftTargetTransform, ref leftJoint, leftGunTip, ref llr);
-            playermove.grappling = true;
+            movementManager.SetGrappling(true);
             leftSwingPoint = currentTargetPointLeft;
         }
         if (inputState.RightSwingPressedThisFrame)
         {
             StartSwing(currentTargetPointRight, rightTargetTransform, ref rightJoint, rightGunTip, ref rlr);
-            playermove.grappling = true;
+            movementManager.SetGrappling(true);
             rightSwingPoint = currentTargetPointRight;
         }
 
@@ -190,19 +197,19 @@ public class Swinging : MonoBehaviour
 
         if (inputState.LeftSwingReleasedThisFrame)
         {
-            if (playermove.slingshotting) LaunchSlingShot(midPoint);
+            if (movementManager.IsSlingshotting) LaunchSlingShot(midPoint);
             else StopSwing(ref leftJoint, ref llr, true);
-            
+
             if (inputState.RightSwingHeld) return;
-            playermove.grappling = false;
+            movementManager.SetGrappling(false);
         }
         if (inputState.RightSwingReleasedThisFrame)
         {
-            if (playermove.slingshotting) LaunchSlingShot(midPoint);
+            if (movementManager.IsSlingshotting) LaunchSlingShot(midPoint);
             else StopSwing(ref rightJoint, ref rlr, false);
-            
+
             if (inputState.LeftSwingHeld) return;
-            playermove.grappling = false;
+            movementManager.SetGrappling(false);
         }
     }
 
@@ -210,19 +217,19 @@ public class Swinging : MonoBehaviour
     {
         Vector3 midPoint = GetMidPoint();
 
-        if(rightJoint != null && leftJoint != null && Vector3.Dot(cam.forward.normalized, (midPoint - cam.position).normalized) > 0.9 && playermove.grounded && sHeld)
+        if(rightJoint != null && leftJoint != null && Vector3.Dot(cam.forward.normalized, (midPoint - cam.position).normalized) > 0.9 && movementManager.IsGrounded && sHeld)
         {
-            if(!playermove.slingshotting)
+            if(!movementManager.IsSlingshotting)
             {
                 StartSlingshot();
             }
         }
         
-        if (playermove.slingshotting)
+        if (movementManager.IsSlingshotting)
         {
             float distance = (transform.position - initialPosition).magnitude;
             float windUpSpeed = Mathf.Max(maximumWindUp - distance, 0);
-            playermove.currentSpeed = Mathf.Min(windUpSpeed, playermove.currentSpeed);
+            movementManager.SetCurrentSpeed(Mathf.Min(windUpSpeed, movementManager.CurrentSpeed));
 
             if((midPoint - transform.position - (midPoint - initialPosition)).sqrMagnitude >  + maximumWindUp*maximumWindUp + 5)
             {
@@ -230,7 +237,7 @@ public class Swinging : MonoBehaviour
             }
         }
 
-        if (inputState.Move.y >= 0  && playermove.slingshotting)
+        if (inputState.Move.y >= 0  && movementManager.IsSlingshotting)
         {
            LaunchSlingShot(midPoint);
         }
@@ -246,7 +253,7 @@ public class Swinging : MonoBehaviour
 
     void StartSlingshot()
     {
-        playermove.slingshotting = true;
+        movementManager.SetSlingshotting(true);
         initialPosition = transform.position;
         leftJoint.spring = 0;
         leftJoint.damper = 0;
@@ -256,7 +263,8 @@ public class Swinging : MonoBehaviour
 
     void LaunchSlingShot(Vector3 midPoint)
     {
-        playermove.slingshotting = false;
+        movementManager.SetSlingshotting(false);
+        movementManager.SetGrappling(false);
         
         if(rightJoint != null)
         {
@@ -324,8 +332,8 @@ public class Swinging : MonoBehaviour
 
     private void HandleReeling()
     {
-        bool shouldReel = (automaticReelIn || spaceheld) && IsSwinging() && !playermove.slingshotting;
-        bool reelStartedThisFrame = inputState.JumpPressedThisFrame && IsSwinging()  && !playermove.slingshotting;
+        bool shouldReel = (automaticReelIn || spaceheld) && IsSwinging() && !movementManager.IsSlingshotting;
+        bool reelStartedThisFrame = inputState.JumpPressedThisFrame && IsSwinging()  && !movementManager.IsSlingshotting;
 
         if (reelStartedThisFrame)
         {
@@ -392,7 +400,7 @@ public class Swinging : MonoBehaviour
 
     private void HandleAirRopeMovement()
     {
-        if (!playermove.grounded)
+        if (!movementManager.IsGrounded)
         {
             Vector3 vAll = rb.linearVelocity;
             Vector3 vHoriz = new Vector3(vAll.x, 0f, vAll.z);
@@ -557,7 +565,7 @@ public class Swinging : MonoBehaviour
 
         if (joint != null)
         {
-            if (!playermove.grounded)
+            if (!movementManager.IsGrounded)
             {
                 Vector3 velocity = rb.linearVelocity;
                 float speed = velocity.magnitude;
