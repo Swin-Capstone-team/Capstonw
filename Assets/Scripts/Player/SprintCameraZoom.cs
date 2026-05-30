@@ -3,40 +3,42 @@ using Cinemachine;
 
 public class SprintCameraZoom : MonoBehaviour
 {
-    public CinemachineFreeLook follow;
-    public Rigidbody playerRigidbody;
+    [Header("Camera")]
+    public CinemachineFreeLook freeLookCam;
 
-    [Header("Zoom Settings")]
-    public float normalDistance = 5f;
-    public float sprintDistance = 3f;
-    public float speedThreshold = 10f;
+    [Header("Player")]
+    public Rigidbody playerRigidbody;
+    public KeyCode sprintKey = KeyCode.LeftShift;
+
+    [Header("Zoom")]
+    public float normalRadius = 5f;
+    public float sprintRadius = 4f;
+
+    [Header("Settings")]
+    public float speedThreshold = 1f;
     public float zoomSpeed = 5f;
 
     void Update()
     {
-        bool isFast = playerRigidbody != null && playerRigidbody.linearVelocity.magnitude >= speedThreshold;
+        if (freeLookCam == null || playerRigidbody == null)
+            return;
 
-        float targetDistance = isFast ? sprintDistance : normalDistance;
+        bool isMoving = playerRigidbody.linearVelocity.magnitude > speedThreshold;
+        bool isSprinting = Input.GetKey(sprintKey) && isMoving;
 
-        follow.m_Orbits[0].m_Radius = Mathf.Lerp(
-            follow.m_Orbits[0].m_Radius,
-            targetDistance,
-            Time.deltaTime * zoomSpeed
-        );
-        follow.m_Orbits[1].m_Radius = Mathf.Lerp(
-            follow.m_Orbits[1].m_Radius,
-            targetDistance,
-            Time.deltaTime * zoomSpeed
-        );
-        follow.m_Orbits[2].m_Radius = Mathf.Lerp(
-            follow.m_Orbits[2].m_Radius,
-            targetDistance,
-            Time.deltaTime * zoomSpeed
-        );
-        follow.m_Orbits[2].m_Radius = Mathf.Lerp(
-            follow.m_Orbits[2].m_Radius,
-            targetDistance,
-            Time.deltaTime * zoomSpeed
-        );
+        float targetRadius = isSprinting ? sprintRadius : normalRadius;
+
+        for (int i = 0; i < 3; i++)
+        {
+            var orbit = freeLookCam.m_Orbits[i];
+            orbit.m_Radius = Mathf.Lerp(
+                orbit.m_Radius,
+                targetRadius,
+                Time.deltaTime * zoomSpeed
+            );
+            freeLookCam.m_Orbits[i] = orbit;
+        }
+
+        Debug.Log("Sprint Zoom: " + isSprinting + " Radius: " + freeLookCam.m_Orbits[1].m_Radius);
     }
 }
