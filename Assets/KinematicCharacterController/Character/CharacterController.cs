@@ -97,6 +97,11 @@ public class CharacterController : MonoBehaviour, ICharacterController
 
         public CharacterState CurrentCharacterState { get; private set; }
 
+        public bool IsCrouching => _isCrouching;
+        public bool IsSprinting => _isSprinting;
+        public bool IsSliding => _isSliding;
+        public bool HasMoveInput => _moveInputVector.sqrMagnitude > 0.01f;
+
         private Collider[] _probedColliders = new Collider[8];
         private RaycastHit[] _probedHits = new RaycastHit[8];
         private Vector3 _moveInputVector;
@@ -216,7 +221,6 @@ public class CharacterController : MonoBehaviour, ICharacterController
                             {
                                 _isCrouching = true;
                                 Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
-                                MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
                             }
                         }
                         else if (inputs.CrouchUp)
@@ -623,7 +627,6 @@ public class CharacterController : MonoBehaviour, ICharacterController
                             else
                             {
                                 // If no obstructions, uncrouch
-                                MeshRoot.localScale = new Vector3(1f, 1f, 1f);
                                 _isCrouching = false;
                             }
                         }
