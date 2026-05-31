@@ -9,7 +9,6 @@ public class UIManager : MonoBehaviour
     public TMP_Text levelsBeatenText;
     public GameObject gameOverPanel;
 
-    private int totalLevelsBeaten = 0;
 
     private void Start()
     {
@@ -19,7 +18,7 @@ public class UIManager : MonoBehaviour
             gameOverPanel.SetActive(false);
         }
         
-        UpdateLevelsBeatenDisplay();
+        UpdateLevelsBeatenDisplay(0);
     }
 
     /// <summary>
@@ -35,15 +34,10 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Increments and updates the global score. Called by LevelManager or GameTimer.
+    /// Increments and updates the global score. Called by GameTimer.
     /// </summary>
-    public void IncrementLevelsBeaten()
-    {
-        totalLevelsBeaten++;
-        UpdateLevelsBeatenDisplay();
-    }
 
-    private void UpdateLevelsBeatenDisplay()
+    public void UpdateLevelsBeatenDisplay(int totalLevelsBeaten)
     {
         if (levelsBeatenText != null)
         {

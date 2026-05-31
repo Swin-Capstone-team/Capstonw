@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class GameTimer : MonoBehaviour
 {
@@ -71,6 +72,8 @@ public class GameTimer : MonoBehaviour
         {
             roomCompletionCounts.Add(level.levelID, 1);
         }
+
+        uiManager.UpdateLevelsBeatenDisplay(roomCompletionCounts.Values.Sum());
     }
 
     private void TriggerGameOver()
