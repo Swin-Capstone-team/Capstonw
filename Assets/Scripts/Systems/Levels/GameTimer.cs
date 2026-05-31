@@ -14,6 +14,8 @@ public class GameTimer : MonoBehaviour
     // Dictionary to track how many times the player has completed specific rooms
     private Dictionary<string, int> roomCompletionCounts = new Dictionary<string, int>();
 
+    private int score;
+
     private void Update()
     {
         if (!isTimerRunning) return;
@@ -73,7 +75,10 @@ public class GameTimer : MonoBehaviour
             roomCompletionCounts.Add(level.levelID, 1);
         }
 
+        score += Mathf.RoundToInt(100 * currentTime/maxTimeForCurrentLevel);
+
         uiManager.UpdateLevelsBeatenDisplay(roomCompletionCounts.Values.Sum());
+        uiManager.UpdateScoreDisplay(score);
     }
 
     private void TriggerGameOver()

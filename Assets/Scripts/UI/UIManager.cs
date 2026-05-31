@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
     [Header("UI Elements")]
     public Slider timeSlider;
     public TMP_Text levelsBeatenText;
+    public TMP_Text scoreText;
     public GameObject gameOverPanel;
 
 
@@ -42,6 +43,14 @@ public class UIManager : MonoBehaviour
         if (levelsBeatenText != null)
         {
             levelsBeatenText.text = "Levels Cleared: " + totalLevelsBeaten.ToString();
+        }
+    }
+
+    public void UpdateScoreDisplay(int score)
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = "Score: " + score.ToString();
         }
     }
 
