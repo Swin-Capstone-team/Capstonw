@@ -32,7 +32,6 @@ public class Swinging : MonoBehaviour
 
 
     [Header("Swinging")]
-    public bool IsUsingGrappleAnchor = true;
     public float jointSpring = 2f;
     public float jointDamper = 0.5f;
     public float jointMassScale = 1f;
@@ -156,19 +155,9 @@ public class Swinging : MonoBehaviour
 
     private void HandleTargeting()
     {
-        if (IsUsingGrappleAnchor)
-        {
-            hasLeftTarget = FindBestGrapplePoint(-targetingSpread, out currentTargetPointLeft, out leftTargetTransform);
-            hasRightTarget = FindBestGrapplePoint(targetingSpread, out currentTargetPointRight, out rightTargetTransform);
-        }
-        else
-        {
-            RaycastHit hit;
-            hasLeftTarget = Physics.Raycast(cam.position, Quaternion.AngleAxis(-targetingSpread, Vector3.up) * cam.forward, out hit, maxSwingDistance, Grappleable);
-            currentTargetPointLeft = hit.point;
-            hasRightTarget = Physics.Raycast(cam.position, Quaternion.AngleAxis(targetingSpread, Vector3.up) * cam.forward, out hit, maxSwingDistance, Grappleable);
-            currentTargetPointRight = hit.point;
-        }
+        hasLeftTarget = FindBestGrapplePoint(-targetingSpread, out currentTargetPointLeft, out leftTargetTransform);
+        hasRightTarget = FindBestGrapplePoint(targetingSpread, out currentTargetPointRight, out rightTargetTransform);
+      
         hasTarget = hasLeftTarget || hasRightTarget;
     }
 
@@ -521,14 +510,8 @@ public class Swinging : MonoBehaviour
         joint.connectedAnchor = currentTargetPoint;
 
         float distanceFromPoint = Vector3.Distance(player.position, currentTargetPoint);
-        if (IsUsingGrappleAnchor) //This was the only difference between raycast and grapple points. Do they need to be different?
-        {
-            joint.minDistance = distanceFromPoint * 0.05f;
-        } 
-        else 
-        {
-            joint.minDistance = distanceFromPoint * 0.05f;
-        }
+        joint.minDistance = distanceFromPoint * 0.05f;
+  
 
         Vector3 localPoint = anchorTransform.InverseTransformPoint(currentTargetPoint);
 
