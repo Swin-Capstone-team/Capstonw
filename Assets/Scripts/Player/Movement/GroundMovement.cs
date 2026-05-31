@@ -48,23 +48,20 @@ public class GroundMovement : MonoBehaviour, IMovementState
         if (mgr == null) return;
 
         bool isSprinting = (mgr.Input != null && mgr.Input.SprintHeld) || mgr.IsSprintLatched;
-        float targetSpeed = isSprinting ? mgr.Settings.sprintSpeed : mgr.Settings.walkSpeed;
+        if (!mgr.IsSlingshotting)
+        {
+            mgr.SetCurrentSpeed(isSprinting ? mgr.Settings.sprintSpeed : mgr.Settings.walkSpeed);
+        }
+        float currentSpeed = mgr.CurrentSpeed;
 
         // Drag handling (on ground)
-        mgr.Rb.linearDamping = mgr.Settings.groundFriction;
+        mgr.Rb.linearDamping = mgr.Settings.groundFriction;   
 
-        // Apply movement force
-        if (lastInputDir.sqrMagnitude > 0.01f)
-        {
-            mgr.Rb.AddForce(lastInputDir.normalized * targetSpeed * 10f, ForceMode.Force);
-        }
-
-        // Speed Control
+        // Only apply force if velocity is less than max speed
         Vector3 flatVel = new Vector3(mgr.Rb.linearVelocity.x, 0f, mgr.Rb.linearVelocity.z);
-        if (flatVel.magnitude > targetSpeed)
+        if (lastInputDir.sqrMagnitude > 0.01f && flatVel.magnitude < currentSpeed)
         {
-            Vector3 limitedVel = flatVel.normalized * targetSpeed;
-            mgr.Rb.linearVelocity = new Vector3(limitedVel.x, mgr.Rb.linearVelocity.y, limitedVel.z);
+            mgr.Rb.AddForce(lastInputDir.normalized * currentSpeed * 10f, ForceMode.Force);
         }
     }
 }

@@ -18,6 +18,7 @@ public class Swinging : MonoBehaviour
     public LineRenderer llr;
     public LineRenderer rlr;
     public Transform leftGunTip, rightGunTip, cam, player;
+    [Tooltip("Layers that will block targeting")]
     public LayerMask Grappleable;
     private Vector3 leftGrapplePosition;
     private Vector3 rightGrapplePosition;
@@ -77,6 +78,7 @@ public class Swinging : MonoBehaviour
     public float slingUpwardBoost = 0.25f;
     public float slingMinYDir = 0.3f;
     private Vector3 initialPosition;
+    private Vector3 initialMidPoint;
 
 
     private Transform leftAnchorTransform;
@@ -220,15 +222,14 @@ public class Swinging : MonoBehaviour
             float windUpSpeed = Mathf.Max(maximumWindUp - distance, 0);
             movementManager.SetCurrentSpeed(Mathf.Min(windUpSpeed, movementManager.CurrentSpeed));
 
-            if((midPoint - transform.position - (midPoint - initialPosition)).sqrMagnitude >  + maximumWindUp*maximumWindUp + 5)
+            if((midPoint - transform.position - (initialMidPoint - initialPosition)).sqrMagnitude > maximumWindUp*maximumWindUp + 5)
             {
                 LaunchSlingShot(midPoint);
             }
-        }
-
-        if (inputState.Move.y >= 0  && movementManager.IsSlingshotting)
-        {
-           LaunchSlingShot(midPoint);
+            else if (inputState.Move.y >= 0  && movementManager.IsSlingshotting)
+            {
+                LaunchSlingShot(midPoint);
+            }
         }
     }
 
@@ -244,6 +245,7 @@ public class Swinging : MonoBehaviour
     {
         movementManager.SetSlingshotting(true);
         initialPosition = transform.position;
+        initialMidPoint = GetMidPoint();
         leftJoint.spring = 0;
         leftJoint.damper = 0;
         rightJoint.spring = 0;
@@ -271,7 +273,8 @@ public class Swinging : MonoBehaviour
         Vector3 direction = (midPoint - transform.position).normalized;
         if (direction.y < slingMinYDir) direction.y = slingMinYDir; // Prevent launching into the ground
         direction = (direction + cam.forward * slingForwardBoost + Vector3.up * slingUpwardBoost).normalized;
-        Vector3 force = direction * (transform.position - initialPosition).magnitude;
+        float dist = (transform.position - initialPosition).magnitude;
+        Vector3 force = dist/(dist + 3) * direction;
         rb.AddForce(force * slingForce, ForceMode.Impulse);
     }
 

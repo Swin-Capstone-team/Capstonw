@@ -37,19 +37,12 @@ public class AirMovement : MonoBehaviour, IMovementState
             return;
         }
 
-        // Apply air movement force
-        if (lastInputDir.sqrMagnitude > 0.01f)
+        // Only apply force if velocity is less than max speed
+        Vector3 flatVel = new Vector3(mgr.Rb.linearVelocity.x, 0f, mgr.Rb.linearVelocity.z);
+        if (lastInputDir.sqrMagnitude > 0.01f && flatVel.magnitude < mgr.Settings.airMaxSpeed)
         {
             // Use walkSpeed as base, apply airMultiplier
             mgr.Rb.AddForce(lastInputDir.normalized * mgr.Settings.walkSpeed * 10f * mgr.Settings.airMultiplier, ForceMode.Force);
-        }
-
-        // Speed Control
-        Vector3 flatVel = new Vector3(mgr.Rb.linearVelocity.x, 0f, mgr.Rb.linearVelocity.z);
-        if (flatVel.magnitude > mgr.Settings.airMaxSpeed)
-        {
-            Vector3 limitedVel = flatVel.normalized * mgr.Settings.airMaxSpeed;
-            mgr.Rb.linearVelocity = new Vector3(limitedVel.x, mgr.Rb.linearVelocity.y, limitedVel.z);
         }
     }
 }

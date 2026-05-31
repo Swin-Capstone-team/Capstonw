@@ -9104,7 +9104,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 922563328}
-  - component: {fileID: 922563329}
+  - component: {fileID: 922563330}
   m_Layer: 0
   m_Name: Level Manager
   m_TagString: Untagged
@@ -9127,7 +9127,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &922563329
+--- !u!114 &922563330
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9147,6 +9147,7 @@ MonoBehaviour:
   - {fileID: 4282723140107944820, guid: ed6cdd57f690b4bf9a5a1a15b893ba93, type: 3}
   - {fileID: 4282723140107944820, guid: 8ad7969eef7dd4d92af0318a04260b21, type: 3}
   - {fileID: 4282723140107944820, guid: 0489df03279af4b12b6e8d7e47dbbb95, type: 3}
+  - {fileID: 4282723140107944820, guid: 595a743b9ca1d444db86c04b7e704a04, type: 3}
   hallwayPrefabs:
   - {fileID: 4503921314214504493, guid: fcbcb00cc01094de0a05544b216ea0a5, type: 3}
   roomsToKeepAhead: 3
@@ -10898,7 +10899,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1285678752
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14170,6 +14171,14 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 1177411195}
+    - target: {fileID: 2242431794466313390, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: slingForce
+      value: 125
+      objectReference: {fileID: 0}
+    - target: {fileID: 2242431794466313390, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
+      propertyPath: Grappleable.m_Bits
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 2496628087055744545, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
       propertyPath: ammoDisplay
       value: 
