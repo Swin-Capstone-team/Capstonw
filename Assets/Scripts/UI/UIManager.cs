@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     public Slider timeSlider;
     public TMP_Text levelsBeatenText;
     public TMP_Text scoreText;
+    public TMP_Text gameOverDetails;
     public GameObject gameOverPanel;
 
 
@@ -20,6 +21,7 @@ public class UIManager : MonoBehaviour
         }
         
         UpdateLevelsBeatenDisplay(0);
+        UpdateScoreDisplay(0);
     }
 
     /// <summary>
@@ -35,7 +37,7 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Increments and updates the global score. Called by GameTimer.
+    /// Updates the levels beaten display. Called by GameTimer.
     /// </summary>
 
     public void UpdateLevelsBeatenDisplay(int totalLevelsBeaten)
@@ -54,10 +56,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ShowGameOverScreen()
+    public void ShowGameOverScreen(int score)
     {
         if (gameOverPanel != null)
         {
+            gameOverDetails.text = "Out of time!\nFinal Score: " + score.ToString() + "\nPress R to restart";
             gameOverPanel.SetActive(true);
         }
     }
