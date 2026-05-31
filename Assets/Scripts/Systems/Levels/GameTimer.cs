@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class GameTimer : MonoBehaviour
 {
@@ -7,11 +8,14 @@ public class GameTimer : MonoBehaviour
     public UIManager uiManager;
 
     private float currentTime;
+    private float decayMultiplier;
     private float maxTimeForCurrentLevel;
     private bool isTimerRunning = false;
 
     // Dictionary to track how many times the player has completed specific rooms
     private Dictionary<string, int> roomCompletionCounts = new Dictionary<string, int>();
+
+    private int score;
 
     private void Update()
     {
@@ -48,7 +52,7 @@ public class GameTimer : MonoBehaviour
         }
 
         // Calculate the decayed time: defaultTime / (decayRate ^ timesCompleted)
-        float decayMultiplier = Mathf.Pow(level.decayRate, timesCompleted);
+        decayMultiplier = Mathf.Pow(level.decayRate, timesCompleted);
         maxTimeForCurrentLevel = level.defaultTime / decayMultiplier;
         
         currentTime = maxTimeForCurrentLevel;
@@ -71,12 +75,17 @@ public class GameTimer : MonoBehaviour
         {
             roomCompletionCounts.Add(level.levelID, 1);
         }
+
+        score += Mathf.RoundToInt(100 * currentTime/maxTimeForCurrentLevel * decayMultiplier);
+        uiManager.UpdateLevelsBeatenDisplay(roomCompletionCounts.Values.Sum());
+        uiManager.UpdateScoreDisplay(score);
+
     }
 
     private void TriggerGameOver()
     {
         isTimerRunning = false;
-        uiManager.ShowGameOverScreen();
+        uiManager.ShowGameOverScreen(score);
         
         // Add your logic here to freeze the player or stop game time
         Time.timeScale = 0f;
