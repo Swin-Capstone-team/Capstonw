@@ -7,6 +7,7 @@ using System;
 public enum CharacterState
 {
     Default,
+    Grappling,
 }
 
 public enum OrientationMethod
@@ -24,6 +25,7 @@ public struct PlayerCharacterInputs
     public bool CrouchDown;
     public bool CrouchUp;
     public bool IsSprinting;
+    public bool GrappleDown;
 }
 
 public struct AICharacterInputs
@@ -86,6 +88,17 @@ public class CharacterController : MonoBehaviour, ICharacterController
         public float SlideJumpDecayMultiplier = 0.6f;
         public float SlideRechargeTime = 1.5f;
 
+        [Header("Grappling")]
+        public bool EnableGrappling = true;
+        public LayerMask GrappableLayer;
+        public float GrappleRange = 25f;
+        public float GrappleTargetSelectionDotMeasure = 0.5f;
+        public float GrappleSpeed = 40f;
+        public float GrappleAcceleration = 60f;
+        public float GrappleStopDistance = 1.5f;
+        public float GrappleCompletionBoost = 1.5f;
+        public float GrappleCooldown = 0.5f;
+
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
         public BonusOrientationMethod BonusOrientationMethod = BonusOrientationMethod.None;
@@ -120,6 +133,12 @@ public class CharacterController : MonoBehaviour, ICharacterController
 
         private int _consecutiveSlideJumps = 0;
         private float _continuousSprintTimer = 0f;
+        
+        // Grappling state
+        private Vector3 _cameraForward;
+        private Vector3 _grapplePoint;
+        private float _timeSinceLastGrapple = Mathf.Infinity;
+        private bool _grappleRequested = false;
         
         private Vector3 lastInnerNormal = Vector3.zero;
         private Vector3 lastOuterNormal = Vector3.zero;
@@ -188,6 +207,8 @@ public class CharacterController : MonoBehaviour, ICharacterController
             }
             Quaternion cameraPlanarRotation = Quaternion.LookRotation(cameraPlanarDirection, Motor.CharacterUp);
 
+            _cameraForward = inputs.CameraRotation * Vector3.forward;
+
             switch (CurrentCharacterState)
             {
                 case CharacterState.Default:
@@ -221,6 +242,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
                             {
                                 _isCrouching = true;
                                 Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
+                                MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
                             }
                         }
                         else if (inputs.CrouchUp)
@@ -230,6 +252,12 @@ public class CharacterController : MonoBehaviour, ICharacterController
 
                         // Sprinting input
                         _isSprinting = inputs.IsSprinting;
+
+                        // Grapple input
+                        if (inputs.GrappleDown)
+                        {
+                            _grappleRequested = true;
+                        }
 
                         break;
                     }
@@ -253,6 +281,53 @@ public class CharacterController : MonoBehaviour, ICharacterController
         /// </summary>
         public void BeforeCharacterUpdate(float deltaTime)
         {
+            _timeSinceLastGrapple += deltaTime;
+            
+            if (CurrentCharacterState == CharacterState.Default)
+            {
+                if (_grappleRequested && EnableGrappling && _timeSinceLastGrapple >= GrappleCooldown)
+                {
+                    if (TryFindGrapplePoint(out Vector3 grapplePoint))
+                    {
+                        // Ensure we unground when starting to grapple so we can move freely in the air
+                        Motor.ForceUnground();
+                        
+                        _grapplePoint = grapplePoint;
+                        TransitionToState(CharacterState.Grappling);
+                    }
+                }
+            }
+            
+            _grappleRequested = false;
+        }
+
+        private bool TryFindGrapplePoint(out Vector3 point)
+        {
+            point = Vector3.zero;
+            Collider[] colliders = Physics.OverlapSphere(Motor.TransientPosition, GrappleRange, GrappableLayer);
+            float bestDot = GrappleTargetSelectionDotMeasure;
+            bool found = false;
+
+            foreach (var col in colliders)
+            {
+                Vector3 dirToCol = (col.bounds.center - Motor.TransientPosition).normalized;
+                float dot = Vector3.Dot(_cameraForward, dirToCol);
+                
+                if (dot > bestDot)
+                {
+                    if (Physics.Raycast(Motor.TransientPosition, dirToCol, out RaycastHit hit, GrappleRange, GrappableLayer | Motor.CollidableLayers))
+                    {
+                        if (hit.collider == col)
+                        {
+                            bestDot = dot;
+                            point = hit.collider.bounds.center;
+                            found = true;
+                        }
+                    }
+                }
+            }
+            
+            return found;
         }
 
         /// <summary>
@@ -304,6 +379,18 @@ public class CharacterController : MonoBehaviour, ICharacterController
                         {
                             Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, Vector3.up, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
                             currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
+                        }
+                        break;
+                    }
+                case CharacterState.Grappling:
+                    {
+                        Vector3 dirToGrapple = (_grapplePoint - Motor.TransientPosition).normalized;
+                        Vector3 projectedDir = Vector3.ProjectOnPlane(dirToGrapple, Motor.CharacterUp).normalized;
+                        if (projectedDir.sqrMagnitude > 0f)
+                        {
+                            // Rotate towards grapple point
+                            Vector3 smoothedLookInputDirection = Vector3.Slerp(Motor.CharacterForward, projectedDir, 1 - Mathf.Exp(-OrientationSharpness * deltaTime)).normalized;
+                            currentRotation = Quaternion.LookRotation(smoothedLookInputDirection, Motor.CharacterUp);
                         }
                         break;
                     }
@@ -572,6 +659,26 @@ public class CharacterController : MonoBehaviour, ICharacterController
                         }
                         break;
                     }
+                case CharacterState.Grappling:
+                    {
+                        Vector3 dirToGrapple = (_grapplePoint - Motor.TransientPosition).normalized;
+                        float distToGrapple = Vector3.Distance(Motor.TransientPosition, _grapplePoint);
+
+                        if (distToGrapple <= GrappleStopDistance)
+                        {
+                            // Finish grapple and apply completion boost momentum
+                            currentVelocity = dirToGrapple * (MaxAirMoveSpeed * _currentSprintMultiplier * GrappleCompletionBoost);
+                            _timeSinceLastGrapple = 0f;
+                            TransitionToState(CharacterState.Default);
+                        }
+                        else
+                        {
+                            // Quickly accelerate towards the grapple point
+                            Vector3 targetVelocity = dirToGrapple * GrappleSpeed;
+                            currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, 1f - Mathf.Exp(-GrappleAcceleration * deltaTime));
+                        }
+                        break;
+                    }
             }
         }
 
@@ -614,6 +721,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
                         {
                             // Do an overlap test with the character's standing height to see if there are any obstructions
                             Motor.SetCapsuleDimensions(0.5f, 2f, 1f);
+                            MeshRoot.localScale = Vector3.one;
                             if (Motor.CharacterOverlap(
                                 Motor.TransientPosition,
                                 Motor.TransientRotation,
@@ -623,6 +731,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
                             {
                                 // If obstructions, just stick to crouching dimensions
                                 Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
+                                MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
                             }
                             else
                             {
@@ -630,6 +739,10 @@ public class CharacterController : MonoBehaviour, ICharacterController
                                 _isCrouching = false;
                             }
                         }
+                        break;
+                    }
+                case CharacterState.Grappling:
+                    {
                         break;
                     }
             }

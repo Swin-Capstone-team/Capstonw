@@ -58,22 +58,7 @@ public class SnapshotAnimator : MonoBehaviour
 
     public void PlayRun(bool isSprinting = false)
     {
-        if (currentState != "Run_Pose_A" && currentState != "Run_Pose_B")
-        {
-            // Force an immediate pose update when starting to run
-            stepTimer = 0f;
-        }
-
-        stepTimer -= Time.deltaTime;
-        
-        // When the timer hits 0, swap the pose
-        if (stepTimer <= 0f)
-        {
-            isRightFootForward = !isRightFootForward;
-            stepTimer = isSprinting ? sprintStepInterval : stepInterval;
-            
-            string pose = isRightFootForward ? "Run_Pose_A" : "Run_Pose_B";
-            ChangeAnimation(pose);
-        }
+        if (isSprinting) ChangeAnimation("Sprint");
+        else ChangeAnimation("Run");
     }
 }
