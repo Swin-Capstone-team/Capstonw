@@ -5,7 +5,6 @@ public class LevelManager : MonoBehaviour
 {
     [Header("System References")]
     public GameTimer gameTimer;
-    public UIManager uiManager;
 
     [Header("Prefabs")]
     public Level startingRoomPrefab;
@@ -92,7 +91,6 @@ public class LevelManager : MonoBehaviour
         // 3. ONLY spawn the next sequence if we just beat a main parkour room
         if (!completedRoom.isHallway)
         {
-            uiManager.IncrementLevelsBeaten();
             SpawnNextSequence();
         }
 
