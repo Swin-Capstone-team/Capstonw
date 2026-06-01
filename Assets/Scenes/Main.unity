@@ -790,7 +790,7 @@ MonoBehaviour:
   hallwayPrefabs:
   - {fileID: 4503921314214504493, guid: fcbcb00cc01094de0a05544b216ea0a5, type: 3}
   roomsToKeepAhead: 3
-  roomsToKeepBehind: 1
+  roomsToKeepBehind: 3
 --- !u!1 &932442578
 GameObject:
   m_ObjectHideFlags: 0

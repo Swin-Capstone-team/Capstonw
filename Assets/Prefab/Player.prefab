@@ -834,7 +834,7 @@ MonoBehaviour:
   GrappableLayer:
     serializedVersion: 2
     m_Bits: 128
-  GrappleRange: 25
+  GrappleRange: 40
   GrappleTargetSelectionDotMeasure: 0.2
   GrappleSpeed: 40
   GrappleAcceleration: 60
@@ -1620,6 +1620,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1779106790129384563}
   - component: {fileID: 3718453146685659612}
+  - component: {fileID: 1766583638391384860}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1658,6 +1659,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player
   Character: {fileID: 8281349379505519708}
   CharacterCamera: {fileID: 2608433161459938158}
+--- !u!114 &1766583638391384860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5322472182857757716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d577660f82e049dcbac3ec8cd556cec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Restart
 --- !u!1 &5340331865509627430
 GameObject:
   m_ObjectHideFlags: 0
