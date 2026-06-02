@@ -10692,12 +10692,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1588238756}
   m_Layer: 5
-  m_Name: Pausemenu
+  m_Name: PauseMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1588238756
 RectTransform:
   m_ObjectHideFlags: 0

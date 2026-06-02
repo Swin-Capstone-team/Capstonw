@@ -1,9 +1,9 @@
+using System.Security.AccessControl;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class MenuController : MonoBehaviour
 {
     private PlayerInputState _input;
-    private PlayerInputState _pause;
     public GameObject pauseMenu; // Reference to the pause menu UI
     private bool isPaused = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -12,11 +12,7 @@ public class GameController : MonoBehaviour
         pauseMenu.SetActive(false);
 
         _input ??= GetComponentInParent<PlayerInputState>();
-        _pause ??= GetComponentInParent<PlayerInputState>();
-
        
-
-
     }
 
     // Update is called once per frame
@@ -29,7 +25,7 @@ public class GameController : MonoBehaviour
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
         }
 
-        if (_pause.PausePressedThisFrame)
+        if (_input.PausePressedThisFrame)
         {
             //Toggle pause state
             TogglePause();
@@ -62,18 +58,18 @@ public class GameController : MonoBehaviour
     
     public void Resume()
     {
-        Debug.Log("Resume called on: " + gameObject.name + " ID: " + GetInstanceID());
+        Debug.Log("Resume called on: " + gameObject.name +
+
+              " ID: " + GetInstanceID() +
+
+              " pauseMenu: " + (pauseMenu == null ? "NULL" : pauseMenu.name));
+        if (!isPaused) return; // If the game is not paused, do nothing
         Debug.Log("Resuming game...");
         isPaused = false;
-
         pauseMenu.SetActive(false);
-
         Time.timeScale = 1f;
-
         Cursor.visible = false;
-
         Cursor.lockState = CursorLockMode.Locked;
-
     }
 
     public void Quit()
