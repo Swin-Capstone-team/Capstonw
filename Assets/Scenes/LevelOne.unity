@@ -10155,7 +10155,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 9172992868836322229, guid: afacc0513093d4fa3864912e11a13fb4, type: 3}
-        m_TargetAssemblyTypeName: Restart, Assembly-CSharp
+        m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
         m_MethodName: Resume
         m_Mode: 1
         m_Arguments:
