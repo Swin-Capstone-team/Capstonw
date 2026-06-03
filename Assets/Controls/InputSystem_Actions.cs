@@ -156,6 +156,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Grapple"",
+                    ""type"": ""Button"",
+                    ""id"": ""47b72137-635c-430b-9c04-c99b07447e66"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""RightSwing"",
                     ""type"": ""Button"",
                     ""id"": ""b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba"",
@@ -465,6 +474,28 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""LeftSwing"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2dc57fa6-2419-43a2-9b46-56db1ab66a7e"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Grapple"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a307144d-c702-4568-92ce-0ce6be71a894"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Grapple"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1136,6 +1167,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_LeftSwing = m_Player.FindAction("LeftSwing", throwIfNotFound: true);
+        m_Player_Grapple = m_Player.FindAction("Grapple", throwIfNotFound: true);
         m_Player_RightSwing = m_Player.FindAction("RightSwing", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Restart = m_Player.FindAction("Restart", throwIfNotFound: true);
@@ -1240,6 +1272,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Crouch;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_LeftSwing;
+    private readonly InputAction m_Player_Grapple;
     private readonly InputAction m_Player_RightSwing;
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_Restart;
@@ -1283,6 +1316,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/LeftSwing".
         /// </summary>
         public InputAction @LeftSwing => m_Wrapper.m_Player_LeftSwing;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Grapple".
+        /// </summary>
+        public InputAction @Grapple => m_Wrapper.m_Player_Grapple;
         /// <summary>
         /// Provides access to the underlying input action "Player/RightSwing".
         /// </summary>
@@ -1346,6 +1383,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @LeftSwing.started += instance.OnLeftSwing;
             @LeftSwing.performed += instance.OnLeftSwing;
             @LeftSwing.canceled += instance.OnLeftSwing;
+            @Grapple.started += instance.OnGrapple;
+            @Grapple.performed += instance.OnGrapple;
+            @Grapple.canceled += instance.OnGrapple;
             @RightSwing.started += instance.OnRightSwing;
             @RightSwing.performed += instance.OnRightSwing;
             @RightSwing.canceled += instance.OnRightSwing;
@@ -1390,6 +1430,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @LeftSwing.started -= instance.OnLeftSwing;
             @LeftSwing.performed -= instance.OnLeftSwing;
             @LeftSwing.canceled -= instance.OnLeftSwing;
+            @Grapple.started -= instance.OnGrapple;
+            @Grapple.performed -= instance.OnGrapple;
+            @Grapple.canceled -= instance.OnGrapple;
             @RightSwing.started -= instance.OnRightSwing;
             @RightSwing.performed -= instance.OnRightSwing;
             @RightSwing.canceled -= instance.OnRightSwing;
@@ -1751,6 +1794,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLeftSwing(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Grapple" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGrapple(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "RightSwing" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

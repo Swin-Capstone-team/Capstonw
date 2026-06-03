@@ -94,6 +94,7 @@ public class Player : MonoBehaviour
         characterInputs.CrouchDown = _actions.Player.Crouch.WasPressedThisFrame();
         characterInputs.CrouchUp = _actions.Player.Crouch.WasReleasedThisFrame();
         characterInputs.IsSprinting = _actions.Player.Sprint.IsPressed();
+        characterInputs.GrappleDown = _actions.Player.Grapple.WasPressedThisFrame();
 
         // Apply inputs to character
         Character.SetInputs(ref characterInputs);
