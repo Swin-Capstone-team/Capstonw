@@ -12,17 +12,31 @@ public class GameController : MonoBehaviour
         pauseMenu.SetActive(false);
 
         _input ??= GetComponentInParent<PlayerInputState>();
-        _pause ??= GetComponentInParent<PlayerInputState>();
+        _pause ??= GetComponentInParent<PlayerInputState>();  
 
-       
+    }
 
+    private InputSystem_Actions _actions;
 
+    private void Awake()
+    {
+        _actions = new InputSystem_Actions();
+    }
+
+    private void OnEnable()
+    {
+        _actions.Player.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _actions.Player.Disable();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_input.RestartPressedThisFrame)
+        if (_actions.Player.Restart.WasPressedThisFrame())
         {
             Debug.Log("Restarting level...");
             Time.timeScale = 1f; // Ensure time is running before restarting
