@@ -2,25 +2,30 @@ using UnityEngine;
 
 public class Restart : MonoBehaviour
 {
-    private PlayerInputState _input;
+    private InputSystem_Actions _actions;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
-        _input ??= GetComponentInParent<PlayerInputState>();
+        _actions = new InputSystem_Actions();
+    }
 
-        if (_input != null) return;
+    private void OnEnable()
+    {
+        _actions.Player.Enable();
+    }
 
-        Debug.LogError("Restart requires PlayerInputState on this object or a parent.", this);
-        enabled = false;
+    private void OnDisable()
+    {
+        _actions.Player.Disable();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_input.RestartPressedThisFrame)
+        if (_actions.Player.Restart.WasPressedThisFrame())
         {
             Debug.Log("Restarting level...");
+            Time.timeScale = 1f; // Ensure time is running before restarting
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
         }
     }

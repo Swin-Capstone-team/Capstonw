@@ -11,6 +11,7 @@ public class ShotgunController : MonoBehaviour {
     [SerializeField] private LayerMask ignoreLayers;
     [SerializeField] private Animator animator;
     [SerializeField] private TextMeshProUGUI ammoDisplay;
+    private PlayerInputState inputState;
 
     [Header("Settings")]
     [SerializeField] private float knockbackForce = 5f;
@@ -21,6 +22,17 @@ public class ShotgunController : MonoBehaviour {
     private float nextTimeToFire = 0f;
     private Camera cam;
 
+    void Awake()
+    {
+        inputState ??= GetComponentInParent<PlayerInputState>();
+
+        if (inputState != null) return;
+
+        Debug.LogError("ShotgunController requires PlayerInputState on this object or a parent.", this);
+        enabled = false;
+    }
+
+
     void Start() {
         cam = Camera.main;
         currentAmmo = gunData.magSize;
@@ -30,17 +42,13 @@ public class ShotgunController : MonoBehaviour {
     void Update() {
         if (isReloading) return;
 
-        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < gunData.magSize) {
+        if (currentAmmo <= 0) {
             StartCoroutine(Reload());
             return;
         }
 
-        if (Input.GetButtonDown("Fire1") && Time.time >= nextTimeToFire) {
-            if (currentAmmo > 0) {
-                Shoot();
-            } else {
-                StartCoroutine(Reload());
-            }
+        if (inputState != null && inputState.ShootPressedThisFrame && Time.time >= nextTimeToFire) {
+            Shoot();
         }
     }
 

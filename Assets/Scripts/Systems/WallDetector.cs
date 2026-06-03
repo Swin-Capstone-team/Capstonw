@@ -6,17 +6,21 @@ public class WallDetector : MonoBehaviour
     [HideInInspector] public bool nearWall = false;
     [HideInInspector] public Vector3 wallNormal;
     [HideInInspector] public Collider currentWall;
+    public string[] wallTags = new string[] { "Jumpable" };
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Jumpable"))
+        foreach (string tag in wallTags)
         {
-            nearWall = true;
-            currentWall = other;
+            if (other.CompareTag(tag))
+            {
+                nearWall = true;
+                currentWall = other;
 
-            // Direction from player to collider center
-            Vector3 dir = (transform.position - other.ClosestPointOnBounds(transform.position)).normalized;
-            wallNormal = dir;
+                // Direction from player to collider center
+                Vector3 dir = (transform.position - other.ClosestPointOnBounds(transform.position)).normalized;
+                wallNormal = dir;
+            }
         }
     }
 

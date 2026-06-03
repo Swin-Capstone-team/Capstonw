@@ -18,6 +18,7 @@ public class PlayerInputState : MonoBehaviour
     public bool JumpPressedThisFrame => _actions.Player.Jump.WasPressedThisFrame();
 
     public bool ShootPressedThisFrame => _actions.Player.Shoot.WasPressedThisFrame();
+    public bool AimHeld => _actions.Player.Aim.IsPressed();
 
     public bool SprintHeld => _actions.Player.Sprint.IsPressed();
 
@@ -31,8 +32,6 @@ public class PlayerInputState : MonoBehaviour
     public bool RightSwingHeld => _actions.Player.RightSwing.IsPressed();
     public bool RightSwingPressedThisFrame => _actions.Player.RightSwing.WasPressedThisFrame();
     public bool RightSwingReleasedThisFrame => _actions.Player.RightSwing.WasReleasedThisFrame();
-
-    public bool AttackPressedThisFrame => _actions.Player.Attack.WasPressedThisFrame();
 
     public bool RestartPressedThisFrame => _actions.Player.Restart.WasPressedThisFrame();
 
@@ -67,7 +66,6 @@ public class PlayerInputState : MonoBehaviour
         LogActionPress(_actions.Player.Crouch, "Crouch");
         LogActionPress(_actions.Player.LeftSwing, "LeftSwing");
         LogActionPress(_actions.Player.RightSwing, "RightSwing");
-        LogActionPress(_actions.Player.Attack, "Attack");
     }
 }
 
