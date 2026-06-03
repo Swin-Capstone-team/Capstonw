@@ -39,7 +39,7 @@ public class LevelManager : MonoBehaviour
 
     private void SpawnNextSequence()
     {
-        SpawnRoom(true);  
+        SpawnRoom(true);
         SpawnRoom(false); 
     }
 
