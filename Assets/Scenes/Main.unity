@@ -439,7 +439,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalRotation.x
@@ -447,7 +447,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalRotation.z
@@ -459,7 +459,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -783,14 +783,14 @@ MonoBehaviour:
   startingRoomPrefab: {fileID: 4282723140107944820, guid: 99f2feed0e46e445aad004e423d5d629, type: 3}
   parkourRoomPrefabs:
   - {fileID: 4282723140107944820, guid: 99f2feed0e46e445aad004e423d5d629, type: 3}
-  - {fileID: 4282723140107944820, guid: bbd06a9fcc58c46bebebb26e639e7b42, type: 3}
-  - {fileID: 4282723140107944820, guid: ed6cdd57f690b4bf9a5a1a15b893ba93, type: 3}
-  - {fileID: 4282723140107944820, guid: 8ad7969eef7dd4d92af0318a04260b21, type: 3}
-  - {fileID: 4282723140107944820, guid: 0489df03279af4b12b6e8d7e47dbbb95, type: 3}
+  - {fileID: 4282723140107944820, guid: 9c7718e71e1dd472f907bcc4565867d2, type: 3}
+  - {fileID: 4282723140107944820, guid: dc8b2cd635402470a88a7920bd3781ec, type: 3}
+  - {fileID: 4282723140107944820, guid: 1ea171a06fc0f4e53964bf227866e83d, type: 3}
+  - {fileID: 4282723140107944820, guid: 46fb33f4d50b24b63b5548c4eba85f92, type: 3}
   hallwayPrefabs:
   - {fileID: 4503921314214504493, guid: fcbcb00cc01094de0a05544b216ea0a5, type: 3}
-  roomsToKeepAhead: 3
-  roomsToKeepBehind: 3
+  roomsToKeepAhead: 2
+  roomsToKeepBehind: 1
 --- !u!1 &932442578
 GameObject:
   m_ObjectHideFlags: 0
