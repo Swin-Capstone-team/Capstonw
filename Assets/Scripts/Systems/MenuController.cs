@@ -48,7 +48,7 @@ public class MenuController : MonoBehaviour
         else if (isPaused)
         {
             Debug.Log("Pausing game...");
-            Time.timeScale = 0f; // Pause the game
+            Time.timeScale = 0.0001f; // Pause the game
             Cursor.visible = true; // Lock the cursor
             Cursor.lockState = CursorLockMode.None;
             pauseMenu.SetActive(true); // Show the pause menu
