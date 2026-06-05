@@ -1,4 +1,4 @@
-using System.Security.AccessControl;
+
 using UnityEngine;
 
 public class MenuController : MonoBehaviour
@@ -75,6 +75,7 @@ public class MenuController : MonoBehaviour
     public void Quit()
     {
         Application.Quit();
+        Debug.Log("Quitting...");
     }
 }
 
