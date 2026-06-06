@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4c27ed8c87225304eb19ecada9af9320
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 202484
+  packageName: Amplify Shader Pack
+  packageVersion: 2.3.9-r2
+  assetPath: Assets/AmplifyShaderPack/Assets/Prefabs/URP/Decal/Decal Parallax Bidirectional
+    Mesh.prefab
+  uploadId: 853548
