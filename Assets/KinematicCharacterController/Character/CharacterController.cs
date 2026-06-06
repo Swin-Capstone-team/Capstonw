@@ -319,7 +319,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
             point = Vector3.zero;
             Collider targetCollider = null;
             Collider[] colliders = Physics.OverlapSphere(Motor.TransientPosition, GrappleRange, GrappableLayer);
-            float bestDot = GrappleTargetSelectionDotMeasure;
+            float bestScore = GrappleTargetSelectionDotMeasure;
             bool found = false;
 
             foreach (var col in colliders)
@@ -327,14 +327,17 @@ public class CharacterController : MonoBehaviour, ICharacterController
                 Vector3 center = col.bounds.center;
                 Vector3 dirToCol = (center - Motor.TransientPosition).normalized;
                 float dot = Vector3.Dot(_cameraForward, dirToCol);
+                float distance = Vector3.Distance(Motor.TransientPosition, center);
+                distance = 1f - distance/GrappleRange;
+                float score = dot * 0.8f + distance * 0.2f;
                 
-                if (dot > bestDot)
+                if (score > bestScore)
                 {
                     if (Physics.Raycast(Motor.TransientPosition, dirToCol, out RaycastHit hit, GrappleRange, GrappableLayer | Motor.CollidableLayers))
                     {
                         if (hit.collider == col)
                         {
-                            bestDot = dot;
+                            bestScore = score;
                             point = center;
                             targetCollider = hit.collider;
                             found = true;
@@ -344,6 +347,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
             }
             if (found)
             {
+                Debug.Log(targetCollider.name);
                 GrappleIndicator newIndicator = targetCollider.GetComponent<GrappleIndicator>();
                 if(newIndicator != currentTargetIndicator)
                 {
