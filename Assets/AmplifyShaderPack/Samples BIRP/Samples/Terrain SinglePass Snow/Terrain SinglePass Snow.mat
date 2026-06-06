@@ -1,0 +1,275 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Terrain SinglePass Snow
+  m_Shader: {fileID: 4800000, guid: 44da71d6577f50b40b4fa92522ac40fe, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _INSTANCEDTERRAINNORMALS_PIXEL
+  m_InvalidKeywords:
+  - _COVERAGEFADE_ON
+  - _TERRAIN_INSTANCED_PERPIXEL_NORMAL
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Control:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Control1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask4:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask5:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask6:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask7:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal4:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal5:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal6:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal7:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SnowMapBaseColor:
+        m_Texture: {fileID: 2800000, guid: f18fa2ed3b5be294599a8db0abc60b99, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SnowMapNormal:
+        m_Texture: {fileID: 2800000, guid: 8429cfd5f2d48c04b8d5dc9df3d0d42d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SnowMapSplat:
+        m_Texture: {fileID: 2800000, guid: 0cc4265c3fca4c5478b870fc1a0e2213, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat4:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat5:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat6:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat7:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TerrainHolesTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Brightness: 0
+    - _Curve: 0
+    - _EnableFog: 0
+    - _EnableInstancedPerPixelNormal: 1
+    - _FadeDistance: 0
+    - _FadeRange: 0
+    - _Float5: 2.5
+    - _FogFill: 0.194
+    - _FogHeight: 0.261
+    - _FogSmoothness: 0.082
+    - _GlossyReflections: 1
+    - _InstancedTerrainNormals: 1
+    - _Metallic: 0
+    - _Metallic0: 0
+    - _Metallic1: 0
+    - _Metallic2: 0
+    - _Metallic3: 0
+    - _Metallic4: 0
+    - _Metallic5: 0
+    - _Metallic6: 0
+    - _Metallic7: 0
+    - _Mettalic: 0.6
+    - _NormalScale0: 1
+    - _NormalScale1: 1
+    - _NormalScale2: 1
+    - _NormalScale3: 1
+    - _NormalScale4: 1
+    - _NormalScale5: 1
+    - _NormalScale6: 1
+    - _NormalScale7: 1
+    - _OpacityAsDensity0: 0
+    - _OpacityAsDensity1: 0
+    - _OpacityAsDensity2: 0
+    - _OpacityAsDensity3: 0
+    - _OpacityAsDensity4: 0
+    - _OpacityAsDensity5: 0
+    - _OpacityAsDensity6: 0
+    - _OpacityAsDensity7: 0
+    - _Smoothness: 0
+    - _Smoothness0: 0
+    - _Smoothness1: 0
+    - _Smoothness2: 0
+    - _Smoothness3: 0
+    - _Smoothness4: 0
+    - _Smoothness5: 0
+    - _Smoothness6: 0
+    - _Smoothness7: 0
+    - _SnowBrightness: 1
+    - _SnowEnable: 1
+    - _SnowNormalStrength: 1
+    - _SnowSaturation: 0
+    - _SnowSplatABlendFactor: 0
+    - _SnowSplatABlendFalloff: 0
+    - _SnowSplatABlendStrength: 5
+    - _SnowSplatAEnable: 1
+    - _SnowSplatAMax: 1
+    - _SnowSplatAMin: 0.15
+    - _SnowSplatASplatBias: 1
+    - _SnowSplatBBlendFactor: 0
+    - _SnowSplatBBlendFalloff: 0
+    - _SnowSplatBBlendStrength: 5
+    - _SnowSplatBEnable: 0
+    - _SnowSplatBMax: 0.65
+    - _SnowSplatBMin: -0.32
+    - _SnowSplatBSplatBias: 0
+    - _SnowSplatGBlendFactor: 0
+    - _SnowSplatGBlendFalloff: 0
+    - _SnowSplatGBlendStrength: 5
+    - _SnowSplatGEnable: 1
+    - _SnowSplatGMax: 1
+    - _SnowSplatGMin: -0.55
+    - _SnowSplatGSplatBias: 1
+    - _SnowSplatRBlendFactor: 0.49
+    - _SnowSplatRBlendFalloff: 10
+    - _SnowSplatRBlendStrength: 5
+    - _SnowSplatREnable: 1
+    - _SnowSplatRMax: 1
+    - _SnowSplatRMin: -0.95
+    - _SnowSplatRSplatBias: 1
+    - _SpecularHighlights: 1
+    - _Speed: 0
+    - _Splat0Brightness: 1
+    - _Splat1Brightness: 1
+    - _Splat2Brightness: 1
+    - _Splat3Brightness: 1
+    - _Splat4Brightness: 1
+    - _Splat5Brightness: 1
+    - _Splat6Brightness: 1
+    - _Splat7Brightness: 1
+    - _Wetness: 3.35
+    - __dirty: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseRemapScale0: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseRemapScale1: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseRemapScale2: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseRemapScale3: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseRemapScale4: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseRemapScale5: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseRemapScale6: {r: 1, g: 1, b: 1, a: 1}
+    - _DiffuseRemapScale7: {r: 1, g: 1, b: 1, a: 1}
+    - _SnowColor: {r: 1, g: 1, b: 1, a: 0}
+    - _SnowMainUVs: {r: 1, g: 1, b: 0, a: 0}
+    - _SonarColor: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecColor: {r: 1, g: 0.5533935, b: 0, a: 0}
+    - _SpecColor0: {r: 1, g: 0, b: 0, a: 0}
+    - _Specular: {r: 0, g: 2.61, b: 2.05, a: 0}
+    - _Specular0: {r: 0, g: 2.61, b: 2.05, a: 0}
+    - _Specular1: {r: 0, g: 0, b: 0, a: 0}
+    - _Specular2: {r: 0, g: 0, b: 0, a: 0}
+    - _Specular3: {r: 0, g: 0, b: 0, a: 0}
+    - _Specular4: {r: 0, g: 0, b: 0, a: 0}
+    - _Specular5: {r: 0, g: 0, b: 0, a: 0}
+    - _Specular6: {r: 0, g: 0, b: 0, a: 0}
+    - _Specular7: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecularHighlights0: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
