@@ -98,6 +98,8 @@ public class CharacterController : MonoBehaviour, ICharacterController
         public float GrappleStopDistance = 1.5f;
         public float GrappleCompletionBoost = 1.5f;
         public float GrappleCooldown = 0.5f;
+        [Tooltip("Frames between calling TryFindGrapplePoint")]
+        public int indicatorUpdateInterval = 10;
         public LineRenderer line;
 
         [Header("Misc")]
@@ -140,6 +142,9 @@ public class CharacterController : MonoBehaviour, ICharacterController
         private Vector3 _grapplePoint;
         private float _timeSinceLastGrapple = Mathf.Infinity;
         private bool _grappleRequested = false;
+        private int frameCount = 0;
+
+        private GrappleIndicator currentTargetIndicator;
         
         private Vector3 lastInnerNormal = Vector3.zero;
         private Vector3 lastOuterNormal = Vector3.zero;
@@ -283,17 +288,23 @@ public class CharacterController : MonoBehaviour, ICharacterController
         public void BeforeCharacterUpdate(float deltaTime)
         {
             _timeSinceLastGrapple += deltaTime;
+            frameCount++;
             
             if (CurrentCharacterState == CharacterState.Default)
             {
+                // Finds grapple point every 10 frames to show which one the player will go to
+                if(frameCount > indicatorUpdateInterval)
+                {
+                    frameCount = 0;
+                    TryFindGrapplePoint(out Vector3 point);  
+                }
                 if (_grappleRequested && EnableGrappling && _timeSinceLastGrapple >= GrappleCooldown)
                 {
-                    if (TryFindGrapplePoint(out Vector3 grapplePoint))
+                    if (TryFindGrapplePoint(out Vector3 point))
                     {
                         // Ensure we unground when starting to grapple so we can move freely in the air
+                        _grapplePoint = point;
                         Motor.ForceUnground();
-                        
-                        _grapplePoint = grapplePoint;
                         line.positionCount = 2;
                         TransitionToState(CharacterState.Grappling);
                     }
@@ -306,13 +317,15 @@ public class CharacterController : MonoBehaviour, ICharacterController
         private bool TryFindGrapplePoint(out Vector3 point)
         {
             point = Vector3.zero;
+            Collider targetCollider = null;
             Collider[] colliders = Physics.OverlapSphere(Motor.TransientPosition, GrappleRange, GrappableLayer);
             float bestDot = GrappleTargetSelectionDotMeasure;
             bool found = false;
 
             foreach (var col in colliders)
             {
-                Vector3 dirToCol = (col.bounds.center - Motor.TransientPosition).normalized;
+                Vector3 center = col.bounds.center;
+                Vector3 dirToCol = (center - Motor.TransientPosition).normalized;
                 float dot = Vector3.Dot(_cameraForward, dirToCol);
                 
                 if (dot > bestDot)
@@ -322,13 +335,34 @@ public class CharacterController : MonoBehaviour, ICharacterController
                         if (hit.collider == col)
                         {
                             bestDot = dot;
-                            point = hit.collider.bounds.center;
+                            point = center;
+                            targetCollider = hit.collider;
                             found = true;
                         }
                     }
                 }
             }
-            
+            if (found)
+            {
+                GrappleIndicator newIndicator = targetCollider.GetComponent<GrappleIndicator>();
+                if(newIndicator != currentTargetIndicator)
+                {
+                    if(currentTargetIndicator != null)
+                    {
+                        currentTargetIndicator.SetTargeted(false);
+                    }
+                    newIndicator.SetTargeted(true);
+                    currentTargetIndicator = newIndicator;
+                }
+            }
+            else
+            {
+                if(currentTargetIndicator != null)
+                {
+                    currentTargetIndicator.SetTargeted(false);
+                    currentTargetIndicator = null;
+                }
+            }
             return found;
         }
 
