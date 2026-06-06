@@ -100,6 +100,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
         public float GrappleCooldown = 0.5f;
         [Tooltip("Frames between calling TryFindGrapplePoint")]
         public int indicatorUpdateInterval = 10;
+        public float grappleAnimationDuration;
         public LineRenderer line;
 
         [Header("Misc")]
@@ -143,6 +144,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
         private float _timeSinceLastGrapple = Mathf.Infinity;
         private bool _grappleRequested = false;
         private int frameCount = 0;
+        private float grappleTimer = 0f;
 
         private GrappleIndicator currentTargetIndicator;
         
@@ -305,7 +307,8 @@ public class CharacterController : MonoBehaviour, ICharacterController
                         // Ensure we unground when starting to grapple so we can move freely in the air
                         _grapplePoint = point;
                         Motor.ForceUnground();
-                        line.positionCount = 2;
+                        line.positionCount = 20;
+                        grappleTimer = 0;
                         TransitionToState(CharacterState.Grappling);
                     }
                 }
@@ -347,7 +350,6 @@ public class CharacterController : MonoBehaviour, ICharacterController
             }
             if (found)
             {
-                Debug.Log(targetCollider.name);
                 GrappleIndicator newIndicator = targetCollider.GetComponent<GrappleIndicator>();
                 if(newIndicator != currentTargetIndicator)
                 {
@@ -372,8 +374,35 @@ public class CharacterController : MonoBehaviour, ICharacterController
 
         private void DrawLine()
         {
-            line.SetPosition(0, line.transform.position);
-            line.SetPosition(1, _grapplePoint);
+            grappleTimer += Time.deltaTime;
+            float t = grappleTimer / grappleAnimationDuration;
+
+            if (t >= 1f)
+            {
+                line.positionCount = 2;
+                line.SetPosition(0, line.transform.position);
+                line.SetPosition(1, _grapplePoint);
+                return;
+            }
+
+            float eased = Mathf.SmoothStep(0, 1, t);
+
+            Vector3 start = line.transform.position;
+
+            for (int i = 0; i < line.positionCount; i++)
+            {
+                float p = i / (float)(line.positionCount - 1);
+
+                Vector3 point = Vector3.Lerp(start, _grapplePoint, p);
+
+                float wave = Mathf.Sin((p * 10f) + Time.time * 25f) * 0.2f;
+
+                Vector3 offset = Vector3.Cross((_grapplePoint - start).normalized, Vector3.up) * wave;
+
+                point += offset * (1f - eased);
+
+                line.SetPosition(i, point);
+            }
         }
 
         /// <summary>

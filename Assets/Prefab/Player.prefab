@@ -982,6 +982,8 @@ MonoBehaviour:
   GrappleStopDistance: 1.5
   GrappleCompletionBoost: 1.5
   GrappleCooldown: 0.5
+  indicatorUpdateInterval: 10
+  grappleAnimationDuration: 0.15
   line: {fileID: 3947640953541695971}
   IgnoredColliders: []
   BonusOrientationMethod: 1
