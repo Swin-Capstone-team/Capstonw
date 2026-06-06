@@ -294,6 +294,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
                         Motor.ForceUnground();
                         
                         _grapplePoint = grapplePoint;
+                        line.positionCount = 2;
                         TransitionToState(CharacterState.Grappling);
                     }
                 }
@@ -676,6 +677,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
                             // Finish grapple and apply completion boost momentum
                             currentVelocity = dirToGrapple * (MaxAirMoveSpeed * _currentSprintMultiplier * GrappleCompletionBoost);
                             _timeSinceLastGrapple = 0f;
+                            line.positionCount = 0;
                             TransitionToState(CharacterState.Default);
                         }
                         else
