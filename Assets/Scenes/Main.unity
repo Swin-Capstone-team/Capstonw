@@ -167,7 +167,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8a3ef027962374aa5ac4669341b26c12, type: 3}
   - {fileID: 8300000, guid: 8933ea7d387e344eeaf5a8a85b6e8fc8, type: 3}
   - {fileID: 8300000, guid: 9e89c4cd816454a29a1eb20252028466, type: 3}
-  masterVolume: 0.5
+  masterVolume: 0
   crossfadeDuration: 1
 --- !u!1 &161305549
 GameObject:
@@ -472,7 +472,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1963736718645426273, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1572321250}
   m_SourcePrefab: {fileID: 100100000, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
 --- !u!1 &705507993
 GameObject:
@@ -789,6 +792,9 @@ MonoBehaviour:
   - {fileID: 4282723140107944820, guid: 46fb33f4d50b24b63b5548c4eba85f92, type: 3}
   hallwayPrefabs:
   - {fileID: 4503921314214504493, guid: fcbcb00cc01094de0a05544b216ea0a5, type: 3}
+  backWallPrefab: {fileID: 362130971969094183, guid: 06c876b37af53db429b30deee9cc4348, type: 3}
+  backWallDelay: 0.5
+  backWallBackwardOffset: 4
   roomsToKeepAhead: 2
   roomsToKeepBehind: 1
 --- !u!1 &932442578
@@ -1209,6 +1215,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1285678751}
   m_CullTransparentMesh: 1
+--- !u!1 &1572321244 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1963736718645426273, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
+  m_PrefabInstance: {fileID: 468326763}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1572321250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572321244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a813126e262a89b47883d22db64467a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FallReset
+  fallY: -20
 --- !u!1 &1719330752
 GameObject:
   m_ObjectHideFlags: 0
