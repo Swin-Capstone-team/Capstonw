@@ -98,6 +98,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
         public float GrappleStopDistance = 1.5f;
         public float GrappleCompletionBoost = 1.5f;
         public float GrappleCooldown = 0.5f;
+        public LineRenderer line;
 
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
@@ -328,6 +329,12 @@ public class CharacterController : MonoBehaviour, ICharacterController
             }
             
             return found;
+        }
+
+        private void DrawLine()
+        {
+            line.SetPosition(0, line.transform.position);
+            line.SetPosition(1, _grapplePoint);
         }
 
         /// <summary>
@@ -743,6 +750,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
                     }
                 case CharacterState.Grappling:
                     {
+                        DrawLine();
                         break;
                     }
             }
