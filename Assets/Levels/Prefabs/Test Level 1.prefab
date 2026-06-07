@@ -238,7 +238,7 @@ MonoBehaviour:
   - mechanicKey: Move
     message: 'Use WASD to move
 
-      Use Shift to sprint'
+      Use shift to sprint'
   startPoint: {fileID: 5525738566572054938}
   endPoint: {fileID: 3131399785983188368}
 --- !u!1 &690983969220389047
