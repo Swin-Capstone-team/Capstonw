@@ -3,27 +3,44 @@ using UnityEngine;
 public class SprintSpeedLines : MonoBehaviour
 {
     public ParticleSystem speedLines;
-    public Rigidbody playerRigidbody;
-    public float speedThreshold = 10f;
 
-    private bool wasFast = false;
+    [Header("Emission")]
+    public float sprintEmission = 40f;
+    public float smoothSpeed = 5f;
+
+    private ParticleSystem.EmissionModule emission;
+    private float currentEmission;
+
+    void Start()
+    {
+        if (speedLines == null)
+            speedLines = GetComponent<ParticleSystem>();
+
+        emission = speedLines.emission;
+
+        currentEmission = 0f;
+        emission.rateOverTime = 0f;
+
+        speedLines.Play();
+    }
 
     void Update()
     {
-        if (speedLines == null || playerRigidbody == null) return;
+        bool moving =
+            Input.GetAxisRaw("Horizontal") != 0 ||
+            Input.GetAxisRaw("Vertical") != 0;
 
-        bool fastNow = playerRigidbody.linearVelocity.magnitude >= speedThreshold;
+        bool sprinting = Input.GetKey(KeyCode.LeftShift) && moving;
 
-        if (fastNow && !wasFast)
-        {
-            speedLines.Clear(true);
-            speedLines.Play(true);
-        }
-        else if (!fastNow && wasFast)
-        {
-            speedLines.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-        }
+        float targetEmission = sprinting ? sprintEmission : 0f;
 
-        wasFast = fastNow;
+        // Smooth fade
+        currentEmission = Mathf.Lerp(
+            currentEmission,
+            targetEmission,
+            Time.deltaTime * smoothSpeed
+        );
+
+        emission.rateOverTime = currentEmission;
     }
 }

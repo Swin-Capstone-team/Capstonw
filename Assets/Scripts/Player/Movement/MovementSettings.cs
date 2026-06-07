@@ -34,7 +34,7 @@ public class MovementSettings : MonoBehaviour
     public float airMaxSpeed = 7f;
 
     [Min(0f)]
-    public float airAcceleration = 15f;
+    public float airMultiplier = 0.4f;
 
     [Header("Slide")]
     [Min(0f)]
@@ -110,7 +110,7 @@ public class MovementSettings : MonoBehaviour
         moveInputThreshold = Mathf.Clamp01(moveInputThreshold);
 
         airMaxSpeed = Mathf.Max(0f, airMaxSpeed);
-        airAcceleration = Mathf.Max(0f, airAcceleration);
+        airMultiplier = Mathf.Max(0f, airMultiplier);
 
         slideSpeedBoost = Mathf.Max(0f, slideSpeedBoost);
         slideCooldown = Mathf.Max(0f, slideCooldown);
