@@ -492,25 +492,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2608433161459938158, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
-      propertyPath: RotationSpeed
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5322472182857757716, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 8281349379505519708, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
-      propertyPath: FootstepInterval
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8281349379505519708, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
-      propertyPath: FootstepMoveThreshold
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8281349379505519708, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
-      propertyPath: SprintFootstepInterval
-      value: 0.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -832,6 +816,9 @@ MonoBehaviour:
   - {fileID: 4282723140107944820, guid: 46fb33f4d50b24b63b5548c4eba85f92, type: 3}
   hallwayPrefabs:
   - {fileID: 4503921314214504493, guid: fcbcb00cc01094de0a05544b216ea0a5, type: 3}
+  backWallPrefab: {fileID: 362130971969094183, guid: 06c876b37af53db429b30deee9cc4348, type: 3}
+  backWallDelay: 0.5
+  backWallBackwardOffset: 4
   roomsToKeepAhead: 2
   roomsToKeepBehind: 1
 --- !u!1 &932442578
