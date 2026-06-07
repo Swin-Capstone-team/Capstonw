@@ -13,6 +13,11 @@ public class LevelManager : MonoBehaviour
     public Level[] parkourRoomPrefabs;
     public Level[] hallwayPrefabs;
 
+    [Header("Back Wall")]
+    public GameObject backWallPrefab;
+    public float backWallDelay = 0.5f;
+    public float backWallBackwardOffset = 4f;
+
     [Header("Generation Settings")]
     public int roomsToKeepAhead = 3;
     public int roomsToKeepBehind = 1;
@@ -23,8 +28,12 @@ public class LevelManager : MonoBehaviour
 
     private HashSet<string> seenMechanicKeys = new HashSet<string>();
 
+    private FallReset playerFallReset;
+
     private void Start()
     {
+        playerFallReset = FindFirstObjectByType<FallReset>();
+
         SpawnStartingRoom();
 
         for (int i = 0; i < roomsToKeepAhead; i++)
@@ -47,18 +56,34 @@ public class LevelManager : MonoBehaviour
         Level startRoom = Instantiate(startingRoomPrefab, Vector3.zero, Quaternion.identity);
         startingRoomInstance = startRoom;
         RegisterRoom(startRoom);
-        gameTimer.StartTimerForLevel(startRoom);
+
+        if (gameTimer != null)
+        {
+            gameTimer.StartTimerForLevel(startRoom);
+        }
+
+        if (playerFallReset != null && startRoom.startPoint != null)
+        {
+            playerFallReset.SetRespawnPoint(startRoom.startPoint);
+        }
     }
 
     private void SpawnNextSequence()
     {
         SpawnRoom(true);
-        SpawnRoom(false); 
+        SpawnRoom(false);
     }
 
     private void SpawnRoom(bool isHallway)
     {
         Level[] prefabArray = isHallway ? hallwayPrefabs : parkourRoomPrefabs;
+
+        if (prefabArray == null || prefabArray.Length == 0)
+        {
+            Debug.LogWarning("No level prefabs assigned.");
+            return;
+        }
+
         Level prefabToSpawn = prefabArray[Random.Range(0, prefabArray.Length)];
 
         Level newRoom = Instantiate(prefabToSpawn);
@@ -69,6 +94,7 @@ public class LevelManager : MonoBehaviour
     private void AlignRoomToPrevious(Level newRoom, Level previousRoom)
     {
         if (previousRoom == null) return;
+        if (newRoom.startPoint == null || previousRoom.endPoint == null) return;
 
         Quaternion rotationOffset = previousRoom.endPoint.rotation * Quaternion.Inverse(newRoom.startPoint.rotation);
         newRoom.transform.rotation = rotationOffset * newRoom.transform.rotation;
@@ -81,7 +107,7 @@ public class LevelManager : MonoBehaviour
     {
         activeRooms.Add(room);
         lastSpawnedRoom = room;
-        
+
         room.OnRoomEntered += HandleRoomEntered;
         room.OnRoomExited  += HandleRoomExited;
 
@@ -91,13 +117,20 @@ public class LevelManager : MonoBehaviour
 
     private void HandleRoomEntered(Level enteredRoom)
     {
-        // Debug.Log($"[LevelManager] HandleRoomEntered: {enteredRoom.levelID}");
-        gameTimer.StartTimerForLevel(enteredRoom);
+        if (gameTimer != null)
+        {
+            gameTimer.StartTimerForLevel(enteredRoom);
+        }
+
+        if (playerFallReset != null && enteredRoom.startPoint != null)
+        {
+            playerFallReset.SetRespawnPoint(enteredRoom.startPoint);
+        }
 
         if (enteredRoom.isHallway)
         {
             // Dismiss any lingering hint when entering a hallway breather
-            uiManager.DismissHint();
+            if (uiManager != null) uiManager.DismissHint();
         }
         else
         {
@@ -108,13 +141,16 @@ public class LevelManager : MonoBehaviour
 
     private void HandleRoomExited(Level completedRoom)
     {
-        // Debug.Log($"[LevelManager] HandleRoomExited: {completedRoom.levelID}");
         completedRoom.OnRoomEntered -= HandleRoomEntered;
         completedRoom.OnRoomExited  -= HandleRoomExited;
 
-        // Don't dismiss here
-        gameTimer.RecordLevelCompletion(completedRoom);
-        
+        if (gameTimer != null)
+        {
+            gameTimer.RecordLevelCompletion(completedRoom);
+        }
+
+        StartCoroutine(SpawnBackWallAfterDelay(completedRoom));
+
         if (!completedRoom.isHallway)
             SpawnNextSequence();
 
@@ -122,17 +158,16 @@ public class LevelManager : MonoBehaviour
         CleanupOldRooms(exitedIndex);
     }
 
-
     private void ShowNewHintsForRoom(Level room)
     {
         if (room.hints == null || room.hints.Count == 0)
         {
             // Debug.Log($"[LevelManager] ShowNewHintsForRoom: {room.levelID} has no hints, skipping.");
-            uiManager.DismissHint(); // no hint for this room, clear whatever was showing
+            if (uiManager != null) uiManager.DismissHint(); // no hint for this room, clear whatever was showing
             return;
         }
 
-        foreach (MechanicHint hint in room.hints)
+        foreach (var hint in room.hints)
         {
             if (string.IsNullOrWhiteSpace(hint.mechanicKey) || string.IsNullOrWhiteSpace(hint.message))
             {
@@ -148,13 +183,13 @@ public class LevelManager : MonoBehaviour
 
             // Debug.Log($"[LevelManager] Showing hint for mechanic '{hint.mechanicKey}': {hint.message}");
             seenMechanicKeys.Add(hint.mechanicKey);
-            uiManager.ShowHint(hint.message);
+            if (uiManager != null) uiManager.ShowHint(hint.message);
             return;
         }
 
         // All hints on this room have already been seen this run
         // Debug.Log($"[LevelManager] All hints already seen for {room.levelID}, dismissing.");
-        uiManager.DismissHint();
+        if (uiManager != null) uiManager.DismissHint();
     }
 
     public void ResetTutorialState()
@@ -162,9 +197,43 @@ public class LevelManager : MonoBehaviour
         seenMechanicKeys.Clear();
     }
 
+    private IEnumerator SpawnBackWallAfterDelay(Level completedRoom)
+    {
+        yield return new WaitForSeconds(backWallDelay);
+
+        SpawnBackWall(completedRoom);
+    }
+
+    private void SpawnBackWall(Level completedRoom)
+    {
+        if (backWallPrefab == null)
+        {
+            Debug.LogWarning("Back wall prefab is not assigned.");
+            return;
+        }
+
+        if (completedRoom == null || completedRoom.endPoint == null)
+        {
+            return;
+        }
+
+        Vector3 spawnPosition =
+            completedRoom.endPoint.position -
+            completedRoom.endPoint.forward * backWallBackwardOffset;
+
+        GameObject wall = Instantiate(
+            backWallPrefab,
+            spawnPosition,
+            completedRoom.endPoint.rotation
+        );
+
+        wall.name = "Invisible Back Wall";
+        wall.transform.SetParent(completedRoom.transform);
+    }
+
     private void CleanupOldRooms(int currentlyExitedIndex)
     {
-        if (currentlyExitedIndex >= roomsToKeepBehind)
+        if (currentlyExitedIndex >= roomsToKeepBehind && activeRooms.Count > 0)
         {
             Level oldestRoom = activeRooms[0];
             activeRooms.RemoveAt(0);

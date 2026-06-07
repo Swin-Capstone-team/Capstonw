@@ -98,6 +98,10 @@ public class CharacterController : MonoBehaviour, ICharacterController
         public float GrappleStopDistance = 1.5f;
         public float GrappleCompletionBoost = 1.5f;
         public float GrappleCooldown = 0.5f;
+        [Tooltip("Frames between calling TryFindGrapplePoint")]
+        public int indicatorUpdateInterval = 10;
+        public float grappleAnimationDuration;
+        public LineRenderer line;
 
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
@@ -114,6 +118,15 @@ public class CharacterController : MonoBehaviour, ICharacterController
         public bool IsSprinting => _isSprinting;
         public bool IsSliding => _isSliding;
         public bool HasMoveInput => _moveInputVector.sqrMagnitude > 0.01f;
+
+
+        [Header("Footsteps")]
+        public float FootstepInterval = 0.3f;
+        public float SprintFootstepInterval = 0.25f;
+        public float FootstepMoveThreshold = 0.1f;
+
+        private float _footstepTimer = 0f;
+
 
         private Collider[] _probedColliders = new Collider[8];
         private RaycastHit[] _probedHits = new RaycastHit[8];
@@ -139,6 +152,10 @@ public class CharacterController : MonoBehaviour, ICharacterController
         private Vector3 _grapplePoint;
         private float _timeSinceLastGrapple = Mathf.Infinity;
         private bool _grappleRequested = false;
+        private int frameCount = 0;
+        private float grappleTimer = 0f;
+
+        private GrappleIndicator currentTargetIndicator;
         
         private Vector3 lastInnerNormal = Vector3.zero;
         private Vector3 lastOuterNormal = Vector3.zero;
@@ -282,17 +299,25 @@ public class CharacterController : MonoBehaviour, ICharacterController
         public void BeforeCharacterUpdate(float deltaTime)
         {
             _timeSinceLastGrapple += deltaTime;
+            frameCount++;
             
             if (CurrentCharacterState == CharacterState.Default)
             {
+                // Finds grapple point every 10 frames to show which one the player will go to
+                if(frameCount > indicatorUpdateInterval)
+                {
+                    frameCount = 0;
+                    TryFindGrapplePoint(out Vector3 point);  
+                }
                 if (_grappleRequested && EnableGrappling && _timeSinceLastGrapple >= GrappleCooldown)
                 {
-                    if (TryFindGrapplePoint(out Vector3 grapplePoint))
+                    if (TryFindGrapplePoint(out Vector3 point))
                     {
                         // Ensure we unground when starting to grapple so we can move freely in the air
+                        _grapplePoint = point;
                         Motor.ForceUnground();
-                        
-                        _grapplePoint = grapplePoint;
+                        line.positionCount = 20;
+                        grappleTimer = 0;
                         TransitionToState(CharacterState.Grappling);
                     }
                 }
@@ -304,30 +329,89 @@ public class CharacterController : MonoBehaviour, ICharacterController
         private bool TryFindGrapplePoint(out Vector3 point)
         {
             point = Vector3.zero;
+            Collider targetCollider = null;
             Collider[] colliders = Physics.OverlapSphere(Motor.TransientPosition, GrappleRange, GrappableLayer);
-            float bestDot = GrappleTargetSelectionDotMeasure;
+            float bestScore = GrappleTargetSelectionDotMeasure;
             bool found = false;
 
             foreach (var col in colliders)
             {
-                Vector3 dirToCol = (col.bounds.center - Motor.TransientPosition).normalized;
+                Vector3 center = col.bounds.center;
+                Vector3 dirToCol = (center - Motor.TransientPosition).normalized;
                 float dot = Vector3.Dot(_cameraForward, dirToCol);
+                float distance = Vector3.Distance(Motor.TransientPosition, center);
+                distance = 1f - distance/GrappleRange;
+                float score = dot * 0.8f + distance * 0.2f;
                 
-                if (dot > bestDot)
+                if (score > bestScore)
                 {
                     if (Physics.Raycast(Motor.TransientPosition, dirToCol, out RaycastHit hit, GrappleRange, GrappableLayer | Motor.CollidableLayers))
                     {
                         if (hit.collider == col)
                         {
-                            bestDot = dot;
-                            point = hit.collider.bounds.center;
+                            bestScore = score;
+                            point = center;
+                            targetCollider = hit.collider;
                             found = true;
                         }
                     }
                 }
             }
-            
+            if (found)
+            {
+                GrappleIndicator newIndicator = targetCollider.GetComponent<GrappleIndicator>();
+                if(newIndicator != currentTargetIndicator)
+                {
+                    if(currentTargetIndicator != null)
+                    {
+                        currentTargetIndicator.SetTargeted(false);
+                    }
+                    newIndicator.SetTargeted(true);
+                    currentTargetIndicator = newIndicator;
+                }
+            }
+            else
+            {
+                if(currentTargetIndicator != null)
+                {
+                    currentTargetIndicator.SetTargeted(false);
+                    currentTargetIndicator = null;
+                }
+            }
             return found;
+        }
+
+        private void DrawLine()
+        {
+            grappleTimer += Time.deltaTime;
+            float t = grappleTimer / grappleAnimationDuration;
+
+            if (t >= 1f)
+            {
+                line.positionCount = 2;
+                line.SetPosition(0, line.transform.position);
+                line.SetPosition(1, _grapplePoint);
+                return;
+            }
+
+            float eased = Mathf.SmoothStep(0, 1, t);
+
+            Vector3 start = line.transform.position;
+
+            for (int i = 0; i < line.positionCount; i++)
+            {
+                float p = i / (float)(line.positionCount - 1);
+
+                Vector3 point = Vector3.Lerp(start, _grapplePoint, p);
+
+                float wave = Mathf.Sin((p * 10f) + Time.time * 25f) * 0.2f;
+
+                Vector3 offset = Vector3.Cross((_grapplePoint - start).normalized, Vector3.up) * wave;
+
+                point += offset * (1f - eased);
+
+                line.SetPosition(i, point);
+            }
         }
 
         /// <summary>
@@ -648,6 +732,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
                                 _jumpRequested = false;
                                 _jumpConsumed = true;
                                 _jumpedThisFrame = true;
+                                AudioManager.Instance.PlaySFX("jump");
                             }
                         }
 
@@ -669,6 +754,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
                             // Finish grapple and apply completion boost momentum
                             currentVelocity = dirToGrapple * (MaxAirMoveSpeed * _currentSprintMultiplier * GrappleCompletionBoost);
                             _timeSinceLastGrapple = 0f;
+                            line.positionCount = 0;
                             TransitionToState(CharacterState.Default);
                         }
                         else
@@ -743,9 +829,11 @@ public class CharacterController : MonoBehaviour, ICharacterController
                     }
                 case CharacterState.Grappling:
                     {
+                        DrawLine();
                         break;
                     }
             }
+            HandleFootsteps(deltaTime);
         }
 
         public void PostGroundingUpdate(float deltaTime)
@@ -802,6 +890,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
 
         protected void OnLanded()
         {
+            AudioManager.Instance.PlaySFX("land");
         }
 
         protected void OnLeaveStableGround()
@@ -810,5 +899,33 @@ public class CharacterController : MonoBehaviour, ICharacterController
 
         public void OnDiscreteCollisionDetected(Collider hitCollider)
         {
+        }
+
+
+        private void HandleFootsteps(float deltaTime)
+        {
+            if (!Motor.GroundingStatus.IsStableOnGround)
+            {
+                _footstepTimer = 0f;
+                return;
+            }
+
+            Vector3 horizontalVelocity = Vector3.ProjectOnPlane(Motor.Velocity, Motor.CharacterUp);
+
+            if (horizontalVelocity.magnitude < FootstepMoveThreshold)
+            {
+                _footstepTimer = 0f;
+                return;
+            }
+
+            float interval = _isSprinting ? SprintFootstepInterval : FootstepInterval;
+
+            _footstepTimer += deltaTime;
+
+            if (_footstepTimer >= interval)
+            {
+                _footstepTimer = 0f;
+                AudioManager.Instance.PlaySFX("footstep");
+            }
         }
     }
