@@ -11,21 +11,24 @@ public class LevelTrigger : MonoBehaviour
     [Tooltip("Drag the parent Level script here.")]
     public Level parentLevel;
 
-    private void OnTriggerEnter(Collider other)
+    private bool hasTriggered = false;
+
+    private void OnTriggerEnter(Collider other) => TryTrigger(other);
+    private void OnTriggerStay(Collider other) => TryTrigger(other);
+
+    private void TryTrigger(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            if (type == TriggerType.Entrance)
-            {
-                parentLevel.EnterRoom();
-            }
-            else if (type == TriggerType.Exit)
-            {
-                parentLevel.CompleteRoom();
-            }
-            
-            // Disable the collider so it only fires once per run
-            gameObject.SetActive(false);
-        }
+        if (hasTriggered) return;
+        if (!other.CompareTag("Player")) return;
+
+        hasTriggered = true;
+            // Debug.Log($"[LevelTrigger] {type} triggered on {parentLevel?.levelID ?? "NULL parentLevel"} by {other.name}");
+
+        if (type == TriggerType.Entrance)
+            parentLevel.EnterRoom();
+        else if (type == TriggerType.Exit)
+            parentLevel.CompleteRoom();
+
+        gameObject.SetActive(false);
     }
 }
