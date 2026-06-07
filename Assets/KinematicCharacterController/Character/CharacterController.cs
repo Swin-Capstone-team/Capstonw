@@ -119,6 +119,15 @@ public class CharacterController : MonoBehaviour, ICharacterController
         public bool IsSliding => _isSliding;
         public bool HasMoveInput => _moveInputVector.sqrMagnitude > 0.01f;
 
+
+        [Header("Footsteps")]
+        public float FootstepInterval = 0.3f;
+        public float SprintFootstepInterval = 0.25f;
+        public float FootstepMoveThreshold = 0.1f;
+
+        private float _footstepTimer = 0f;
+
+
         private Collider[] _probedColliders = new Collider[8];
         private RaycastHit[] _probedHits = new RaycastHit[8];
         private Vector3 _moveInputVector;
@@ -723,6 +732,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
                                 _jumpRequested = false;
                                 _jumpConsumed = true;
                                 _jumpedThisFrame = true;
+                                AudioManager.Instance.PlaySFX("jump");
                             }
                         }
 
@@ -823,6 +833,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
                         break;
                     }
             }
+            HandleFootsteps(deltaTime);
         }
 
         public void PostGroundingUpdate(float deltaTime)
@@ -879,6 +890,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
 
         protected void OnLanded()
         {
+            AudioManager.Instance.PlaySFX("land");
         }
 
         protected void OnLeaveStableGround()
@@ -887,5 +899,33 @@ public class CharacterController : MonoBehaviour, ICharacterController
 
         public void OnDiscreteCollisionDetected(Collider hitCollider)
         {
+        }
+
+
+        private void HandleFootsteps(float deltaTime)
+        {
+            if (!Motor.GroundingStatus.IsStableOnGround)
+            {
+                _footstepTimer = 0f;
+                return;
+            }
+
+            Vector3 horizontalVelocity = Vector3.ProjectOnPlane(Motor.Velocity, Motor.CharacterUp);
+
+            if (horizontalVelocity.magnitude < FootstepMoveThreshold)
+            {
+                _footstepTimer = 0f;
+                return;
+            }
+
+            float interval = _isSprinting ? SprintFootstepInterval : FootstepInterval;
+
+            _footstepTimer += deltaTime;
+
+            if (_footstepTimer >= interval)
+            {
+                _footstepTimer = 0f;
+                AudioManager.Instance.PlaySFX("footstep");
+            }
         }
     }

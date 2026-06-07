@@ -1,25 +1,51 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
+[System.Serializable]
+public class SoundEffect
+{
+    public string id;
+    public AudioClip[] audioClips;
+}
 
 public class AudioManager : MonoBehaviour
 {
+    public static AudioManager Instance { get; private set; }
+
     [Header("Playlist")]
     [Tooltip("List of audio clips to play in order.")]
     public AudioClip[] musicTracks;
+    [SerializeField]
+    private SoundEffect[] soundEffects;
 
     [Header("Settings")]
-    [Range(0f, 1f)] public float masterVolume = 0.5f;
+    [Range(0f, 1f)] public float masterVolume = 1f;
+    [Range(0f, 1f)] public float musicVolume = 0.5f;
+    [Range(0f, 1f)] public float sfxVolume = 1f;
     [Tooltip("Time in seconds it takes to transition from one track to the next.")]
     public float crossfadeDuration = 2f;
 
     private AudioSource sourceA;
     private AudioSource sourceB;
+    private AudioSource sfxSource;
     private bool isUsingSourceA = true;
     private int currentTrackIndex = 0;
     private bool isTransitioning = false;
+    private Dictionary<string, AudioClip[]> sfxLookup;
+    
 
     private void Awake()
     {
+        // Singleton pattern to ensure only one instance of AudioManager exists
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+
         // Dynamically create two AudioSources to handle the crossfading smoothly
         sourceA = gameObject.AddComponent<AudioSource>();
         sourceB = gameObject.AddComponent<AudioSource>();
@@ -29,6 +55,25 @@ public class AudioManager : MonoBehaviour
         sourceB.spatialBlend = 0f;
         sourceA.playOnAwake = false;
         sourceB.playOnAwake = false;
+
+        // Sfx source and dictionary setup
+        sfxSource = gameObject.AddComponent<AudioSource>();
+        sfxSource.spatialBlend = 0f;
+        sfxLookup = new Dictionary<string, AudioClip[]>();
+
+        foreach (var sfx in soundEffects)
+        {
+            if (string.IsNullOrEmpty(sfx.id))
+                continue;
+
+            if (sfx.audioClips == null || sfx.audioClips.Length == 0)
+                continue;
+
+            if (!sfxLookup.ContainsKey(sfx.id))
+            {
+                sfxLookup.Add(sfx.id, sfx.audioClips);
+            }
+        }
     }
 
     private void Start()
@@ -37,7 +82,7 @@ public class AudioManager : MonoBehaviour
         if (musicTracks != null && musicTracks.Length > 0)
         {
             sourceA.clip = musicTracks[0];
-            sourceA.volume = masterVolume;
+            sourceA.volume = GetMusicVolume();
             sourceA.Play();
         }
     }
@@ -98,23 +143,88 @@ public class AudioManager : MonoBehaviour
             float t = timer / crossfadeDuration;
             
             // Fade in the new track
-            fadingIn.volume = Mathf.Lerp(0f, masterVolume, t);
+            fadingIn.volume = Mathf.Lerp(0f, GetMusicVolume(), t);
             
             // Fade out the old track if it hasn't finished
             if (fadingOut.isPlaying)
             {
-                fadingOut.volume = Mathf.Lerp(masterVolume, 0f, t);
+                fadingOut.volume = Mathf.Lerp(GetMusicVolume(), 0f, t);
             }
 
             yield return null;
         }
 
         // Ensure final volumes are neatly locked
-        fadingIn.volume = masterVolume;
+        fadingIn.volume = GetMusicVolume();
         
         fadingOut.volume = 0f;
         fadingOut.Stop();
 
         isTransitioning = false;
+    }
+
+
+
+    private AudioClip GetRandomSFX(string id)
+    {
+        if (!sfxLookup.TryGetValue(id, out AudioClip[] clips))
+            return null;
+
+        if (clips.Length == 0)
+            return null;
+
+        return clips[Random.Range(0, clips.Length)];
+    }
+
+    public void PlaySFX(string id)
+    {
+        AudioClip clip = GetRandomSFX(id);
+
+        if (clip != null)
+        {
+            sfxSource.PlayOneShot(clip, GetSFXVolume());
+        }
+    }
+
+    public void PlaySFX(string id, float volume)
+    {
+        AudioClip clip = GetRandomSFX(id);
+
+        if (clip != null)
+        {
+            sfxSource.PlayOneShot(clip, GetSFXVolume(volume));
+        }
+    }
+
+    public void PlaySFX(string id, Vector3 position)
+    {
+        AudioClip clip = GetRandomSFX(id);
+
+        if (clip != null)
+        {
+            AudioSource.PlayClipAtPoint(clip, position, GetSFXVolume());
+        }
+    }
+
+    public void PlaySFX(string id, Vector3 position, float volume)
+    {
+        AudioClip clip = GetRandomSFX(id);
+
+        if (clip != null)
+        {
+            AudioSource.PlayClipAtPoint(clip, position, GetSFXVolume(volume));
+        }
+    }
+
+
+    private float GetMusicVolume()
+    {
+        return masterVolume * musicVolume;
+    }
+
+
+    private float GetSFXVolume(float volumeMultiplier = 1f)
+    {
+        return masterVolume * sfxVolume * volumeMultiplier;
     }
 }

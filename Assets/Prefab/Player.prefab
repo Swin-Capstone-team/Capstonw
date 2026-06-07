@@ -882,6 +882,7 @@ GameObject:
   - component: {fileID: 8281349379505519708}
   - component: {fileID: 2069686122990036387}
   - component: {fileID: 3823210005649850079}
+  - component: {fileID: 8122812323391338042}
   m_Layer: 6
   m_Name: Character
   m_TagString: Player
@@ -992,6 +993,9 @@ MonoBehaviour:
   MeshRoot: {fileID: 4027643792111864199}
   CameraFollowPoint: {fileID: 6978010813723005634}
   CrouchedCapsuleHeight: 1
+  FootstepInterval: 0.3
+  SprintFootstepInterval: 0.25
+  FootstepMoveThreshold: 0.2
 --- !u!114 &2069686122990036387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1061,6 +1065,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8122812323391338042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1963736718645426273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a813126e262a89b47883d22db64467a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FallReset
+  fallY: -20
 --- !u!1 &1994390239571696206
 GameObject:
   m_ObjectHideFlags: 0
