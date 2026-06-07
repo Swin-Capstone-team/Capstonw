@@ -8,12 +8,12 @@ Shader "Toon_Prototype"
 		_BaseColour( "BaseColour", 2D ) = "white" {}
 		_Normal( "Normal", 2D ) = "white" {}
 		_RMAL( "RMAL", 2D ) = "white" {}
-		[ToggleOff( _FLAKEREFLECTIONS_OFF )] _FlakeReflections( "FlakeReflections?", Float ) = 0
 		_FresnelPow( "FresnelPow", Float ) = 3
 		_FresnelInt( "FresnelInt", Float ) = 1
 		_AOPow( "AOPow", Float ) = 1
 		_RoughnessMult( "RoughnessMult", Float ) = 1
 		_MetalValue( "MetalValue", Float ) = 1
+		_InksCol( "InksCol", Vector ) = ( 0, 0, 0, 1 )
 
 
 		//_TransmissionShadow( "Transmission Shadow", Range( 0, 1 ) ) = 0.5
@@ -284,7 +284,6 @@ Shader "Toon_Prototype"
 			#define ASE_NEEDS_FRAG_WORLD_VIEW_DIR
 			#define ASE_NEEDS_WORLD_NORMAL
 			#define ASE_NEEDS_FRAG_WORLD_NORMAL
-			#pragma shader_feature_local _FLAKEREFLECTIONS_OFF
 
 
 			#if defined(ASE_EARLY_Z_DEPTH_OPTIMIZE) && (SHADER_TARGET >= 45)
@@ -335,6 +334,7 @@ Shader "Toon_Prototype"
 			CBUFFER_START(UnityPerMaterial)
 			float4 _BaseColour_ST;
 			float4 _RMAL_ST;
+			float4 _InksCol;
 			float4 _Normal_ST;
 			float _AOPow;
 			float _FresnelInt;
@@ -594,14 +594,7 @@ Shader "Toon_Prototype"
 				float2 uv_BaseColour = input.ase_texcoord7.xy * _BaseColour_ST.xy + _BaseColour_ST.zw;
 				float4 tex2DNode14 = tex2D( _BaseColour, uv_BaseColour );
 				float3 Diffuse15 = tex2DNode14.rgb;
-				float clampResult80 = clamp( 0.0 , 0.0 , 1.0 );
-				float3 temp_cast_0 = (clampResult80).xxx;
-				#ifdef _FLAKEREFLECTIONS_OFF
-				float3 staticSwitch87 = temp_cast_0;
-				#else
-				float3 staticSwitch87 = Diffuse15;
-				#endif
-				float3 BaseDiffuseOutput89 = staticSwitch87;
+				float3 BaseDiffuseOutput89 = Diffuse15;
 				float2 uv_RMAL = input.ase_texcoord7.xy * _RMAL_ST.xy + _RMAL_ST.zw;
 				float4 tex2DNode22 = tex2D( _RMAL, uv_RMAL );
 				float AOMap18 = tex2DNode22.b;
@@ -609,16 +602,15 @@ Shader "Toon_Prototype"
 				float3 DiffuseAOOutput57 = ( BaseDiffuseOutput89 * lerpResult60 );
 				float FresnelMask43 = tex2DNode14.a;
 				float fresnelNdotV96 = dot( NormalWS, ViewDirWS );
-				float fresnelNode96 = ( 0.0 + 0.0001 * pow( 1.0 - fresnelNdotV96, _FresnelPow ) );
+				float fresnelNode96 = ( 0.0 + 1.0 * pow( 1.0 - fresnelNdotV96, _FresnelPow ) );
 				float3 lerpResult99 = lerp( DiffuseAOOutput57 , ( ( DiffuseAOOutput57 * _FresnelInt ) * FresnelMask43 ) , pow( fresnelNode96 , 3.0 ));
 				float3 FresnelOutput100 = lerpResult99;
 				float MetalMap17 = tex2DNode22.g;
 				float3 lerpResult155 = lerp( FresnelOutput100 , ( FresnelOutput100 * _MetalValue ) , MetalMap17);
 				float3 MetalTweakOutput156 = lerpResult155;
-				float4 color230 = IsGammaSpace() ? float4( 0, 0, 0, 1 ) : float4( 0, 0, 0, 1 );
 				float InksMap19 = tex2DNode22.a;
-				float BlackInks_Mask35 = saturate( step( InksMap19 , 0.05 ) );
-				float4 lerpResult33 = lerp( float4( MetalTweakOutput156 , 0.0 ) , color230 , BlackInks_Mask35);
+				float BlackInks_Mask35 = saturate( step( 0.05 , InksMap19 ) );
+				float4 lerpResult33 = lerp( float4( MetalTweakOutput156 , 0.0 ) , _InksCol , BlackInks_Mask35);
 				float4 BlackInks_Output34 = lerpResult33;
 				float4 lerpResult167 = lerp( BlackInks_Output34 , ( BlackInks_Output34 + ( 1.0 - saturate( step( InksMap19 , 0.65 ) ) ) ) , 0.1);
 				
@@ -628,7 +620,7 @@ Shader "Toon_Prototype"
 				float RoughnessMap16 = tex2DNode22.r;
 				
 
-				float3 BaseColor = lerpResult167.rgb;
+				float3 BaseColor = lerpResult167.xyz;
 				float3 Normal = NormalMap21;
 				float3 Specular = 0.5;
 				float Metallic = MetalMap17;
@@ -975,6 +967,7 @@ Shader "Toon_Prototype"
 			CBUFFER_START(UnityPerMaterial)
 			float4 _BaseColour_ST;
 			float4 _RMAL_ST;
+			float4 _InksCol;
 			float4 _Normal_ST;
 			float _AOPow;
 			float _FresnelInt;
@@ -1285,6 +1278,7 @@ Shader "Toon_Prototype"
 			CBUFFER_START(UnityPerMaterial)
 			float4 _BaseColour_ST;
 			float4 _RMAL_ST;
+			float4 _InksCol;
 			float4 _Normal_ST;
 			float _AOPow;
 			float _FresnelInt;
@@ -1540,7 +1534,6 @@ Shader "Toon_Prototype"
 			#define ASE_NEEDS_WORLD_POSITION
 			#define ASE_NEEDS_FRAG_WORLD_POSITION
 			#define ASE_NEEDS_VERT_NORMAL
-			#pragma shader_feature_local _FLAKEREFLECTIONS_OFF
 
 
 			struct Attributes
@@ -1572,6 +1565,7 @@ Shader "Toon_Prototype"
 			CBUFFER_START(UnityPerMaterial)
 			float4 _BaseColour_ST;
 			float4 _RMAL_ST;
+			float4 _InksCol;
 			float4 _Normal_ST;
 			float _AOPow;
 			float _FresnelInt;
@@ -1770,14 +1764,7 @@ Shader "Toon_Prototype"
 				float2 uv_BaseColour = input.ase_texcoord3.xy * _BaseColour_ST.xy + _BaseColour_ST.zw;
 				float4 tex2DNode14 = tex2D( _BaseColour, uv_BaseColour );
 				float3 Diffuse15 = tex2DNode14.rgb;
-				float clampResult80 = clamp( 0.0 , 0.0 , 1.0 );
-				float3 temp_cast_0 = (clampResult80).xxx;
-				#ifdef _FLAKEREFLECTIONS_OFF
-				float3 staticSwitch87 = temp_cast_0;
-				#else
-				float3 staticSwitch87 = Diffuse15;
-				#endif
-				float3 BaseDiffuseOutput89 = staticSwitch87;
+				float3 BaseDiffuseOutput89 = Diffuse15;
 				float2 uv_RMAL = input.ase_texcoord3.xy * _RMAL_ST.xy + _RMAL_ST.zw;
 				float4 tex2DNode22 = tex2D( _RMAL, uv_RMAL );
 				float AOMap18 = tex2DNode22.b;
@@ -1788,21 +1775,20 @@ Shader "Toon_Prototype"
 				float3 ase_viewDirWS = normalize( ase_viewVectorWS );
 				float3 ase_normalWS = input.ase_texcoord4.xyz;
 				float fresnelNdotV96 = dot( ase_normalWS, ase_viewDirWS );
-				float fresnelNode96 = ( 0.0 + 0.0001 * pow( 1.0 - fresnelNdotV96, _FresnelPow ) );
+				float fresnelNode96 = ( 0.0 + 1.0 * pow( 1.0 - fresnelNdotV96, _FresnelPow ) );
 				float3 lerpResult99 = lerp( DiffuseAOOutput57 , ( ( DiffuseAOOutput57 * _FresnelInt ) * FresnelMask43 ) , pow( fresnelNode96 , 3.0 ));
 				float3 FresnelOutput100 = lerpResult99;
 				float MetalMap17 = tex2DNode22.g;
 				float3 lerpResult155 = lerp( FresnelOutput100 , ( FresnelOutput100 * _MetalValue ) , MetalMap17);
 				float3 MetalTweakOutput156 = lerpResult155;
-				float4 color230 = IsGammaSpace() ? float4( 0, 0, 0, 1 ) : float4( 0, 0, 0, 1 );
 				float InksMap19 = tex2DNode22.a;
-				float BlackInks_Mask35 = saturate( step( InksMap19 , 0.05 ) );
-				float4 lerpResult33 = lerp( float4( MetalTweakOutput156 , 0.0 ) , color230 , BlackInks_Mask35);
+				float BlackInks_Mask35 = saturate( step( 0.05 , InksMap19 ) );
+				float4 lerpResult33 = lerp( float4( MetalTweakOutput156 , 0.0 ) , _InksCol , BlackInks_Mask35);
 				float4 BlackInks_Output34 = lerpResult33;
 				float4 lerpResult167 = lerp( BlackInks_Output34 , ( BlackInks_Output34 + ( 1.0 - saturate( step( InksMap19 , 0.65 ) ) ) ) , 0.1);
 				
 
-				float3 BaseColor = lerpResult167.rgb;
+				float3 BaseColor = lerpResult167.xyz;
 				float3 Emission = 0;
 				float Alpha = 1;
 				#if defined( _ALPHATEST_ON )
@@ -1880,7 +1866,6 @@ Shader "Toon_Prototype"
 			#define ASE_NEEDS_WORLD_POSITION
 			#define ASE_NEEDS_FRAG_WORLD_POSITION
 			#define ASE_NEEDS_VERT_NORMAL
-			#pragma shader_feature_local _FLAKEREFLECTIONS_OFF
 
 
 			struct Attributes
@@ -1905,6 +1890,7 @@ Shader "Toon_Prototype"
 			CBUFFER_START(UnityPerMaterial)
 			float4 _BaseColour_ST;
 			float4 _RMAL_ST;
+			float4 _InksCol;
 			float4 _Normal_ST;
 			float _AOPow;
 			float _FresnelInt;
@@ -2089,14 +2075,7 @@ Shader "Toon_Prototype"
 				float2 uv_BaseColour = input.ase_texcoord1.xy * _BaseColour_ST.xy + _BaseColour_ST.zw;
 				float4 tex2DNode14 = tex2D( _BaseColour, uv_BaseColour );
 				float3 Diffuse15 = tex2DNode14.rgb;
-				float clampResult80 = clamp( 0.0 , 0.0 , 1.0 );
-				float3 temp_cast_0 = (clampResult80).xxx;
-				#ifdef _FLAKEREFLECTIONS_OFF
-				float3 staticSwitch87 = temp_cast_0;
-				#else
-				float3 staticSwitch87 = Diffuse15;
-				#endif
-				float3 BaseDiffuseOutput89 = staticSwitch87;
+				float3 BaseDiffuseOutput89 = Diffuse15;
 				float2 uv_RMAL = input.ase_texcoord1.xy * _RMAL_ST.xy + _RMAL_ST.zw;
 				float4 tex2DNode22 = tex2D( _RMAL, uv_RMAL );
 				float AOMap18 = tex2DNode22.b;
@@ -2107,21 +2086,20 @@ Shader "Toon_Prototype"
 				float3 ase_viewDirWS = normalize( ase_viewVectorWS );
 				float3 ase_normalWS = input.ase_texcoord2.xyz;
 				float fresnelNdotV96 = dot( ase_normalWS, ase_viewDirWS );
-				float fresnelNode96 = ( 0.0 + 0.0001 * pow( 1.0 - fresnelNdotV96, _FresnelPow ) );
+				float fresnelNode96 = ( 0.0 + 1.0 * pow( 1.0 - fresnelNdotV96, _FresnelPow ) );
 				float3 lerpResult99 = lerp( DiffuseAOOutput57 , ( ( DiffuseAOOutput57 * _FresnelInt ) * FresnelMask43 ) , pow( fresnelNode96 , 3.0 ));
 				float3 FresnelOutput100 = lerpResult99;
 				float MetalMap17 = tex2DNode22.g;
 				float3 lerpResult155 = lerp( FresnelOutput100 , ( FresnelOutput100 * _MetalValue ) , MetalMap17);
 				float3 MetalTweakOutput156 = lerpResult155;
-				float4 color230 = IsGammaSpace() ? float4( 0, 0, 0, 1 ) : float4( 0, 0, 0, 1 );
 				float InksMap19 = tex2DNode22.a;
-				float BlackInks_Mask35 = saturate( step( InksMap19 , 0.05 ) );
-				float4 lerpResult33 = lerp( float4( MetalTweakOutput156 , 0.0 ) , color230 , BlackInks_Mask35);
+				float BlackInks_Mask35 = saturate( step( 0.05 , InksMap19 ) );
+				float4 lerpResult33 = lerp( float4( MetalTweakOutput156 , 0.0 ) , _InksCol , BlackInks_Mask35);
 				float4 BlackInks_Output34 = lerpResult33;
 				float4 lerpResult167 = lerp( BlackInks_Output34 , ( BlackInks_Output34 + ( 1.0 - saturate( step( InksMap19 , 0.65 ) ) ) ) , 0.1);
 				
 
-				float3 BaseColor = lerpResult167.rgb;
+				float3 BaseColor = lerpResult167.xyz;
 				float Alpha = 1;
 				#if defined( _ALPHATEST_ON )
 					float AlphaClipThreshold = _Cutoff;
@@ -2234,6 +2212,7 @@ Shader "Toon_Prototype"
 			CBUFFER_START(UnityPerMaterial)
 			float4 _BaseColour_ST;
 			float4 _RMAL_ST;
+			float4 _InksCol;
 			float4 _Normal_ST;
 			float _AOPow;
 			float _FresnelInt;
@@ -2578,6 +2557,7 @@ Shader "Toon_Prototype"
 			CBUFFER_START(UnityPerMaterial)
 			float4 _BaseColour_ST;
 			float4 _RMAL_ST;
+			float4 _InksCol;
 			float4 _Normal_ST;
 			float _AOPow;
 			float _FresnelInt;
@@ -2860,6 +2840,7 @@ Shader "Toon_Prototype"
 			CBUFFER_START(UnityPerMaterial)
 			float4 _BaseColour_ST;
 			float4 _RMAL_ST;
+			float4 _InksCol;
 			float4 _Normal_ST;
 			float _AOPow;
 			float _FresnelInt;
@@ -3151,6 +3132,7 @@ Shader "Toon_Prototype"
 			CBUFFER_START(UnityPerMaterial)
 			float4 _BaseColour_ST;
 			float4 _RMAL_ST;
+			float4 _InksCol;
 			float4 _Normal_ST;
 			float _AOPow;
 			float _FresnelInt;
@@ -3334,7 +3316,6 @@ Node;AmplifyShaderEditor.FractNode, AmplifyShaderEditor, Version=0.0.0.0, Cultur
 Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;130;-848,2560;Inherit;False;Property;_EmmisivePower;EmmisivePower;18;0;Create;True;0;0;0;False;0;False;1;1;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;127;-288,2496;Inherit;True;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;43;-1568,-1936;Inherit;False;FresnelMask;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;19;-1568,-1456;Inherit;False;InksMap;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;61;-864,-1888;Inherit;False;AO;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;54;-864,-2000;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;21;-1568,-1104;Inherit;False;NormalMap;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
@@ -3343,7 +3324,6 @@ Node;AmplifyShaderEditor.ClampOpNode, AmplifyShaderEditor, Version=0.0.0.0, Cult
 Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;53;-1264,-1936;Inherit;False;18;AOMap;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;98;1808,-2016;Inherit;False;57;DiffuseAOOutput;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;94;1728,-1936;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.PowerNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;97;1920,-1696;Inherit;False;False;2;0;FLOAT;0;False;1;FLOAT;3;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;93;1488,-1936;Inherit;False;57;DiffuseAOOutput;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;95;1904,-1856;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;102;1696,-1808;Inherit;False;43;FresnelMask;1;0;OBJECT;;False;1;FLOAT;0
@@ -3372,17 +3352,15 @@ Node;AmplifyShaderEditor.LerpOp, AmplifyShaderEditor, Version=0.0.0.0, Culture=n
 Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;156;-2688,208;Inherit;False;MetalTweakOutput;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SaturateNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;161;-1120,256;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.OneMinusNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;162;-960,256;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;163;-1024,128;Inherit;False;34;BlackInks_Output;1;0;OBJECT;;False;1;COLOR;0
-Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;165;-800,80;Inherit;False;34;BlackInks_Output;1;0;OBJECT;;False;1;COLOR;0
-Node;AmplifyShaderEditor.SimpleAddOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;164;-704,176;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;163;-1024,128;Inherit;False;34;BlackInks_Output;1;0;OBJECT;;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;165;-800,80;Inherit;False;34;BlackInks_Output;1;0;OBJECT;;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.SimpleAddOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;164;-704,176;Inherit;False;2;2;0;FLOAT4;0,0,0,0;False;1;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;166;-832,352;Inherit;False;Constant;_CrossHatchesVIsibility;CrossHatchesVIsibility;21;0;Create;True;0;0;0;False;0;False;0.1;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.LerpOp, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;167;-496,176;Inherit;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.LerpOp, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;167;-496,176;Inherit;False;3;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0,0,0,0;False;2;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;30;-2384,128;Inherit;False;156;MetalTweakOutput;1;0;OBJECT;;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;27;-2368,496;Inherit;False;19;InksMap;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SaturateNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;31;-2016,496;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;35;-1856,496;Inherit;False;BlackInks_Mask;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.LerpOp, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;33;-2000,128;Inherit;False;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;34;-1744,128;Inherit;False;BlackInks_Output;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.LerpOp, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;33;-2000,128;Inherit;False;3;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0,0,0,0;False;2;FLOAT;0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;34;-1744,128;Inherit;False;BlackInks_Output;-1;True;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;131;-928,2832;Inherit;False;Property;_PulsationSpeed;PulsationSpeed;17;0;Create;True;0;0;0;False;0;False;0.5;0.5;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.TimeNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;169;-928,2656;Inherit;False;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;18;-1568,-1520;Inherit;False;AOMap;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
@@ -3393,8 +3371,6 @@ Node;AmplifyShaderEditor.SamplerNode, AmplifyShaderEditor, Version=0.0.0.0, Cult
 Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;132;-896,1872;Inherit;False;Constant;_0;0;19;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;148;1520,1792;Inherit;False;18;AOMap;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;145;1440,1696;Inherit;False;17;MetalMap;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;87;832,-1504;Inherit;False;Property;_FlakeReflections;FlakeReflections?;4;0;Create;True;0;0;0;False;0;False;0;0;0;True;;ToggleOff;2;Key0;Key1;Create;True;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;89;1168,-1456;Inherit;False;BaseDiffuseOutput;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;140;-336,-1648;Inherit;False;Property;_BaseReflections;BaseReflections;11;0;Create;True;0;0;0;False;0;False;4;4;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;100;2288,-1888;Inherit;False;FresnelOutput;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;143;1456,-1600;Inherit;False;Property;_FresnelPow;FresnelPow;5;0;Create;True;0;0;0;False;1;;False;3;3;0;0;0;1;FLOAT;0
@@ -3402,17 +3378,24 @@ Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, 
 Node;AmplifyShaderEditor.SamplerNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;116;-896,2336;Inherit;True;Property;_Emissive;Emissive;15;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;False;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
 Node;AmplifyShaderEditor.SamplerNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;14;-1856,-2032;Inherit;True;Property;_BaseColour;BaseColour;0;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;False;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
 Node;AmplifyShaderEditor.SamplerNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;20;-1856,-1136;Inherit;True;Property;_Normal;Normal;1;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;False;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
-Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;85;-352,-1328;Inherit;False;21;NormalMap;1;0;OBJECT;;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.ReflectOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;170;-160,-1344;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;144;1488,-1856;Inherit;False;Property;_FresnelInt;FresnelInt;6;0;Create;True;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;230;-2384,208;Inherit;False;Constant;_InksCol;InksCol;22;0;Create;True;0;0;0;False;0;False;0,0,0,1;0,0,0,0;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
-Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;36;-2384,400;Inherit;False;35;BlackInks_Mask;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StepOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;29;-2144,496;Inherit;False;2;0;FLOAT;0.05;False;1;FLOAT;0.05;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;158;-1456,256;Inherit;False;19;InksMap;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.StepOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;159;-1248,256;Inherit;False;2;0;FLOAT;0.65;False;1;FLOAT;0.65;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;118;-576,2336;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.LerpOp, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;128;-32,2336;Inherit;True;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;2;FLOAT3;0.5,0.5,0.5;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.FresnelNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;96;1712,-1696;Inherit;False;Standard;WorldNormal;ViewDir;False;False;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0.0001;False;3;FLOAT;3;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;85;-352,-1328;Inherit;False;21;NormalMap;1;0;OBJECT;;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;89;1168,-1456;Inherit;False;BaseDiffuseOutput;-1;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;87;880,-1616;Inherit;False;Property;_FlakeReflections;FlakeReflections?;4;0;Create;True;0;0;0;False;0;False;0;0;0;True;;ToggleOff;2;Key0;Key1;Create;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FresnelNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;96;1712,-1696;Inherit;False;Standard;WorldNormal;ViewDir;False;False;5;0;FLOAT3;0,0,1;False;4;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;1;False;3;FLOAT;3;False;1;FLOAT;0
+Node;AmplifyShaderEditor.PowerNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;97;1936,-1696;Inherit;False;False;2;0;FLOAT;0;False;1;FLOAT;3;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;231;1568,1376;Inherit;False;89;BaseDiffuseOutput;1;0;OBJECT;;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.Vector4Node, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;232;-2384,208;Inherit;False;Property;_InksCol;InksCol;21;0;Create;True;0;0;0;False;0;False;0,0,0,1;0,0,0,1;0;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;19;-1568,-1456;Inherit;False;InksMap;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;36;-2384,400;Inherit;False;35;BlackInks_Mask;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;27;-2368,496;Inherit;False;19;InksMap;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SaturateNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;31;-2016,496;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StepOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;29;-2144,496;Inherit;False;2;0;FLOAT;0.05;False;1;FLOAT;0.05;False;1;FLOAT;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;218;1760,1600;Float;False;False;-1;3;UnityEditor.ShaderGraphLitGUI;0;15;New Amplify Shader;94348b07e5e8bab40bd6c8a1e3df54cd;True;ExtraPrePass;0;0;ExtraPrePass;6;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;False;True;4;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;UniversalMaterialType=Lit;True;5;True;14;all;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;False;True;0;False;False;0;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;220;1760,1600;Float;False;False;-1;3;UnityEditor.ShaderGraphLitGUI;0;15;New Amplify Shader;94348b07e5e8bab40bd6c8a1e3df54cd;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;False;True;4;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;UniversalMaterialType=Lit;True;5;True;14;all;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;True;1;False;;True;3;False;;False;False;True;1;LightMode=ShadowCaster;False;False;0;;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;221;1760,1600;Float;False;False;-1;3;UnityEditor.ShaderGraphLitGUI;0;15;New Amplify Shader;94348b07e5e8bab40bd6c8a1e3df54cd;True;DepthOnly;0;3;DepthOnly;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;False;True;4;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;UniversalMaterialType=Lit;True;5;True;14;all;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;True;True;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;True;1;False;;False;False;False;True;1;LightMode=DepthOnly;False;False;0;;0;0;Standard;0;False;0
@@ -3440,7 +3423,6 @@ WireConnection;126;0;125;0
 WireConnection;127;0;118;0
 WireConnection;127;1;126;0
 WireConnection;43;0;14;4
-WireConnection;19;0;22;4
 WireConnection;61;0;60;0
 WireConnection;54;0;90;0
 WireConnection;54;1;60;0
@@ -3448,7 +3430,6 @@ WireConnection;21;0;20;5
 WireConnection;75;1;170;0
 WireConnection;94;0;93;0
 WireConnection;94;1;144;0
-WireConnection;97;0;96;0
 WireConnection;95;0;94;0
 WireConnection;95;1;102;0
 WireConnection;99;0;98;0
@@ -3472,31 +3453,30 @@ WireConnection;164;1;162;0
 WireConnection;167;0;165;0
 WireConnection;167;1;164;0
 WireConnection;167;2;166;0
-WireConnection;31;0;29;0
 WireConnection;35;0;31;0
 WireConnection;33;0;30;0
-WireConnection;33;1;230;0
+WireConnection;33;1;232;0
 WireConnection;33;2;36;0
 WireConnection;34;0;33;0
 WireConnection;18;0;22;3
 WireConnection;17;0;22;2
 WireConnection;16;0;22;1
-WireConnection;87;1;86;0
-WireConnection;87;0;80;0
-WireConnection;89;0;87;0
 WireConnection;100;0;99;0
-WireConnection;170;1;85;0
-WireConnection;29;0;27;0
 WireConnection;159;0;158;0
 WireConnection;118;0;116;5
 WireConnection;118;1;130;0
 WireConnection;128;0;118;0
 WireConnection;128;1;127;0
+WireConnection;89;0;86;0
 WireConnection;96;3;143;0
+WireConnection;97;0;96;0
+WireConnection;19;0;22;4
+WireConnection;31;0;29;0
+WireConnection;29;1;27;0
 WireConnection;219;0;167;0
 WireConnection;219;1;147;0
 WireConnection;219;3;145;0
 WireConnection;219;4;105;0
 WireConnection;219;5;148;0
 ASEEND*/
-//CHKSM=632623A7E1016AA3FCE3C2AAB7DCBBB8B269B1EC
+//CHKSM=BF1D26E3C81469FC98F9D05DB26516D9FAF7D82F
