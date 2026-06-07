@@ -36,9 +36,15 @@ public class GrappleIndicator : MonoBehaviour
     public Color activeColor = new Color(0f, 1f, 0.3f, 1f);
     public Vector3 activeScale = new Vector3(1.5f, 1.5f, 1.5f);
 
+    [Header("Visual Settings - Targeted")]
+    public Color targetedColor = new Color(1f, 0f, 0.3f, 1f);
+
     [Header("Animation Settings")]
     [Tooltip("How fast the indicator changes color and size.")]
     public float transitionSpeed = 10f;
+    public Transform canvas;
+
+    private bool isTargeted;
 
     private void Start()
     {
@@ -49,14 +55,16 @@ public class GrappleIndicator : MonoBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+        if (playerCamera == null) return;
+        // 1. Billboard effect: Always look at the player/camera
+        canvas.LookAt(canvas.position + playerCamera.rotation * Vector3.forward, playerCamera.transform.rotation * Vector3.up);
+    }
+
     private void Update()
     {
         if (playerCamera == null) return;
-
-        // 1. Billboard effect: Always look at the player/camera
-        // This ensures the forward vector faces away from the camera, 
-        // making the sprite or canvas face the camera.
-        transform.forward = transform.position - playerCamera.position;
 
         // 2. Calculate distance
         float distance = Vector3.Distance(transform.position, playerCamera.position);
@@ -102,7 +110,15 @@ public class GrappleIndicator : MonoBehaviour
         }
 
         Vector3 targetScale = isGrappleable ? activeScale : inactiveScale;
-        Color targetColor = isGrappleable ? activeColor : inactiveColor;
+        Color targetColor;
+        if (isTargeted)
+        {
+            targetColor = targetedColor;
+        }
+        else
+        {
+            targetColor = isGrappleable ? activeColor : inactiveColor;
+        }
 
         // 4. Handle fade out logic when the player is far away
         if (distance > maxVisibleDistance)
@@ -141,5 +157,10 @@ public class GrappleIndicator : MonoBehaviour
                     img.color = Color.Lerp(img.color, targetColor, Time.deltaTime * transitionSpeed);
             }
         }
+    }
+
+    public void SetTargeted(bool targeted)
+    {
+        isTargeted = targeted;
     }
 }

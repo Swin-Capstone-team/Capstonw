@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class menubuttons : MonoBehaviour
+public class MenuButtons : MonoBehaviour
 {
     public MenuController pauseScript; // Reference to the MenuController script
     public GameObject pauseMenu; // Reference to the pause menu UI

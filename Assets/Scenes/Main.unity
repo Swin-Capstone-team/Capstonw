@@ -167,7 +167,34 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8a3ef027962374aa5ac4669341b26c12, type: 3}
   - {fileID: 8300000, guid: 8933ea7d387e344eeaf5a8a85b6e8fc8, type: 3}
   - {fileID: 8300000, guid: 9e89c4cd816454a29a1eb20252028466, type: 3}
+  soundEffects:
+  - id: footstep
+    audioClips:
+    - {fileID: 8300000, guid: 112cc1338a14fb94ca0706444e8336d5, type: 3}
+    - {fileID: 8300000, guid: 3789ce93fcccfc14a895621e58da4010, type: 3}
+    - {fileID: 8300000, guid: d668caa6114bf5245ab700af642c3f6a, type: 3}
+    - {fileID: 8300000, guid: 626929eac7654754a933ea582f96d4a7, type: 3}
+    - {fileID: 8300000, guid: 4b2a16ef94add3a4b921a185b5b95507, type: 3}
+    - {fileID: 8300000, guid: 0903acc44eaa1f440af81373c26aed9e, type: 3}
+    - {fileID: 8300000, guid: 6c6cd11bc42e4184aacdf0aaf1941a53, type: 3}
+  - id: jump
+    audioClips:
+    - {fileID: 8300000, guid: 01af6f08363d3a14cb9a7d5b742eb306, type: 3}
+  - id: land
+    audioClips:
+    - {fileID: 8300000, guid: 47397438267c4f3489b3bf33b46ee403, type: 3}
+  - id: longSlide
+    audioClips:
+    - {fileID: 8300000, guid: 5c13d791074bd78449521b1b5ae2b0f6, type: 3}
+  - id: shortSlide
+    audioClips:
+    - {fileID: 8300000, guid: 88243d83ce9c3184386765314e7343a9, type: 3}
+  - id: skate
+    audioClips:
+    - {fileID: 8300000, guid: 5c3c1df3f329cdd45b7860039df8203c, type: 3}
   masterVolume: 0.5
+  musicVolume: 0.5
+  sfxVolume: 1
   crossfadeDuration: 1
 --- !u!1 &161305549
 GameObject:
@@ -443,7 +470,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalRotation.x
@@ -451,7 +478,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalRotation.z
@@ -463,7 +490,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1078,14 +1105,17 @@ MonoBehaviour:
   startingRoomPrefab: {fileID: 4282723140107944820, guid: 99f2feed0e46e445aad004e423d5d629, type: 3}
   parkourRoomPrefabs:
   - {fileID: 4282723140107944820, guid: 99f2feed0e46e445aad004e423d5d629, type: 3}
-  - {fileID: 4282723140107944820, guid: bbd06a9fcc58c46bebebb26e639e7b42, type: 3}
-  - {fileID: 4282723140107944820, guid: ed6cdd57f690b4bf9a5a1a15b893ba93, type: 3}
-  - {fileID: 4282723140107944820, guid: 8ad7969eef7dd4d92af0318a04260b21, type: 3}
-  - {fileID: 4282723140107944820, guid: 0489df03279af4b12b6e8d7e47dbbb95, type: 3}
+  - {fileID: 4282723140107944820, guid: 9c7718e71e1dd472f907bcc4565867d2, type: 3}
+  - {fileID: 4282723140107944820, guid: dc8b2cd635402470a88a7920bd3781ec, type: 3}
+  - {fileID: 4282723140107944820, guid: 1ea171a06fc0f4e53964bf227866e83d, type: 3}
+  - {fileID: 4282723140107944820, guid: 46fb33f4d50b24b63b5548c4eba85f92, type: 3}
   hallwayPrefabs:
   - {fileID: 4503921314214504493, guid: fcbcb00cc01094de0a05544b216ea0a5, type: 3}
-  roomsToKeepAhead: 3
-  roomsToKeepBehind: 3
+  backWallPrefab: {fileID: 362130971969094183, guid: 06c876b37af53db429b30deee9cc4348, type: 3}
+  backWallDelay: 0.5
+  backWallBackwardOffset: 4
+  roomsToKeepAhead: 2
+  roomsToKeepBehind: 1
 --- !u!1 &932442578
 GameObject:
   m_ObjectHideFlags: 0
