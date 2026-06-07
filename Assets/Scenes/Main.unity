@@ -492,33 +492,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2608433161459938158, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
-      propertyPath: RotationSpeed
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5322472182857757716, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 8281349379505519708, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
-      propertyPath: FootstepInterval
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8281349379505519708, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
-      propertyPath: FootstepMoveThreshold
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8281349379505519708, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
-      propertyPath: SprintFootstepInterval
-      value: 0.25
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1963736718645426273, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1572321250}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
 --- !u!1 &705507993
 GameObject:
@@ -1258,24 +1239,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1285678751}
   m_CullTransparentMesh: 1
---- !u!1 &1572321244 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1963736718645426273, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
-  m_PrefabInstance: {fileID: 468326763}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1572321250
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1572321244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a813126e262a89b47883d22db64467a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FallReset
-  fallY: -20
 --- !u!1 &1719330752
 GameObject:
   m_ObjectHideFlags: 0
