@@ -117,7 +117,9 @@ MonoBehaviour:
   inactiveScale: {x: 1, y: 1, z: 1}
   activeColor: {r: 0, g: 1, b: 0.3, a: 1}
   activeScale: {x: 1.5, y: 1.5, z: 1.5}
+  targetedColor: {r: 1, g: 0, b: 0.3, a: 1}
   transitionSpeed: 10
+  canvas: {fileID: 5367003865437683938}
 --- !u!1 &2124478491335981307
 GameObject:
   m_ObjectHideFlags: 0
