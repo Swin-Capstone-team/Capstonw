@@ -63,6 +63,7 @@ MonoBehaviour:
   isHallway: 0
   defaultTime: 30
   decayRate: 1.2
+  hints: []
   startPoint: {fileID: 5738597487928176242}
   endPoint: {fileID: 5904861064589359208}
 --- !u!1 &637061647259978048
