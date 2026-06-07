@@ -28,6 +28,7 @@ public class MenuController : MonoBehaviour
         if (_input.PausePressedThisFrame)
         {
             //Toggle pause state
+            Debug.Log("Pause button pressed.");
             TogglePause();
         }
 
