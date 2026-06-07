@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +12,11 @@ public class LevelManager : MonoBehaviour
     public Level[] parkourRoomPrefabs;
     public Level[] hallwayPrefabs;
 
+    [Header("Back Wall")]
+    public GameObject backWallPrefab;
+    public float backWallDelay = 0.5f;
+    public float backWallBackwardOffset = 4f;
+
     [Header("Generation Settings")]
     public int roomsToKeepAhead = 3;
     public int roomsToKeepBehind = 1;
@@ -18,8 +24,12 @@ public class LevelManager : MonoBehaviour
     private List<Level> activeRooms = new List<Level>();
     private Level lastSpawnedRoom;
 
+    private FallReset playerFallReset;
+
     private void Start()
     {
+        playerFallReset = FindFirstObjectByType<FallReset>();
+
         SpawnStartingRoom();
 
         for (int i = 0; i < roomsToKeepAhead; i++)
@@ -32,20 +42,34 @@ public class LevelManager : MonoBehaviour
     {
         Level startRoom = Instantiate(startingRoomPrefab, Vector3.zero, Quaternion.identity);
         RegisterRoom(startRoom);
-        
-        // Force the timer to start for the very first room since they spawn inside it
-        gameTimer.StartTimerForLevel(startRoom);
+
+        if (gameTimer != null)
+        {
+            gameTimer.StartTimerForLevel(startRoom);
+        }
+
+        if (playerFallReset != null && startRoom.startPoint != null)
+        {
+            playerFallReset.SetRespawnPoint(startRoom.startPoint);
+        }
     }
 
     private void SpawnNextSequence()
     {
         SpawnRoom(true);
-        SpawnRoom(false); 
+        SpawnRoom(false);
     }
 
     private void SpawnRoom(bool isHallway)
     {
         Level[] prefabArray = isHallway ? hallwayPrefabs : parkourRoomPrefabs;
+
+        if (prefabArray == null || prefabArray.Length == 0)
+        {
+            Debug.LogWarning("No level prefabs assigned.");
+            return;
+        }
+
         Level prefabToSpawn = prefabArray[Random.Range(0, prefabArray.Length)];
 
         Level newRoom = Instantiate(prefabToSpawn);
@@ -56,6 +80,7 @@ public class LevelManager : MonoBehaviour
     private void AlignRoomToPrevious(Level newRoom, Level previousRoom)
     {
         if (previousRoom == null) return;
+        if (newRoom.startPoint == null || previousRoom.endPoint == null) return;
 
         Quaternion rotationOffset = previousRoom.endPoint.rotation * Quaternion.Inverse(newRoom.startPoint.rotation);
         newRoom.transform.rotation = rotationOffset * newRoom.transform.rotation;
@@ -68,40 +93,82 @@ public class LevelManager : MonoBehaviour
     {
         activeRooms.Add(room);
         lastSpawnedRoom = room;
-        
-        // Subscribe to BOTH events
+
         room.OnRoomEntered += HandleRoomEntered;
         room.OnRoomExited += HandleRoomExited;
     }
 
     private void HandleRoomEntered(Level enteredRoom)
     {
-        gameTimer.StartTimerForLevel(enteredRoom);
+        if (gameTimer != null)
+        {
+            gameTimer.StartTimerForLevel(enteredRoom);
+        }
+
+        if (playerFallReset != null && enteredRoom.startPoint != null)
+        {
+            playerFallReset.SetRespawnPoint(enteredRoom.startPoint);
+        }
     }
 
     private void HandleRoomExited(Level completedRoom)
     {
-        // 1. Unsubscribe to prevent memory leaks
         completedRoom.OnRoomEntered -= HandleRoomEntered;
         completedRoom.OnRoomExited -= HandleRoomExited;
 
-        // 2. Notify systems about the completion
-        gameTimer.RecordLevelCompletion(completedRoom);
-        
-        // 3. ONLY spawn the next sequence if we just beat a main parkour room
+        if (gameTimer != null)
+        {
+            gameTimer.RecordLevelCompletion(completedRoom);
+        }
+
+        StartCoroutine(SpawnBackWallAfterDelay(completedRoom));
+
         if (!completedRoom.isHallway)
         {
             SpawnNextSequence();
         }
 
-        // 4. Cleanup old rooms safely (this still runs for hallways so we don't leave them behind)
         int exitedIndex = activeRooms.IndexOf(completedRoom);
         CleanupOldRooms(exitedIndex);
     }
 
+    private IEnumerator SpawnBackWallAfterDelay(Level completedRoom)
+    {
+        yield return new WaitForSeconds(backWallDelay);
+
+        SpawnBackWall(completedRoom);
+    }
+
+    private void SpawnBackWall(Level completedRoom)
+    {
+        if (backWallPrefab == null)
+        {
+            Debug.LogWarning("Back wall prefab is not assigned.");
+            return;
+        }
+
+        if (completedRoom == null || completedRoom.endPoint == null)
+        {
+            return;
+        }
+
+        Vector3 spawnPosition =
+            completedRoom.endPoint.position -
+            completedRoom.endPoint.forward * backWallBackwardOffset;
+
+        GameObject wall = Instantiate(
+            backWallPrefab,
+            spawnPosition,
+            completedRoom.endPoint.rotation
+        );
+
+        wall.name = "Invisible Back Wall";
+        wall.transform.SetParent(completedRoom.transform);
+    }
+
     private void CleanupOldRooms(int currentlyExitedIndex)
     {
-        if (currentlyExitedIndex >= roomsToKeepBehind)
+        if (currentlyExitedIndex >= roomsToKeepBehind && activeRooms.Count > 0)
         {
             Level oldestRoom = activeRooms[0];
             activeRooms.RemoveAt(0);
