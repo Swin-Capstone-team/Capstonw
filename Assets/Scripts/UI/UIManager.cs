@@ -43,8 +43,10 @@ public class UIManager : MonoBehaviour
     public float hintDisplayDuration = 0f;
 
     private float targetTimeRatio = 1f;
+    private bool isAnimatingTimer = false;
     private float currentDisplayedScore = 0f;
     private int targetScore = 0;
+    private int totalLevelsBeaten = 0;
     private Vector3 originalScoreScale;
     private bool isPulsing = false;
     
@@ -104,8 +106,18 @@ public class UIManager : MonoBehaviour
     {
         if (timeImage != null)
         {
-            // Smoothly move the fill amount towards the target ratio
-            timeImage.fillAmount = Mathf.Lerp(timeImage.fillAmount, targetTimeRatio, Time.deltaTime * fillLerpSpeed);
+            if (isAnimatingTimer)
+            {
+                // Smoothly move the fill amount towards the target ratio for animations
+                timeImage.fillAmount = Mathf.Lerp(timeImage.fillAmount, targetTimeRatio, Time.deltaTime * fillLerpSpeed);
+
+                // Stop animating once we are extremely close to the target, allowing exact time tracking to take over
+                if (Mathf.Abs(timeImage.fillAmount - targetTimeRatio) < 0.005f)
+                {
+                    timeImage.fillAmount = targetTimeRatio;
+                    isAnimatingTimer = false;
+                }
+            }
             
             // Apply dynamic color gradient based on the current visible fill amount
             timeImage.color = timerColorGradient.Evaluate(timeImage.fillAmount);
@@ -147,6 +159,21 @@ public class UIManager : MonoBehaviour
         if (maxTime > 0)
         {
             targetTimeRatio = currentTime / maxTime;
+
+            if (timeImage != null)
+            {
+                // If there's a significant jump upwards in time (like starting a new level), animate the refill
+                if (targetTimeRatio > timeImage.fillAmount + 0.05f)
+                {
+                    isAnimatingTimer = true;
+                }
+
+                // If not currently running an animation (draining or refilling), exactly match the real time
+                if (!isAnimatingTimer)
+                {
+                    timeImage.fillAmount = targetTimeRatio;
+                }
+            }
         }
     }
 
@@ -156,6 +183,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateLevelsBeatenDisplay(int totalLevelsBeaten)
     {
+        this.totalLevelsBeaten = totalLevelsBeaten;
         if (levelsBeatenText != null)
         {
             levelsBeatenText.text = "Levels Cleared: " + totalLevelsBeaten.ToString();
@@ -240,13 +268,15 @@ public class UIManager : MonoBehaviour
     public void DrainTimer()
     {
         targetTimeRatio = 0f;
+        isAnimatingTimer = true;
     }
 
     public void ShowGameOverScreen(int score)
     {
         if (gameOverPanel != null)
         {
-            gameOverDetails.text = "Out of time!\nFinal Score: " + score.ToString() + "\nLevels Cleared: " + levelsBeatenText.text.Split(':')[1].Trim() + "\nPress R to Restart";
+            // gameOverDetails.text = "Out of time!\nFinal Score: " + score.ToString() + "\nLevels Cleared: " + totalLevelsBeaten.ToString() + "\nPress R to Restart";
+            gameOverDetails.text = "Out of time!\nLevels Cleared: " + totalLevelsBeaten.ToString() + "\nPress R to Restart";
             gameOverPanel.SetActive(true);
         }
     }
