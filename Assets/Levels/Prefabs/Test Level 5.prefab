@@ -234,6 +234,9 @@ MonoBehaviour:
   isHallway: 0
   defaultTime: 40
   decayRate: 1.2
+  hints:
+  - mechanicKey: Grapple
+    message: Left click to grapple to hooks
   startPoint: {fileID: 5525738566572054938}
   endPoint: {fileID: 3131399785983188368}
 --- !u!1 &690983969220389047

@@ -458,6 +458,9 @@ MonoBehaviour:
   isHallway: 0
   defaultTime: 40
   decayRate: 1.2
+  hints:
+  - mechanicKey: Jump
+    message: Press space to jump
   startPoint: {fileID: 3131399785983188368}
   endPoint: {fileID: 5525738566572054938}
 --- !u!1 &566918252457921407
