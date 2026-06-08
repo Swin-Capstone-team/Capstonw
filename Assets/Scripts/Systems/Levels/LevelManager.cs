@@ -6,6 +6,7 @@ public class LevelManager : MonoBehaviour
 {
     [Header("System References")]
     public GameTimer gameTimer;
+    public UIManager uiManager;
 
     [Header("Prefabs")]
     public Level startingRoomPrefab;
@@ -23,6 +24,9 @@ public class LevelManager : MonoBehaviour
 
     private List<Level> activeRooms = new List<Level>();
     private Level lastSpawnedRoom;
+    private Level startingRoomInstance;
+
+    private HashSet<string> seenMechanicKeys = new HashSet<string>();
 
     private FallReset playerFallReset;
 
@@ -36,11 +40,21 @@ public class LevelManager : MonoBehaviour
         {
             SpawnNextSequence();
         }
+
+        StartCoroutine(ShowStartingRoomHintNextFrame());
+    }
+
+    private IEnumerator ShowStartingRoomHintNextFrame()
+    {
+        yield return null;
+        // Debug.Log($"[LevelManager] Showing starting room hint for: {startingRoomInstance.levelID}, hints count: {startingRoomInstance.hints.Count}");
+        ShowNewHintsForRoom(startingRoomInstance);
     }
 
     private void SpawnStartingRoom()
     {
         Level startRoom = Instantiate(startingRoomPrefab, Vector3.zero, Quaternion.identity);
+        startingRoomInstance = startRoom;
         RegisterRoom(startRoom);
 
         if (gameTimer != null)
@@ -95,8 +109,11 @@ public class LevelManager : MonoBehaviour
         lastSpawnedRoom = room;
 
         room.OnRoomEntered += HandleRoomEntered;
-        room.OnRoomExited += HandleRoomExited;
+        room.OnRoomExited  += HandleRoomExited;
+
+        // Debug.Log($"[LevelManager] Registered room: {room.levelID}, isHallway: {room.isHallway}, hints: {room.hints.Count}");
     }
+
 
     private void HandleRoomEntered(Level enteredRoom)
     {
@@ -109,12 +126,23 @@ public class LevelManager : MonoBehaviour
         {
             playerFallReset.SetRespawnPoint(enteredRoom.startPoint);
         }
+
+        if (enteredRoom.isHallway)
+        {
+            // Dismiss any lingering hint when entering a hallway breather
+            if (uiManager != null) uiManager.DismissHint();
+        }
+        else
+        {
+            // ShowHint internally cancels any active coroutine so no race condition
+            ShowNewHintsForRoom(enteredRoom);
+        }
     }
 
     private void HandleRoomExited(Level completedRoom)
     {
         completedRoom.OnRoomEntered -= HandleRoomEntered;
-        completedRoom.OnRoomExited -= HandleRoomExited;
+        completedRoom.OnRoomExited  -= HandleRoomExited;
 
         if (gameTimer != null)
         {
@@ -124,12 +152,49 @@ public class LevelManager : MonoBehaviour
         StartCoroutine(SpawnBackWallAfterDelay(completedRoom));
 
         if (!completedRoom.isHallway)
-        {
             SpawnNextSequence();
-        }
 
         int exitedIndex = activeRooms.IndexOf(completedRoom);
         CleanupOldRooms(exitedIndex);
+    }
+
+    private void ShowNewHintsForRoom(Level room)
+    {
+        if (room.hints == null || room.hints.Count == 0)
+        {
+            // Debug.Log($"[LevelManager] ShowNewHintsForRoom: {room.levelID} has no hints, skipping.");
+            if (uiManager != null) uiManager.DismissHint(); // no hint for this room, clear whatever was showing
+            return;
+        }
+
+        foreach (var hint in room.hints)
+        {
+            if (string.IsNullOrWhiteSpace(hint.mechanicKey) || string.IsNullOrWhiteSpace(hint.message))
+            {
+                // Debug.Log($"[LevelManager] Skipping hint with empty key or message on {room.levelID}");
+                continue;
+            }
+
+            if (seenMechanicKeys.Contains(hint.mechanicKey))
+            {
+                // Debug.Log($"[LevelManager] Mechanic '{hint.mechanicKey}' already seen, skipping.");
+                continue;
+            }
+
+            // Debug.Log($"[LevelManager] Showing hint for mechanic '{hint.mechanicKey}': {hint.message}");
+            seenMechanicKeys.Add(hint.mechanicKey);
+            if (uiManager != null) uiManager.ShowHint(hint.message);
+            return;
+        }
+
+        // All hints on this room have already been seen this run
+        // Debug.Log($"[LevelManager] All hints already seen for {room.levelID}, dismissing.");
+        if (uiManager != null) uiManager.DismissHint();
+    }
+
+    public void ResetTutorialState()
+    {
+        seenMechanicKeys.Clear();
     }
 
     private IEnumerator SpawnBackWallAfterDelay(Level completedRoom)

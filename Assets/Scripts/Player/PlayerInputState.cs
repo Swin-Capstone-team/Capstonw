@@ -34,7 +34,7 @@ public class PlayerInputState : MonoBehaviour
     public bool RightSwingReleasedThisFrame => _actions.Player.RightSwing.WasReleasedThisFrame();
 
     public bool RestartPressedThisFrame => _actions.Player.Restart.WasPressedThisFrame();
-
+    public bool PausePressedThisFrame => _actions.Player.Pause.WasPressedThisFrame();
 
     private void LogActionPress(InputAction action, string actionName)
     {
