@@ -10,23 +10,9 @@ public class Player : MonoBehaviour
 
     private InputSystem_Actions _actions;
 
-    private void Awake()
-    {
-        _actions = new InputSystem_Actions();
-    }
-
-    private void OnEnable()
-    {
-        _actions.Player.Enable();
-    }
-
-    private void OnDisable()
-    {
-        _actions.Player.Disable();
-    }
-
     private void Start()
     {
+        _actions = GetComponent<PlayerInputState>().GetPlayerActions();
         Cursor.lockState = CursorLockMode.Locked;
 
         // Tell camera to follow transform
