@@ -81,7 +81,6 @@ public class GameTimer : MonoBehaviour
         int addedScore = Mathf.RoundToInt(100 * currentTime/maxTimeForCurrentLevel * decayMultiplier);
         score += addedScore;
         
-        uiManager.UpdateLevelsBeatenDisplay(roomCompletionCounts.Values.Sum());
         uiManager.UpdateScoreDisplay(score);
         uiManager.ShowScoreAdded(addedScore);
         uiManager.DrainTimer();
@@ -91,7 +90,7 @@ public class GameTimer : MonoBehaviour
     private void TriggerGameOver()
     {
         isTimerRunning = false;
-        uiManager.ShowGameOverScreen(score);
+        uiManager.ShowGameOverScreen(score, roomCompletionCounts.Values.Sum());
         
         // Add your logic here to freeze the player or stop game time
         Time.timeScale = 0f;

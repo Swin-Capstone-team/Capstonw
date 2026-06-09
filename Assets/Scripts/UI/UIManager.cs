@@ -46,7 +46,6 @@ public class UIManager : MonoBehaviour
     private bool isAnimatingTimer = false;
     private float currentDisplayedScore = 0f;
     private int targetScore = 0;
-    private int totalLevelsBeaten = 0;
     private Vector3 originalScoreScale;
     private bool isPulsing = false;
     
@@ -97,8 +96,6 @@ public class UIManager : MonoBehaviour
             scoreAddedText.color = c;
             scoreAddedText.gameObject.SetActive(false);
         }
-        
-        UpdateLevelsBeatenDisplay(0);
         UpdateScoreDisplay(0);
     }
 
@@ -181,14 +178,6 @@ public class UIManager : MonoBehaviour
     /// Updates the levels beaten display. Called by GameTimer.
     /// </summary>
 
-    public void UpdateLevelsBeatenDisplay(int totalLevelsBeaten)
-    {
-        this.totalLevelsBeaten = totalLevelsBeaten;
-        if (levelsBeatenText != null)
-        {
-            levelsBeatenText.text = "Levels Cleared: " + totalLevelsBeaten.ToString();
-        }
-    }
 
     public void UpdateScoreDisplay(int score)
     {
@@ -271,7 +260,7 @@ public class UIManager : MonoBehaviour
         isAnimatingTimer = true;
     }
 
-    public void ShowGameOverScreen(int score)
+    public void ShowGameOverScreen(int score, int totalLevelsBeaten)
     {
         if (gameOverPanel != null)
         {
