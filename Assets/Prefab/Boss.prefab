@@ -770,7 +770,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   animator: {fileID: 8017350239836956778}
-  player: {fileID: 0}
+  player: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
   followRange: {fileID: 4083592698170477127}
   stompRange: {fileID: 6655596790004215217}
   stompHitbox: {fileID: 5692737687162185387}

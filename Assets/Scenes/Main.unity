@@ -192,8 +192,8 @@ MonoBehaviour:
   - id: skate
     audioClips:
     - {fileID: 8300000, guid: 5c3c1df3f329cdd45b7860039df8203c, type: 3}
-  masterVolume: 0.15
-  musicVolume: 0.5
+  masterVolume: 0.496
+  musicVolume: 0
   sfxVolume: 1
   crossfadeDuration: 1
 --- !u!1 &161305549
@@ -498,6 +498,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5322472182857757716, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322472182857757716, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
+      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -6314,13 +6318,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
   gameTimer: {fileID: 912977857}
   uiManager: {fileID: 932442583}
-  startingRoomPrefab: {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
+  startingRoomPrefab: {fileID: 4282723140107944820, guid: 99f2feed0e46e445aad004e423d5d629, type: 3}
   parkourRoomPrefabs:
-  - {fileID: 4282723140107944820, guid: 99f2feed0e46e445aad004e423d5d629, type: 3}
-  - {fileID: 4282723140107944820, guid: 9c7718e71e1dd472f907bcc4565867d2, type: 3}
-  - {fileID: 4282723140107944820, guid: dc8b2cd635402470a88a7920bd3781ec, type: 3}
-  - {fileID: 4282723140107944820, guid: 1ea171a06fc0f4e53964bf227866e83d, type: 3}
-  - {fileID: 4282723140107944820, guid: 46fb33f4d50b24b63b5548c4eba85f92, type: 3}
+  - {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
+  - {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
+  - {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
+  - {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
+  - {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
+  - {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
   hallwayPrefabs:
   - {fileID: 4503921314214504493, guid: fcbcb00cc01094de0a05544b216ea0a5, type: 3}
   backWallPrefab: {fileID: 362130971969094183, guid: 06c876b37af53db429b30deee9cc4348, type: 3}
