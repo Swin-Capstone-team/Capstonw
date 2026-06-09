@@ -5,14 +5,16 @@ public class MenuController : MonoBehaviour
 {
     private PlayerInputState _input;
     public GameObject pauseMenu; // Reference to the pause menu UI
+    public GameObject settingsMenu;
     public bool isPaused = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         pauseMenu.SetActive(false);
+        settingsMenu.GetComponent<SettingsMenu>().Load();
+        settingsMenu.SetActive(false);
         isPaused = false;
         _input ??= GetComponentInParent<PlayerInputState>();
-       
     }
 
     // Update is called once per frame
@@ -36,7 +38,14 @@ public class MenuController : MonoBehaviour
 
     public void TogglePause()
     {
+        if (settingsMenu.activeSelf)
+        {
+            BackFromSettings();
+            return;
+        }
+
         isPaused = !isPaused;
+        
         if (!isPaused)
         {
             Debug.Log("Resuming game...");
@@ -53,8 +62,19 @@ public class MenuController : MonoBehaviour
             Time.timeScale = 0.0001f; // Pause the game
             Cursor.visible = true; // Lock the cursor
             Cursor.lockState = CursorLockMode.None;
-
         }
+    }
+
+    public void ShowSettings()
+    {
+        settingsMenu.SetActive(true);
+        pauseMenu.SetActive(false);
+    }
+
+    public void BackFromSettings()
+    {
+        pauseMenu.SetActive(true);
+        settingsMenu.SetActive(false);
     }
 
     
