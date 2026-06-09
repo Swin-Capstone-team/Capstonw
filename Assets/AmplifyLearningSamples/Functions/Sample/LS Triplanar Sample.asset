@@ -1,0 +1,145 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: LS Triplanar Sample
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor v1.9.9.5\n// Available at the
+    Unity Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=19905\nNode;AmplifyShaderEditor.CommentaryNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;100;-640,-3072;Inherit;False;1025.962;1183.371;Sample
+    Texture Size Node;7;106;109;108;107;99;113;112;;0,0,0,1;0;0\nNode;AmplifyShaderEditor.CommentaryNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;126;-640,-1824;Inherit;False;1019.292;1057.189;example
+    World Space;14;131;151;150;141;130;137;148;129;128;127;149;138;134;175;;0,0,0,1;0;0\nNode;AmplifyShaderEditor.CommentaryNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;112;-592,-2544;Inherit;False;751;284;Spherical;2;110;114;;0,0,0,1;0;0\nNode;AmplifyShaderEditor.CommentaryNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;113;-592,-2224;Inherit;False;753;259;Cylindrical;2;111;115;;0,0,0,1;0;0\nNode;AmplifyShaderEditor.CommentaryNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;152;448,-1824;Inherit;False;1019.292;1057.189;example
+    Object Space;17;170;169;167;166;165;164;163;162;161;156;155;154;153;171;174;173;172;;0,0,0,1;0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;99;-608,-3024;Inherit;False;348.9355;100;Tex;;0.1981132,0.1635368,0.1635368,1;This
+    port accepts a Texture Object which allows the use of it's texture UV parameters
+    in the material inspector;0;0\nNode;AmplifyShaderEditor.StickyNoteNode, AmplifyShaderEditor,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;107;-608,-2912;Inherit;False;337.3915;110.2612;World
+    Pos / Local Pos;;0.1981132,0.1635368,0.1635368,1;If set, uses the connected world/local
+    position (depending the selected Space) instead of the current world/local position.
+    Useful when applying a vertex offset to the shader.;0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;108;-608,-2784;Inherit;False;336.1089;101.2827;Tilling;;0.1981132,0.1635368,0.1635368,1;A
+    multiplier that controls the scale repetition of the textures being projected
+    onto the surface;0;0\nNode;AmplifyShaderEditor.StickyNoteNode, AmplifyShaderEditor,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;109;-608,-2672;Inherit;False;336.4783;119.2825;Falloff;;0.1981132,0.1635368,0.1635368,1;A
+    multiplier that controls the interpolated blend between the projected planes.
+    Higher values means harder blends while lower means softer;0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;114;-208,-2480;Inherit;False;329;117;;;0,0,0,1;It
+    projects 1 texture from all 3 planes in both positive and negative axis, effectively
+    wrapping the object with 1 texture;0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;115;-208,-2176;Inherit;False;327;146;;;0,0,0,1;
+    It projects 3 textures, 1 texture from the vertical top pointing down, 1 texture
+    from all around horizontal XY axis and 1 texture from the vertical bottom pointing
+    up, effectively wrapping as a cylinder.;0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;134;-608,-1232;Inherit;False;200;100;Normal
+    Map;;0,0,0,1;_BumpMap;0;0\nNode;AmplifyShaderEditor.StickyNoteNode, AmplifyShaderEditor,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;138;-608,-1632;Inherit;False;198;100;BaseColor
+    Map;;0,0,0,1;_MainTex;0;0\nNode;AmplifyShaderEditor.StickyNoteNode, AmplifyShaderEditor,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;149;-384,-960;Inherit;False;271.9921;141.9506;_NormalStrength;;0,0,0,1;This
+    scale the normal map perpendicular to the surface. Effectively decreasing or
+    increasing how bumpy the surface looks;0;0\nNode;AmplifyShaderEditor.TriplanarNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;106;-240,-3024;Inherit;True;Spherical;World;False;Top
+    Texture 0;_TopTexture0;white;0;None;Mid Texture 0;_MidTexture0;white;-1;None;Bot
+    Texture 0;_BotTexture0;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.DynamicAppendNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;128;-320,-1440;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.RangedFloatNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;129;-448,-1328;Inherit;False;Constant;_Falloff;Falloff;9;0;Create;True;0;0;0;False;0;False;0.4810575;0;0;1;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;148;-384,-1040;Half;False;Property;_NormalStrength1;Normal
+    Strength;3;0;Create;False;1;;0;0;False;0;False;1;1;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.TexturePropertyNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;137;-384,-1232;Inherit;True;Property;_BumpMap;Normal
+    Map;4;2;[Normal];[SingleLineTexture];Create;False;0;0;0;False;0;False;4acb82e6eb294c04880e2b085274d756;4acb82e6eb294c04880e2b085274d756;False;white;Auto;Texture2D;False;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1\nNode;AmplifyShaderEditor.TexturePropertyNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;130;-384,-1632;Inherit;True;Property;_MainTex;Base
+    Map;7;1;[SingleLineTexture];Create;False;0;0;0;False;0;False;40d039c7c47e80541b43e38546594e5d;40d039c7c47e80541b43e38546594e5d;False;white;Auto;Texture2D;False;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1\nNode;AmplifyShaderEditor.WireNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;150;-160,-1440;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.WireNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;151;-160,-1392;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.TriplanarNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;141;-80,-1232;Inherit;True;Spherical;World;True;Top
+    Texture 5;_TopTexture5;white;-1;None;Mid Texture 5;_MidTexture5;white;-1;None;Bot
+    Texture 5;_BotTexture5;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.TriplanarNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;131;-80,-1632;Inherit;True;Spherical;World;False;Top
+    Texture 3;_TopTexture3;white;-1;None;Mid Texture 3;_MidTexture3;white;-1;None;Bot
+    Texture 3;_BotTexture3;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;153;480,-1232;Inherit;False;200;100;Normal
+    Map;;0,0,0,1;_BumpMap;0;0\nNode;AmplifyShaderEditor.StickyNoteNode, AmplifyShaderEditor,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;154;480,-1632;Inherit;False;198;100;BaseColor
+    Map;;0,0,0,1;_MainTex;0;0\nNode;AmplifyShaderEditor.StickyNoteNode, AmplifyShaderEditor,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;155;704,-960;Inherit;False;271.9921;141.9506;_NormalStrength;;0,0,0,1;This
+    scale the normal map perpendicular to the surface. Effectively decreasing or
+    increasing how bumpy the surface looks;0;0\nNode;AmplifyShaderEditor.DynamicAppendNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;161;768,-1440;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.RangedFloatNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;162;640,-1328;Inherit;False;Constant;_Falloff1;Falloff;9;0;Create;True;0;0;0;False;0;False;0.4810575;0;0;1;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;163;704,-1040;Half;False;Property;_NormalStrength2;Normal
+    Strength;3;0;Create;False;1;;0;0;False;0;False;1;1;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.TexturePropertyNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;164;704,-1232;Inherit;True;Property;_BumpMap1;Normal
+    Map;4;2;[Normal];[SingleLineTexture];Create;False;0;0;0;False;0;False;4acb82e6eb294c04880e2b085274d756;4acb82e6eb294c04880e2b085274d756;False;white;Auto;Texture2D;False;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1\nNode;AmplifyShaderEditor.TexturePropertyNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;165;704,-1632;Inherit;True;Property;_MainTex1;Base
+    Map;7;1;[SingleLineTexture];Create;False;0;0;0;False;0;False;40d039c7c47e80541b43e38546594e5d;40d039c7c47e80541b43e38546594e5d;False;white;Auto;Texture2D;False;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1\nNode;AmplifyShaderEditor.WireNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;166;928,-1440;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.WireNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;167;928,-1392;Inherit;False;1;0;FLOAT2;0,0;False;1;FLOAT2;0\nNode;AmplifyShaderEditor.TriplanarNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;170;1008,-1632;Inherit;True;Spherical;Object;False;Top
+    Texture 6;_TopTexture6;white;-1;None;Mid Texture 6;_MidTexture6;white;-1;None;Bot
+    Texture 6;_BotTexture6;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.TriplanarNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;169;1008,-1232;Inherit;True;Spherical;Object;True;Top
+    Texture 4;_TopTexture4;white;-1;None;Mid Texture 4;_MidTexture4;white;-1;None;Bot
+    Texture 4;_BotTexture4;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.WireNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;172;944,-1216;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.WireNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;173;928,-1712;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.WireNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;174;928,-1712;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.WireNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;176;-144,-1216;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.WireNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;177;-144,-1696;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.WireNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;178;-144,-1696;Inherit;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nNode;AmplifyShaderEditor.PositionNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;175;-352,-1776;Inherit;False;1;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.PositionNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;171;736,-1776;Inherit;False;0;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3\nNode;AmplifyShaderEditor.RangedFloatNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;156;608,-1440;Inherit;False;Property;_Tiling1;Tiling;8;0;Create;True;0;0;0;False;0;False;0.91;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;127;-480,-1440;Inherit;False;Property;_Tiling;Tiling;8;0;Create;True;0;0;0;False;0;False;0.91;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.TriplanarNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;110;-576,-2480;Inherit;True;Spherical;World;False;Top
+    Texture 1;_TopTexture1;white;6;None;Mid Texture 1;_MidTexture1;white;-1;None;Bot
+    Texture 1;_BotTexture1;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.TriplanarNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;111;-576,-2176;Inherit;True;Cylindrical;World;False;Top
+    Texture 2;_TopTexture2;white;1;None;Mid Texture 2;_MidTexture2;white;2;None;Bot
+    Texture 2;_BotTexture2;white;5;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT3;1,1,1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4\nNode;AmplifyShaderEditor.FunctionOutput,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;64;-640,-3168;Inherit;False;True;-1;Out;0;False;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0\nWireConnection;128;0;127;0\nWireConnection;128;1;127;0\nWireConnection;150;0;128;0\nWireConnection;151;0;128;0\nWireConnection;141;0;137;0\nWireConnection;141;9;176;0\nWireConnection;141;8;148;0\nWireConnection;141;3;151;0\nWireConnection;141;4;129;0\nWireConnection;131;0;130;0\nWireConnection;131;9;177;0\nWireConnection;131;3;150;0\nWireConnection;131;4;129;0\nWireConnection;161;0;156;0\nWireConnection;161;1;156;0\nWireConnection;166;0;161;0\nWireConnection;167;0;161;0\nWireConnection;170;0;165;0\nWireConnection;170;9;173;0\nWireConnection;170;3;166;0\nWireConnection;170;4;162;0\nWireConnection;169;0;164;0\nWireConnection;169;9;172;0\nWireConnection;169;8;163;0\nWireConnection;169;3;167;0\nWireConnection;169;4;162;0\nWireConnection;172;0;174;0\nWireConnection;173;0;171;0\nWireConnection;174;0;171;0\nWireConnection;176;0;178;0\nWireConnection;177;0;175;0\nWireConnection;178;0;175;0\nASEEND*/\n//CHKSM=9223DABD5434323D73604853AB76E5E6B16C9261"
+  m_functionName: 
+  m_description: 'Triplanar Sample Node
+
+
+    Learning Sample
+
+
+    GPU Cycles:
+
+    Unknown'
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 0
+  m_headerStyle: 2
+  m_headerColor: {r: 0.11764706, g: 0.31764707, b: 0.63529414, a: 1}
+  m_customNodeCategory: LS Sample
+  m_previewPosition: 0
+  m_hidden: 0
+  m_url: 

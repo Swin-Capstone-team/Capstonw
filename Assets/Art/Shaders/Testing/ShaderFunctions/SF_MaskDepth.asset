@@ -18,8 +18,8 @@ MonoBehaviour:
     AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;4;-80,-16;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode,
     AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;1;-480,-32;Inherit;False;Constant;_100000;100000;0;0;Create;True;0;0;0;False;0;False;100000;0;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionInput,
     AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;2;-256,-16;Inherit;False;MaxDepth;1;0;False;1;0;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.ScreenDepthNode,
-    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;3;-432,160;Inherit;False;0;1;0;FLOAT4;0,0,0,0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput,
-    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;0;320,-16;Inherit;True;True;-1;Output;0;False;1;0;FLOAT;0;False;1;FLOAT;0\nWireConnection;5;0;4;0\nWireConnection;4;0;2;0\nWireConnection;4;1;3;0\nWireConnection;2;0;1;0\nWireConnection;0;0;5;0\nASEEND*/\n//CHKSM=B1AFA6889CD5BE281FDE36CC1EF5F111FC6F319D"
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;3;-288,64;Inherit;False;0;1;0;FLOAT4;0,0,0,0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;0;320,-16;Inherit;True;True;-1;Output;0;False;1;0;FLOAT;0;False;1;FLOAT;0\nWireConnection;5;0;4;0\nWireConnection;4;0;2;0\nWireConnection;4;1;3;0\nWireConnection;2;0;1;0\nWireConnection;0;0;5;0\nASEEND*/\n//CHKSM=08487E085B1002A0C8BB0520F73EAE8D3233E5E4"
   m_functionName: 
   m_description: 
   m_additionalIncludes:

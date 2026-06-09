@@ -115,7 +115,7 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DistanceCutoff: 16.9
+    - _DistanceCutoff: 2.5
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 1
@@ -124,7 +124,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OutlineWidth: 0.0174
+    - _OutlineWidth: 0.005
     - _Parallax: 0.02
     - _QueueControl: 0
     - _QueueOffset: 0
@@ -143,3 +143,4 @@ Material:
     - _RimColor: {r: 0, g: 1, b: 0.91724133, a: 0}
     - _WireColor: {r: 0, g: 0.19106245, b: 1, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
