@@ -192,7 +192,7 @@ MonoBehaviour:
   - id: skate
     audioClips:
     - {fileID: 8300000, guid: 5c3c1df3f329cdd45b7860039df8203c, type: 3}
-  masterVolume: 0.5
+  masterVolume: 0.15
   musicVolume: 0.5
   sfxVolume: 1
   crossfadeDuration: 1
@@ -6314,7 +6314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
   gameTimer: {fileID: 912977857}
   uiManager: {fileID: 932442583}
-  startingRoomPrefab: {fileID: 4282723140107944820, guid: 99f2feed0e46e445aad004e423d5d629, type: 3}
+  startingRoomPrefab: {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
   parkourRoomPrefabs:
   - {fileID: 4282723140107944820, guid: 99f2feed0e46e445aad004e423d5d629, type: 3}
   - {fileID: 4282723140107944820, guid: 9c7718e71e1dd472f907bcc4565867d2, type: 3}
