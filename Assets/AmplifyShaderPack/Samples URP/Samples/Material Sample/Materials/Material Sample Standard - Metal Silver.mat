@@ -109,7 +109,7 @@ Material:
     - _EnableEmission: 0
     - _EnableFogOnTransparent: 1
     - _EnvironmentReflections: 1
-    - _GlossMapScale: 0.604
+    - _GlossMapScale: 0.771
     - _GlossyReflections: 1
     - _Metallic: 1
     - _MetallicStrength: 1
@@ -156,7 +156,7 @@ Material:
     - _ZWrite: 1
     - __dirty: 0
     m_Colors:
-    - _BaseColor: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 0}
+    - _BaseColor: {r: 0.9882353, g: 0.98039216, b: 0.9607843, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
