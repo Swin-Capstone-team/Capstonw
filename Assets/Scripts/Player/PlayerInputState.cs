@@ -18,6 +18,7 @@ public class PlayerInputState : MonoBehaviour
     public bool JumpPressedThisFrame => _actions.Player.Jump.WasPressedThisFrame();
 
     public bool ShootPressedThisFrame => _actions.Player.Shoot.WasPressedThisFrame();
+    public bool AimHeld => _actions.Player.Aim.IsPressed();
 
     public bool SprintHeld => _actions.Player.Sprint.IsPressed();
 
@@ -33,7 +34,7 @@ public class PlayerInputState : MonoBehaviour
     public bool RightSwingReleasedThisFrame => _actions.Player.RightSwing.WasReleasedThisFrame();
 
     public bool RestartPressedThisFrame => _actions.Player.Restart.WasPressedThisFrame();
-
+    public bool PausePressedThisFrame => _actions.Player.Pause.WasPressedThisFrame();
 
     private void LogActionPress(InputAction action, string actionName)
     {

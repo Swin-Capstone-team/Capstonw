@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Level : MonoBehaviour
@@ -11,6 +12,9 @@ public class Level : MonoBehaviour
     public float defaultTime = 30f;
     public float decayRate = 1.2f; 
     
+    [Header("Tutorial Hints")]
+    public List<MechanicHint> hints = new List<MechanicHint>();
+
     [Header("Connection Points")]
     public Transform startPoint;
     public Transform endPoint;

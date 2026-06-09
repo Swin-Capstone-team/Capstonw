@@ -55,7 +55,7 @@ public class Behaviour : MonoBehaviour
             else { Debug.Log("Swipe attack is on cooldown!"); }
         }
 
-        if (isFollowing && !isAttacking) 
+        if (isFollowing && !stompattackRange && !swipeattackRange)       //Follow the player if in aggro range but not attack ranges
         {
             FollowPlayer();
             Debug.Log("Following the player!");
