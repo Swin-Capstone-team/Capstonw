@@ -203,7 +203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   levelID: Level 8
   isHallway: 0
-  defaultTime: 30
+  defaultTime: 90
   decayRate: 1.2
   hints: []
   startPoint: {fileID: 4233223834149888857}

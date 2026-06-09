@@ -6557,11 +6557,7 @@ MonoBehaviour:
   startingRoomPrefab: {fileID: 4282723140107944820, guid: 99f2feed0e46e445aad004e423d5d629, type: 3}
   parkourRoomPrefabs:
   - {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
-  - {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
-  - {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
-  - {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
-  - {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
-  - {fileID: 4282723140107944820, guid: 61f6a085e420d41229d235c3d70afe35, type: 3}
+  - {fileID: 4282723140107944820, guid: 97d53838fe8b24fdb9c2d4ea702ce1df, type: 3}
   hallwayPrefabs:
   - {fileID: 4503921314214504493, guid: fcbcb00cc01094de0a05544b216ea0a5, type: 3}
   backWallPrefab: {fileID: 362130971969094183, guid: 06c876b37af53db429b30deee9cc4348, type: 3}
