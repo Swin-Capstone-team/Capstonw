@@ -3,7 +3,22 @@ guid: c31162119ad85bc48aaa65906c8d912c
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Alpha
+    second: {fileID: 2100000, guid: f3c26a73df35d9741b3bb5b23137db87, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cistern
+    second: {fileID: 2100000, guid: b95d7a5c32a5ab748bc63354d40325ad, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wagon
+    second: {fileID: 2100000, guid: da7bd81c71eabea4385e327f0356ccea, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
