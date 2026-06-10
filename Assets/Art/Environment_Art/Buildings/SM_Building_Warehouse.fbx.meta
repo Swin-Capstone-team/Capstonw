@@ -3,7 +3,42 @@ guid: 42f3ff5deaa12a84f80a32b1f1b09609
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Emissive
+    second: {fileID: 2100000, guid: cb3abb7b5b78af7419d09268958d1e58, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal
+    second: {fileID: 2100000, guid: 010d093c10556f146b716e18500f11df, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: WetConcrete
+    second: {fileID: 2100000, guid: bb46582e27a6c4e4db6a3757d7fc4528, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: door
+    second: {fileID: 2100000, guid: 8dd3018593f2301489db179776f4c4a1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: plaster
+    second: {fileID: 2100000, guid: 26bbd5b44c32a8b4d93604fbf9d54733, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: roller
+    second: {fileID: 2100000, guid: 65768421c8d965e4ab6c22a75fb2f236, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: roof
+    second: {fileID: 2100000, guid: d8eaf66a00430594e9fdf5ec5ede68ab, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
