@@ -66,7 +66,7 @@ namespace UI.Menus.MainMenu
             {
                 return;
             }
-        
+            AudioManager.Instance.PlaySFX("menuSelect");
             Debug.Log($"{button.name} clicked");
             switch (button.name) 
             {

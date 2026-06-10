@@ -138,21 +138,25 @@ namespace UI.Menus.OptionsMenu
 
         private void ShowGameOptions()
         {
+            AudioManager.Instance.PlaySFX("menuSelect");
             ShowSubMenu(_gameOptionsMenu);
         }
 
         private void ShowVideoOptions()
         {
+            AudioManager.Instance.PlaySFX("menuSelect");
             ShowSubMenu(_videoOptionsMenu);
         }
 
         private void ShowSoundOptions()
         {
+            AudioManager.Instance.PlaySFX("menuSelect");
             ShowSubMenu(_soundOptionsMenu);
         }
 
         private void ShowControlsOptions()
         {
+            AudioManager.Instance.PlaySFX("menuSelect");
             ShowSubMenu(_controlOptionsMenu);
         }
 
@@ -186,21 +190,25 @@ namespace UI.Menus.OptionsMenu
 
         private void HandleExitRequested()
         {
+            AudioManager.Instance.PlaySFX("menuSelect");
             _exitRequested?.Invoke();
         }
 
         private void HandleConfirmRequested()
         {
+            AudioManager.Instance.PlaySFX("menuSelect");
             _confirmRequested?.Invoke();
         }
 
         private void HandleBackRequested()
         {
+            AudioManager.Instance.PlaySFX("menuSelect");
             HandleBackAction();
         }
 
         private void HandleDefaultSettingsRequested()
         {
+            AudioManager.Instance.PlaySFX("menuSelect");
             _defaultSettingsRequested?.Invoke();
         }
 

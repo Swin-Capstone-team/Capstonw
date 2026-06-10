@@ -363,7 +363,13 @@ MonoBehaviour:
   musicTracks:
   - {fileID: 8300000, guid: cdbeed10e632841d0b42ceabe573d1a2, type: 3}
   - {fileID: 8300000, guid: d91421ea2602f48919624e403df8ccdb, type: 3}
-  soundEffects: []
+  soundEffects:
+  - id: menuSelect
+    audioClips:
+    - {fileID: 8300000, guid: d12a9b18739bb53499a0f4249522c2be, type: 3}
+  - id: menuOptions
+    audioClips:
+    - {fileID: 8300000, guid: 2bb21e466a4f3c6498113c002bfddf6b, type: 3}
   masterVolume: 0.5
   musicVolume: 0
   sfxVolume: 1

@@ -329,6 +329,12 @@ MonoBehaviour:
   - id: skate
     audioClips:
     - {fileID: 8300000, guid: 5c3c1df3f329cdd45b7860039df8203c, type: 3}
+  - id: menuSelect
+    audioClips:
+    - {fileID: 8300000, guid: d12a9b18739bb53499a0f4249522c2be, type: 3}
+  - id: menuOptions
+    audioClips:
+    - {fileID: 8300000, guid: 2bb21e466a4f3c6498113c002bfddf6b, type: 3}
   masterVolume: 0.5
   musicVolume: 0.5
   sfxVolume: 1
@@ -7313,7 +7319,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e2854e12a8534914b5c8fe25d0f2a98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::menubuttons
-  mainMenuSceneName: MainMenu
   pauseScript: {fileID: 779319464}
   pauseMenu: {fileID: 1270294687}
   buttonAnimator: {fileID: 1088681359}

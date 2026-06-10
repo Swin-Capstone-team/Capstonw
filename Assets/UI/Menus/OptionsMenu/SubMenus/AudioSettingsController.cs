@@ -25,6 +25,9 @@ namespace UI.Menus.OptionsMenu
             _masterSlider.RegisterValueChangedCallback(OnMasterVolumeChanged);  
             _musicSlider.RegisterValueChangedCallback(OnMusicVolumeChanged);
             _sfxSlider.RegisterValueChangedCallback(OnSFXVolumeChanged);
+            _masterSlider.RegisterCallback<PointerCaptureOutEvent>(OnSliderReleased);
+            _musicSlider.RegisterCallback<PointerCaptureOutEvent>(OnSliderReleased);
+            _sfxSlider.RegisterCallback<PointerCaptureOutEvent>(OnSliderReleased);
         }
 
         public void UnregisterButtons()
@@ -32,6 +35,9 @@ namespace UI.Menus.OptionsMenu
             _masterSlider.UnregisterValueChangedCallback(OnMasterVolumeChanged);
             _musicSlider.UnregisterValueChangedCallback(OnMusicVolumeChanged);
             _sfxSlider.UnregisterValueChangedCallback(OnSFXVolumeChanged);
+            _masterSlider.UnregisterCallback<PointerCaptureOutEvent>(OnSliderReleased);
+            _musicSlider.UnregisterCallback<PointerCaptureOutEvent>(OnSliderReleased);
+            _sfxSlider.UnregisterCallback<PointerCaptureOutEvent>(OnSliderReleased);
         }
 
         private void OnMasterVolumeChanged(ChangeEvent<float> evt)
@@ -64,6 +70,11 @@ namespace UI.Menus.OptionsMenu
             if(changed) return;
             changed = true;
             _anyChange?.Invoke();
+        }
+
+        private void OnSliderReleased(PointerCaptureOutEvent evt)
+        {
+            AudioManager.Instance.PlaySFX("menuOptions");
         }
 
         private void Load()

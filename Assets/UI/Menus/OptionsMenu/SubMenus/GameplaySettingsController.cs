@@ -19,12 +19,14 @@ namespace UI.Menus.OptionsMenu
 
         public void RegisterButtons()
         {
-            _cameraSensitivity.RegisterValueChangedCallback(OnCameraSensitivityChanged);  
+            _cameraSensitivity.RegisterValueChangedCallback(OnCameraSensitivityChanged); 
+            _cameraSensitivity.RegisterCallback<PointerCaptureOutEvent>(OnSliderReleased); 
         }
 
         public void UnregisterButtons()
         {
             _cameraSensitivity.UnregisterValueChangedCallback(OnCameraSensitivityChanged);  
+            _cameraSensitivity.UnregisterCallback<PointerCaptureOutEvent>(OnSliderReleased);
         }
 
         private void OnCameraSensitivityChanged(ChangeEvent<float> evt)
@@ -35,6 +37,11 @@ namespace UI.Menus.OptionsMenu
             if(changed) return;
             changed = true;
             _anyChange?.Invoke();
+        }
+
+        private void OnSliderReleased(PointerCaptureOutEvent evt)
+        {
+            AudioManager.Instance.PlaySFX("menuOptions");
         }
 
         private void Load()

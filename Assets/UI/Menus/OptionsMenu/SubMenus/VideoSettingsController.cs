@@ -58,8 +58,10 @@ namespace UI.Menus.OptionsMenu
             _resolutionDropDown.RegisterValueChangedCallback(OnResolutionChanged);
             _refreshRateLeftButton.clicked += PreviousRefreshRate;
             _refreshRateRightButton.clicked += NextRefreshRate;
-            _brightnessSlider.RegisterValueChangedCallback(OnBrightnessChanged);  
+            _brightnessSlider.RegisterValueChangedCallback(OnBrightnessChanged); 
+            _brightnessSlider.RegisterCallback<PointerCaptureOutEvent>(OnSliderReleased);
             _fovSlider.RegisterValueChangedCallback(OnFOVChanged); 
+            _fovSlider.RegisterCallback<PointerCaptureOutEvent>(OnSliderReleased);
         }
 
         public void UnregisterButtons()
@@ -69,8 +71,10 @@ namespace UI.Menus.OptionsMenu
             _resolutionDropDown.UnregisterValueChangedCallback(OnResolutionChanged);
             _refreshRateLeftButton.clicked -= PreviousRefreshRate;
             _refreshRateRightButton.clicked -= NextRefreshRate;
-            _brightnessSlider.UnregisterValueChangedCallback(OnBrightnessChanged);  
+            _brightnessSlider.UnregisterValueChangedCallback(OnBrightnessChanged); 
+            _brightnessSlider.UnregisterCallback<PointerCaptureOutEvent>(OnSliderReleased); 
             _fovSlider.UnregisterValueChangedCallback(OnFOVChanged); 
+            _fovSlider.UnregisterCallback<PointerCaptureOutEvent>(OnSliderReleased);
         }
 
         public void NextDisplay()
@@ -84,6 +88,7 @@ namespace UI.Menus.OptionsMenu
 
         private void UpdateDisplayMode(int change)
         {
+            AudioManager.Instance.PlaySFX("menuOptions");
             int length = Enum.GetValues(typeof(FullScreenMode)).Length;
             displayIndex = (displayIndex + change) % length;
             if (displayIndex < 0)
@@ -111,6 +116,7 @@ namespace UI.Menus.OptionsMenu
 
         private void OnResolutionChanged(ChangeEvent<string> evt)
         {
+            AudioManager.Instance.PlaySFX("menuOptions");
             resolutionIndex = _resolutionDropDown.choices.IndexOf(evt.newValue);
             if(changed) return;
             changed = true;
@@ -128,6 +134,7 @@ namespace UI.Menus.OptionsMenu
 
         private void UpdateRefreshRate(int change)
         {
+            AudioManager.Instance.PlaySFX("menuOptions");
             refreshRateIndex = (refreshRateIndex + change) % refreshRates.Count;
             if (refreshRateIndex < 0)
             {
@@ -141,6 +148,7 @@ namespace UI.Menus.OptionsMenu
 
         private void OnBrightnessChanged(ChangeEvent<float> evt)
         {
+            
             //idk man
             Debug.Log(evt.newValue);
             float rounded = Mathf.Round(evt.newValue);
@@ -158,6 +166,11 @@ namespace UI.Menus.OptionsMenu
             if(changed) return;
             changed = true;
             _anyChange?.Invoke();
+        }
+
+        private void OnSliderReleased(PointerCaptureOutEvent evt)
+        {
+            AudioManager.Instance.PlaySFX("menuOptions");
         }
 
         private void Load()
