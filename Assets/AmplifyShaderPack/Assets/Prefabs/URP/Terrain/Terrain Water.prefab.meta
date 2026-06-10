@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 339aa12821538db4b9cf8044e39bc60d
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 202484
+  packageName: Amplify Shader Pack
+  packageVersion: 2.3.9-r2
+  assetPath: Assets/AmplifyShaderPack/Assets/Prefabs/URP/Terrain/Terrain Water.prefab
+  uploadId: 853548

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 346672314dce37645a253781501d2c50
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 202484
+  packageName: Amplify Shader Pack
+  packageVersion: 2.3.9-r2
+  assetPath: Assets/AmplifyShaderPack/Assets/Prefabs/BIRP/Terrain/Terrain SinglePass.prefab
+  uploadId: 853548

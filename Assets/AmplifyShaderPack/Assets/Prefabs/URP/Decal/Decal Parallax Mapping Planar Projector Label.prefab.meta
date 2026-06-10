@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 71719210eec77014da8b9c61e1ca4061
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 202484
+  packageName: Amplify Shader Pack
+  packageVersion: 2.3.9-r2
+  assetPath: Assets/AmplifyShaderPack/Assets/Prefabs/URP/Decal/Decal Parallax Mapping
+    Planar Projector Label.prefab
+  uploadId: 853548

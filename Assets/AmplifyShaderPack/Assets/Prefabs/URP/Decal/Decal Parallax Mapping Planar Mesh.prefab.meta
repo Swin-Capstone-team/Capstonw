@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a596433600f43384ca1b00f4660bca30
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 202484
+  packageName: Amplify Shader Pack
+  packageVersion: 2.3.9-r2
+  assetPath: Assets/AmplifyShaderPack/Assets/Prefabs/URP/Decal/Decal Parallax Mapping
+    Planar Mesh.prefab
+  uploadId: 853548
