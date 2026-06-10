@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 104b3fb53b2cb1a47a7782f0ea6641dd
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 202484
+  packageName: Amplify Shader Pack
+  packageVersion: 2.3.9-r2
+  assetPath: Assets/AmplifyShaderPack/Assets/Prefabs/BIRP/Terrain/Terrain SinglePass
+    Snow.prefab
+  uploadId: 853548

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1ecf1496ca43c9d45af5d796ce01bafa
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 202484
+  packageName: Amplify Shader Pack
+  packageVersion: 2.3.9-r2
+  assetPath: Assets/AmplifyShaderPack/Assets/Prefabs/HDRP/Decal/Decal Parallax Occlusion
+    Mapping Projector Label.prefab
+  uploadId: 853548
