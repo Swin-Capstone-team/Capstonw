@@ -62,6 +62,7 @@ public class MenuController : MonoBehaviour, IMenu
 
     public void ShowOptions()
     {
+        AudioManager.Instance.PlaySFX("menuSelect");
         inOptions = true;
         _optionsMenu.Show(this);
         
