@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5ead375b396521f4babc0f850215e50c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 202484
+  packageName: Amplify Shader Pack
+  packageVersion: 2.3.9-r2
+  assetPath: Assets/AmplifyShaderPack/Assets/Terrain/Layer 03 Rock.terrainlayer
+  uploadId: 853548

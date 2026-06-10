@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: LS Exposure
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor v1.9.9.7\n// Available at the
+    Unity Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=19907\nNode;AmplifyShaderEditor.CommentaryNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;13;-384,-736;Inherit;False;862;281.6667;Exposure;3;16;21;14;;0,0,0,1;0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;14;80,-672;Inherit;False;367.0127;184.0221;CurrentMultiplier;;0.0471698,0.0471698,0.0471698,1;GetCurrentExposureMultiplier()$$Supports
+    $--- HDRP 12 or higher $--- URP 17x or higher$All other it will return ( 1.0
+    )$$$$$$$;0;0\nNode;AmplifyShaderEditor.StickyNoteNode, AmplifyShaderEditor, Version=0.0.0.0,
+    Culture=neutral, PublicKeyToken=null;21;-352,-688;Inherit;False;281.9296;131.2667;;;0,0,0,1;The
+    Exposure Node allows you to get the Camera's exposure value from the current
+    frame$$$;0;0\nNode;AmplifyShaderEditor.Exposure, AmplifyShaderEditor, Version=0.0.0.0,
+    Culture=neutral, PublicKeyToken=null;16;-32,-672;Inherit;False;0;1;FLOAT;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;22;-400,-96;Inherit;False;398.5793;222.7789;Exposure
+    Compensation;;0,0,0,1;Set the value that the Shader uses to compensate the automatically
+    calculated exposure value. This is useful if you want to over or under expose
+    the Scene. Default value 0.25 should be good for most case to match exposure
+    weight in shader to scene automatic exposure values. $$property _ ExposureCompensation
+    is Hidden by default in this shader however advance users may wish to expose
+    it if needed. $;0;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode, AmplifyShaderEditor,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;23;-128,-256;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.Exposure,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;24;-272,-256;Inherit;False;0;1;FLOAT;0\nNode;AmplifyShaderEditor.RangedFloatNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;25;-400,-176;Inherit;False;Constant;_ExposureCompensation;Exposure
+    Compensation;19;0;Create;True;0;0;0;False;0;False;0.25;0.25;0;0;0;1;FLOAT;0\nNode;AmplifyShaderEditor.SimpleMultiplyOpNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;27;32,-368;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0\nNode;AmplifyShaderEditor.FunctionOutput,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;0;-384,-816;Inherit;False;True;-1;Out;0;True;1;0;FLOAT;0;False;1;FLOAT;0\nWireConnection;23;0;24;0\nWireConnection;23;1;25;0\nWireConnection;27;1;23;0\nASEEND*/\n//CHKSM=642766025A84AA95C3A457DC15287BDC4D7DF1AB"
+  m_functionName: 
+  m_description: 'Exposure
+
+
+    Learning Sample
+
+
+    GPU Cycles:
+
+    Unknown'
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 0
+  m_headerStyle: 2
+  m_headerColor: {r: 0.7529412, g: 0.6784314, b: 0, a: 1}
+  m_customNodeCategory: LS Lighting
+  m_previewPosition: 0
+  m_hidden: 0
+  m_url: 
