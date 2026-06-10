@@ -6,6 +6,7 @@ public class CrouchAnimatorBool : MonoBehaviour
 
     private static readonly int IsCrouchingHash = Animator.StringToHash("IsCrouching");
     private static readonly int IsMovingHash = Animator.StringToHash("IsMoving");
+    private static readonly int IsSlidingHash = Animator.StringToHash("IsSliding");
 
     private void Awake()
     {
@@ -25,7 +26,13 @@ public class CrouchAnimatorBool : MonoBehaviour
             Input.GetKey(KeyCode.S) ||
             Input.GetKey(KeyCode.D);
 
-        animator.SetBool(IsCrouchingHash, isCrouching);
+        bool isSliding =
+            Input.GetKey(KeyCode.LeftControl) &&
+            Input.GetKey(KeyCode.LeftShift) &&
+            isMoving;
+
+        animator.SetBool(IsCrouchingHash, isCrouching && !isSliding);
         animator.SetBool(IsMovingHash, isMoving);
+        animator.SetBool(IsSlidingHash, isSliding);
     }
 }
