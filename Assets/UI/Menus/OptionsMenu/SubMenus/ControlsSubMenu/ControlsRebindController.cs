@@ -42,9 +42,10 @@ namespace UI.Menus.OptionsMenu
             string controlRowClass,
             string valueContainerClass,
             string listeningText,
-            string unboundText)
+            string unboundText,
+            Action anyChange)
         {
-            base.Initialize(root, root?.Q<VisualElement>(OptionsMenuUIIDs.ControlOptions));
+            base.Initialize(root, root?.Q<VisualElement>(OptionsMenuUIIDs.ControlOptions), anyChange);
 
             _entries = entries;
             _rebindSaveKey = rebindSaveKey;

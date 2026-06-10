@@ -1,18 +1,21 @@
 
 using UnityEngine;
+using UI.Menus.OptionsMenu;
+using UnityEngine.SceneManagement;
 
-public class MenuController : MonoBehaviour
+public class MenuController : MonoBehaviour, IMenu
 {
+    [Header("Flow")]
+    [SerializeField] private string mainMenuSceneName = "MainMenu";
     private PlayerInputState _input;
-    public GameObject pauseMenu; // Reference to the pause menu UI
-    public GameObject settingsMenu;
+    public GameObject pauseMenu;
+    public OptionsMenuEvents _optionsMenu;
     public bool isPaused = false;
+    private bool inOptions = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         pauseMenu.SetActive(false);
-        settingsMenu.GetComponent<SettingsMenu>().Load();
-        settingsMenu.SetActive(false);
         isPaused = false;
         _input ??= GetComponentInParent<PlayerInputState>();
     }
@@ -22,7 +25,6 @@ public class MenuController : MonoBehaviour
     {
         if (_input.RestartPressedThisFrame)
         {
-            Debug.Log("Restarting level...");
             Time.timeScale = 1f; // Ensure time is running before restarting
             UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
         }
@@ -30,7 +32,6 @@ public class MenuController : MonoBehaviour
         if (_input.PausePressedThisFrame)
         {
             //Toggle pause state
-            Debug.Log("Pause button pressed.");
             TogglePause();
         }
 
@@ -38,17 +39,12 @@ public class MenuController : MonoBehaviour
 
     public void TogglePause()
     {
-        if (settingsMenu.activeSelf)
-        {
-            BackFromSettings();
-            return;
-        }
+        if(inOptions) return;
 
         isPaused = !isPaused;
         
         if (!isPaused)
         {
-            Debug.Log("Resuming game...");
             Time.timeScale = 1f; // Resume the game
             pauseMenu.SetActive(false); // Hide the pause menu
             Cursor.visible = false; // Hide the cursor
@@ -58,23 +54,35 @@ public class MenuController : MonoBehaviour
         else if (isPaused)
         {
             pauseMenu.SetActive(true); // Show the pause menu
-            Debug.Log("Pausing game...");
             Time.timeScale = 0.0001f; // Pause the game
             Cursor.visible = true; // Lock the cursor
             Cursor.lockState = CursorLockMode.None;
         }
     }
 
-    public void ShowSettings()
+    public void ShowOptions()
     {
-        settingsMenu.SetActive(true);
-        pauseMenu.SetActive(false);
+        inOptions = true;
+        _optionsMenu.Show(this);
+        
     }
 
-    public void BackFromSettings()
+    public void ToMainMenu()
+    { 
+        isPaused = false;
+        Time.timeScale = 1f;
+        SceneManager.LoadSceneAsync(mainMenuSceneName);
+    }
+
+    public void Show()
     {
-        pauseMenu.SetActive(true);
-        settingsMenu.SetActive(false);
+        inOptions = false;
+        //pauseMenu.SetActive(true);
+    }
+
+    public void Hide()
+    {
+        //pauseMenu.SetActive(false);
     }
 
     

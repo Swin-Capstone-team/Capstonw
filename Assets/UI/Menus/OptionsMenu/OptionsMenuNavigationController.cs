@@ -203,5 +203,10 @@ namespace UI.Menus.OptionsMenu
         {
             _defaultSettingsRequested?.Invoke();
         }
+
+        public void ChangeConfirmOpacity(float opacity)
+        {
+            _confirmFooterButton.style.opacity = opacity;
+        }
     }
 }
