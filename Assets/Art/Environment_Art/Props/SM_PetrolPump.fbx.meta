@@ -9,36 +9,6 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: No Name
     second: {fileID: 2100000, guid: d6841fb856aa07449bad38d5f677314f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: base
-    second: {fileID: 2100000, guid: d6841fb856aa07449bad38d5f677314f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: black.001
-    second: {fileID: 2100000, guid: 1af9fbef8b63fc249a7f5a9834cfd2d7, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: concrete
-    second: {fileID: 2100000, guid: bb46582e27a6c4e4db6a3757d7fc4528, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: glass.002
-    second: {fileID: 2100000, guid: ba07f0bbf493d784e9626f615dab24df, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: metal.002
-    second: {fileID: 2100000, guid: da7bd81c71eabea4385e327f0356ccea, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: white
-    second: {fileID: 2100000, guid: cb3abb7b5b78af7419d09268958d1e58, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

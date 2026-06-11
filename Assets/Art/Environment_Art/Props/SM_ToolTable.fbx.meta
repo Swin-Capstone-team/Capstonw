@@ -9,26 +9,6 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: No Name
     second: {fileID: 2100000, guid: b95d7a5c32a5ab748bc63354d40325ad, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: main
-    second: {fileID: 2100000, guid: d6841fb856aa07449bad38d5f677314f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: metal.006
-    second: {fileID: 2100000, guid: 77a60c23345c37e49ba9bdbdd77cc346, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: plastic red
-    second: {fileID: 2100000, guid: 1aa15105715cc254b995a0ff8ad724a4, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: wood
-    second: {fileID: 2100000, guid: bfe8ece681be20a49b806e9c660c97ea, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

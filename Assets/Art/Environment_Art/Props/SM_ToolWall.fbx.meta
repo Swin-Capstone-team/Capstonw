@@ -3,32 +3,7 @@ guid: 008f77de25f85bc43b55a14a539fc65b
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: board
-    second: {fileID: 2100000, guid: 9f9729da85a533944b86907860cfae9d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: metal.007
-    second: {fileID: 2100000, guid: cb25b22d615b428b805cadb52bde2928, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: plastic.001
-    second: {fileID: 2100000, guid: 9f9729da85a533944b86907860cfae9d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: wood.001
-    second: {fileID: 2100000, guid: bfe8ece681be20a49b806e9c660c97ea, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: yellow.003
-    second: {fileID: 2100000, guid: 476244c15fe5e884a8686d45ded17ae3, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 1
     materialName: 0
