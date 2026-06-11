@@ -21,7 +21,11 @@ public class SnapshotAnimator : MonoBehaviour
         horizontalVelocity.y = 0;
         bool isMoving = horizontalVelocity.magnitude > 0.1f && characterController.HasMoveInput;
 
-        if (!isGrounded)
+        if (characterController.CurrentCharacterState == CharacterState.Grappling)
+        {
+            PlayGrapple();
+        }
+        else if (!isGrounded)
         {
             ChangeAnimation("Jump");
         }
@@ -31,7 +35,7 @@ public class SnapshotAnimator : MonoBehaviour
         }
         else if (characterController.IsCrouching)
         {
-            ChangeAnimation("Crouch");
+            PlayCrouch(isMoving);
         }
         else if (isMoving)
         {
@@ -52,9 +56,17 @@ public class SnapshotAnimator : MonoBehaviour
 
     public void PlayIdle() => ChangeAnimation("Idle");
     public void PlayJump() => ChangeAnimation("Jump");
-    public void PlayCrouch() => ChangeAnimation("Crouch");
+    public void PlayCrouch() => ChangeAnimation("Crouch_Idle");
+    public void PlayCrouchMove() => ChangeAnimation("Crouch_Move");
     public void PlaySlide() => ChangeAnimation("Slide");
     public void PlayShoot() => ChangeAnimation("Shoot");
+    public void PlayGrapple() => ChangeAnimation("Grapple");
+
+    private void PlayCrouch(bool isMoving)
+    {
+        if (isMoving) PlayCrouchMove();
+        else PlayCrouch();
+    }
 
     public void PlayRun(bool isSprinting = false)
     {

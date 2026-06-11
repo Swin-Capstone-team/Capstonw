@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8c768c725b4fd6145a5c388f1501816e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 202484
+  packageName: Amplify Shader Pack
+  packageVersion: 2.3.9-r2
+  assetPath: Assets/AmplifyShaderPack/Assets/Prefabs/URP/Decal/Decal Parallax Bidirectional
+    Projector.prefab
+  uploadId: 853548

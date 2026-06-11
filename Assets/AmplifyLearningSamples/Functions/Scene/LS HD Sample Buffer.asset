@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b2425a2284af743826c689403a4924, type: 3}
+  m_Name: LS HD Sample Buffer
+  m_EditorClassIdentifier: 
+  m_functionInfo: "// Made with Amplify Shader Editor v1.9.9.9\n// Available at the
+    Unity Asset Store - http://u3d.as/y3X \n/*ASEBEGIN\nVersion=19909\nNode;AmplifyShaderEditor.CommentaryNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;58;-893.3395,-1408;Inherit;False;2288.781;2281.684;HD
+    Sample Buffer;3;94;119;120;;0,0,0,1;0;0\nNode;AmplifyShaderEditor.CommentaryNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;120;-256,-96;Inherit;False;1539.574;847.8666;HDRP
+    17+;9;123;122;121;108;107;106;98;96;64;;0,0,0,1;0;0\nNode;AmplifyShaderEditor.CommentaryNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;119;-254.8628,-1344;Inherit;False;1538.093;1218.085;HDRP
+    14+;11;114;113;109;111;112;105;104;103;102;101;57;;0,0,0,1;0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;57;-192,-1280;Inherit;False;321.8463;100;UV;;0,0,0,1;Input
+    UV value;0;0\nNode;AmplifyShaderEditor.StickyNoteNode, AmplifyShaderEditor, Version=0.0.0.0,
+    Culture=neutral, PublicKeyToken=null;64;-240,176;Inherit;False;318.8666;144.4666;Thickness;;0,0,0,1;Sample
+    the Worldspace value, in meters, between the near and the far plane of the camera.This
+    port appears when you select Thickness in the Source Buffer dropdown;0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;94;-832,-1344;Inherit;False;464.3816;315.7825;Sampler;;0,0,0,1;Determines
+    the sampler that Unity uses to sample the buffer$$-- NormalWorldSpace$-- Smoothness$--
+    MotionVectors$-- IsSky$-- PostProcessInput$$$-- RenderingLayerMask$-- Thickness$--
+    IsUnderWater$$;0;0\nNode;AmplifyShaderEditor.StickyNoteNode, AmplifyShaderEditor,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;96;-240,32;Inherit;False;320.7305;122.4;Layer
+    Mask;;0,0,0,1;Set the number of the Layer to sample. This port appears when you
+    select Thickness in the Source Buffer dropdown.;0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;98;-240,336;Inherit;False;322.4667;133.8666;Overlap
+    Count;;0,0,0,1;Count the number of triangles for a given pixel. This is useful
+    for vegetation or flat surfaces.$This port appears when you select Thickness
+    in the Source Buffer dropdown;0;0\nNode;AmplifyShaderEditor.StickyNoteNode, AmplifyShaderEditor,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;100;-736,-1568;Inherit;False;386.3047;131.5856;HDRP
+    Only;;1,0,0,1;this node is first added in ASE v1.9.9.6 and or higher$$This node
+    requires Unity 2022.3/HDRP v14 or higher;0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;101;384,-1280;Inherit;False;821.9664;211.6035;NormalWorldSpace;;0,0,0,1;$$float3
+    Unity_HDRP_SampleBuffer_NormalWorldSpace_float(float2 uv, int layerID)${$uint2
+    pixelCoords = uint2(uv * _ScreenSize.xy)@$NormalData normalData@$DecodeFromNormalBuffer(pixelCoords,
+    normalData)@$return normalData.normalWS@$}$;0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;102;384,-1056;Inherit;False;850.4971;231.1148;Smoothness;;0,0,0,1;$$float1
+    Unity_HDRP_SampleBuffer_Smoothness_float(float2 uv, int layerID)${$uint2 pixelCoords
+    = uint2(uv * _ScreenSize.xy)@$NormalData normalData@$DecodeFromNormalBuffer(pixelCoords,
+    normalData)@$return IsSky(pixelCoords) ? 1 : RoughnessToPerceptualSmoothness(PerceptualRoughnessToRoughness(normalData.perceptualRoughness))@$};0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;103;384,-800;Inherit;False;855.5264;220.1579;MotionVectors;;0,0,0,1;$$float2
+    Unity_HDRP_SampleBuffer_MotionVectors_float(float2 uv, int layerID)${$uint2 pixelCoords
+    = uint2(uv * _ScreenSize.xy)@$float4 motionVecBufferSample = LOAD_TEXTURE2D_X_LOD(_CameraMotionVectorsTexture,
+    pixelCoords, 0)@$float2 motionVec@$DecodeMotionVector(motionVecBufferSample,
+    motionVec)@$return motionVec@$};0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;104;384,-560;Inherit;False;857.3012;166.3011;IsSky;;0,0,0,1;$$float1
+    Unity_HDRP_SampleBuffer_IsSky_float(float2 uv, int layerID)${$return IsSky(uv)
+    ? 1 : 0@$};0;0\nNode;AmplifyShaderEditor.StickyNoteNode, AmplifyShaderEditor,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;105;384,-384;Inherit;False;864.69;182.1732;PostProcessInput;;0,0,0,1;$$TEXTURE2D_X(_CustomPostProcessInput)@$float4
+    Unity_HDRP_SampleBuffer_PostProcessInput_float(float2 uv, int layerID)${$uint2
+    pixelCoords = uint2(uv * _ScreenSize.xy)@$return LOAD_TEXTURE2D_X_LOD(_CustomPostProcessInput,
+    pixelCoords, 0)@$};0;0\nNode;AmplifyShaderEditor.StickyNoteNode, AmplifyShaderEditor,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;106;368,-48;Inherit;False;864.7742;197.3327;RenderingLayerMask
+    HDRP 17+;;0,0,0,1;$$float1 Unity_HDRP_SampleBuffer_RenderingLayerMask_float(float2
+    uv, int layerID)${$uint2 pixelCoords = uint2(uv * _ScreenSize.xy)@$return _EnableRenderingLayers
+    ? UnpackMeshRenderingLayerMask(LOAD_TEXTURE2D_X_LOD(_RenderingLayerMaskTexture,
+    pixelCoords, 0)) : 0@$};0;0\nNode;AmplifyShaderEditor.StickyNoteNode, AmplifyShaderEditor,
+    Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;107;368,176;Inherit;False;856.6282;233.6198;Thickness
+    HDRP 17+;;0,0,0,1;$$float2 Unity_HDRP_SampleBuffer_Thickness_float(float2 uv,
+    int layerID)${$$            #if defined(SHADER_STAGE_RAY_TRACING) && defined(RAYTRACING_SHADER_GRAPH_DEFAULT)$           
+    #error 'HD Sample Buffer' node is not supported in ray tracing, please provide
+    an alternate implementation, relying for instance on the 'Raytracing Quality'
+    keyword$            #endif$return SampleThickness(uv.xy, layerID)@$};0;0\nNode;AmplifyShaderEditor.StickyNoteNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;108;368,512;Inherit;False;858.2;189.7999;
+    IsUnderWater HDRP 17+;;0,0,0,1;$$float1 Unity_HDRP_SampleBuffer_IsUnderWater_float(float2
+    uv, int layerID)${$uint2 pixelCoords = uint2(uv * _ScreenSize.xy)@$return _UnderWaterSurfaceIndex
+    != -1 ? GetUnderWaterDistance(pixelCoords) : 1.0f@$};0;0\nNode;AmplifyShaderEditor.HDSampleBufferNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;109;160,-1280;Inherit;False;NormalWS;2;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT3;0;0;1\nNode;AmplifyShaderEditor.HDSampleBufferNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;111;160,-1056;Inherit;False;Smoothness;2;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT;0;0;1\nNode;AmplifyShaderEditor.HDSampleBufferNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;112;128,-800;Inherit;False;MotionVectors;2;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT2;0;0;1\nNode;AmplifyShaderEditor.HDSampleBufferNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;113;192,-560;Inherit;False;IsSky;2;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT;0;0;1\nNode;AmplifyShaderEditor.HDSampleBufferNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;114;128,-384;Inherit;False;PostProcessInput;2;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT4;0;0;1\nNode;AmplifyShaderEditor.HDSampleBufferNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;122;96,176;Inherit;False;Thickness;2;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT;0;FLOAT;1\nNode;AmplifyShaderEditor.HDSampleBufferNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;123;112,512;Inherit;False;IsUnderWater;2;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT;0;FLOAT;1\nNode;AmplifyShaderEditor.HDSampleBufferNode,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;121;96,-48;Inherit;False;RenderingLayerMask;2;0;FLOAT2;0,0;False;1;FLOAT;0;False;2;FLOAT;0;0;1\nNode;AmplifyShaderEditor.FunctionOutput,
+    AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;0;-896,-1568;Inherit;False;True;-1;Out;0;True;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0\nASEEND*/\n//CHKSM=FD49C96A689F83C86CAF9CFD21D8EBF0B600079E"
+  m_functionName: 
+  m_description: 'HD Sample Buffer
+
+
+    Learning Sample
+
+
+'
+  m_additionalIncludes:
+    m_additionalIncludes: []
+    m_outsideIncludes: []
+  m_additionalPragmas:
+    m_additionalPragmas: []
+    m_outsidePragmas: []
+  m_additionalDirectives:
+    m_validData: 0
+    m_isDirty: 0
+    m_moduleName: ' Additional Directives'
+    m_independentModule: 1
+    m_customEdited: 0
+    m_additionalDirectives: []
+    m_shaderFunctionDirectives: []
+    m_nativeDirectives: []
+    m_nativeDirectivesIndex: -1
+    m_nativeDirectivesFoldout: 0
+    m_directivesSaveItems: []
+  m_nodeCategory: 0
+  m_headerStyle: 2
+  m_headerColor: {r: 0.5882353, g: 0.078431375, b: 0.23921569, a: 1}
+  m_customNodeCategory: LS Scene
+  m_previewPosition: 0
+  m_hidden: 0
+  m_url: 

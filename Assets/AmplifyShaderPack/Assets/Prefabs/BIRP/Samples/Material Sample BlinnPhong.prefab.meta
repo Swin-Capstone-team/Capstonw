@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: aefde9c1cdfe6ea46864488a140b95df
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 202484
+  packageName: Amplify Shader Pack
+  packageVersion: 2.3.9-r2
+  assetPath: Assets/AmplifyShaderPack/Assets/Prefabs/BIRP/Samples/Material Sample
+    BlinnPhong.prefab
+  uploadId: 853548
