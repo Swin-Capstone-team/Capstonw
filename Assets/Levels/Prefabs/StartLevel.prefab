@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 3810945624698253640}
   - component: {fileID: 4282723140107944820}
   m_Layer: 0
-  m_Name: Test Level 1
+  m_Name: StartLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -230,7 +230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d54ab9c4b1454b6f828f99297a15c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level
-  levelID: Level 1
+  levelID: StartLevel
   isHallway: 0
   defaultTime: 40
   decayRate: 1.2

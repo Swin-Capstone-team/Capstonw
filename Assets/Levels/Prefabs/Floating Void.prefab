@@ -179,7 +179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d54ab9c4b1454b6f828f99297a15c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Level
-  levelID: Level 6
+  levelID: Floating Void
   isHallway: 0
   defaultTime: 20
   decayRate: 1.2
