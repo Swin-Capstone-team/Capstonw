@@ -266,7 +266,6 @@ public class CharacterController : MonoBehaviour, ICharacterController
                             {
                                 _isCrouching = true;
                                 Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
-                                MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
                             }
                         }
                         else if (inputs.CrouchUp)
@@ -814,7 +813,6 @@ public class CharacterController : MonoBehaviour, ICharacterController
                         {
                             // Do an overlap test with the character's standing height to see if there are any obstructions
                             Motor.SetCapsuleDimensions(0.5f, 2f, 1f);
-                            MeshRoot.localScale = Vector3.one;
                             if (Motor.CharacterOverlap(
                                 Motor.TransientPosition,
                                 Motor.TransientRotation,
@@ -824,7 +822,6 @@ public class CharacterController : MonoBehaviour, ICharacterController
                             {
                                 // If obstructions, just stick to crouching dimensions
                                 Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
-                                MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
                             }
                             else
                             {

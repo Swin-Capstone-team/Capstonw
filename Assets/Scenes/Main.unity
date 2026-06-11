@@ -638,10 +638,6 @@ PrefabInstance:
       propertyPath: _optionsMenu
       value: 
       objectReference: {fileID: 1951252499}
-    - target: {fileID: 1766583638391384860, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
-      propertyPath: settingsMenu
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -681,10 +677,6 @@ PrefabInstance:
     - target: {fileID: 1779106790129384563, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3030514699773705822, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
-      propertyPath: m_NotificationBehavior
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5322472182857757716, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_Name
