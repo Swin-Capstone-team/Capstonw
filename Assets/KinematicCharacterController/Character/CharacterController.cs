@@ -127,13 +127,6 @@ public class CharacterController : MonoBehaviour, ICharacterController
 
         private float _footstepTimer = 0f;
 
-        [Header("Water Ripples")]
-        public ParticleSystem Ripple;
-        public float WaterRaycastHeight = 1.5f;
-        public float RippleForwardOffset = 1f;
-
-        private bool _inWater = false;
-
 
         private Collider[] _probedColliders = new Collider[8];
         private RaycastHit[] _probedHits = new RaycastHit[8];
@@ -841,7 +834,6 @@ public class CharacterController : MonoBehaviour, ICharacterController
                     }
             }
             HandleFootsteps(deltaTime);
-            HandleWaterRipples(deltaTime);
         }
 
         public void PostGroundingUpdate(float deltaTime)
@@ -935,41 +927,5 @@ public class CharacterController : MonoBehaviour, ICharacterController
                 _footstepTimer = 0f;
                 AudioManager.Instance.PlaySFX("footstep");
             }
-        }
-
-        private void HandleWaterRipples(float deltaTime)
-        {
-            // Probe up/down through the character for a water surface on the Water layer
-            bool nowInWater = Physics.Raycast(
-                Motor.TransientPosition + Vector3.up * WaterRaycastHeight,
-                Vector3.down,
-                WaterRaycastHeight * 2f,
-                LayerMask.GetMask("Water"));
-
-            if (Ripple != null)
-            {
-                // Follow the character (offset forward when on ground)
-                Ripple.transform.position = Motor.GroundingStatus.IsStableOnGround
-                    ? Motor.TransientPosition + Motor.CharacterForward * RippleForwardOffset
-                    : Motor.TransientPosition;
-
-                if (nowInWater != _inWater)
-                {
-                    // Crossing the surface: make sure the system is active so the splash burst
-                    // actually emits, on both entering and exiting the water.
-                    Ripple.gameObject.SetActive(true);
-                    Ripple.Emit(Motor.TransientPosition, Vector3.zero, 5f, 0.1f, Color.white);
-                }
-                else
-                {
-                    // Steady state: continuous ripples only while submerged
-                    Ripple.gameObject.SetActive(nowInWater);
-                }
-            }
-
-            _inWater = nowInWater;
-
-            // Publish player position to the water shader (consumed by Water.shadergraph's _Player)
-            Shader.SetGlobalVector("_Player", Motor.TransientPosition);
         }
     }
