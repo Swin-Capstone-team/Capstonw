@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.cyanilux.urp-blitrenderfeature": {
+      "version": "https://github.com/Cyanilux/URP_BlitRenderFeature.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "62f2a9b12b5b8d0a03b7f0b155001bbe362901ff"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,

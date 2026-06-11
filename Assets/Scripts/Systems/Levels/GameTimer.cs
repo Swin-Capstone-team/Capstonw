@@ -66,6 +66,8 @@ public class GameTimer : MonoBehaviour
     {
         if (level.isHallway) return;
 
+        isTimerRunning = false; // Stop the timer so it doesn't immediately overwrite the drain animation
+
         // Increment the completion count for this specific room
         if (roomCompletionCounts.ContainsKey(level.levelID))
         {
@@ -76,9 +78,13 @@ public class GameTimer : MonoBehaviour
             roomCompletionCounts.Add(level.levelID, 1);
         }
 
-        score += Mathf.RoundToInt(100 * currentTime/maxTimeForCurrentLevel * decayMultiplier);
+        int addedScore = Mathf.RoundToInt(100 * currentTime/maxTimeForCurrentLevel * decayMultiplier);
+        score += addedScore;
+        
         uiManager.UpdateLevelsBeatenDisplay(roomCompletionCounts.Values.Sum());
         uiManager.UpdateScoreDisplay(score);
+        uiManager.ShowScoreAdded(addedScore);
+        uiManager.DrainTimer();
 
     }
 

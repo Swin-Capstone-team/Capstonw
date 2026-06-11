@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9a88d30d422bb5040a7a3addda8a95cd
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 202484
+  packageName: Amplify Shader Pack
+  packageVersion: 2.3.9-r2
+  assetPath: Assets/AmplifyShaderPack/Assets/Prefabs/HDRP/Decal/Decal Parallax Bidirectional
+    Panel Projector.prefab
+  uploadId: 853548

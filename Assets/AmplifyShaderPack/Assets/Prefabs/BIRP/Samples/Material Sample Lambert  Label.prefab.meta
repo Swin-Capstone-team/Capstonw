@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: aa1c4369832224e44b3408d6b6204cf0
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 202484
+  packageName: Amplify Shader Pack
+  packageVersion: 2.3.9-r2
+  assetPath: Assets/AmplifyShaderPack/Assets/Prefabs/BIRP/Samples/Material Sample
+    Lambert  Label.prefab
+  uploadId: 853548

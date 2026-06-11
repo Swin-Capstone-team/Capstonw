@@ -234,6 +234,9 @@ MonoBehaviour:
   isHallway: 0
   defaultTime: 40
   decayRate: 1.2
+  hints:
+  - mechanicKey: Slide
+    message: Press control to crouch/slide
   startPoint: {fileID: 3131399785983188368}
   endPoint: {fileID: 5525738566572054938}
 --- !u!1 &429935105555906182

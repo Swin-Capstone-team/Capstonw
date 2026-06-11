@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e866659c1c6b3d743ad2fc1f5112f2dc
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 202484
+  packageName: Amplify Shader Pack
+  packageVersion: 2.3.9-r2
+  assetPath: Assets/AmplifyShaderPack/Assets/Prefabs/HDRP/Decal/Decal Parallax Mapping
+    Normal Projector.prefab
+  uploadId: 853548
