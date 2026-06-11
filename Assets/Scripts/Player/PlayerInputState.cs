@@ -11,6 +11,8 @@ public class PlayerInputState : MonoBehaviour
 
     private InputSystem_Actions _actions;
 
+
+    // Only old player inputs, only here to not making the unused scripts not raise a bunch of errors
     public Vector2 Move => _actions.Player.Move.ReadValue<Vector2>();
     public Vector2 Look => _actions.Player.Look.ReadValue<Vector2>();
 
@@ -32,6 +34,8 @@ public class PlayerInputState : MonoBehaviour
     public bool RightSwingHeld => _actions.Player.RightSwing.IsPressed();
     public bool RightSwingPressedThisFrame => _actions.Player.RightSwing.WasPressedThisFrame();
     public bool RightSwingReleasedThisFrame => _actions.Player.RightSwing.WasReleasedThisFrame();
+
+    // Menu Inputs
 
     public bool RestartPressedThisFrame => _actions.Player.Restart.WasPressedThisFrame();
     public bool PausePressedThisFrame => _actions.Player.Pause.WasPressedThisFrame();
@@ -66,6 +70,12 @@ public class PlayerInputState : MonoBehaviour
         LogActionPress(_actions.Player.Crouch, "Crouch");
         LogActionPress(_actions.Player.LeftSwing, "LeftSwing");
         LogActionPress(_actions.Player.RightSwing, "RightSwing");
+    }
+
+    // Just gives the action object to player to handle player inputs
+    public InputSystem_Actions GetPlayerActions()
+    {
+        return _actions;
     }
 }
 

@@ -157,6 +157,10 @@
     -unity-font-style: normal;
 }
 
+.optionSettingsButton:hover{
+    color: rgba(2, 87, 147, 0.71);
+}
+
 .optionSettingsLabel {
     margin-top: 0;
     margin-right: 0;
@@ -378,4 +382,24 @@ Input {
     font-size: 22px;
     -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&guid=e3265ab4bf004d28a9537516768c1c75&type=3#LiberationSans");
     color: rgb(114, 255, 244);
+}
+
+
+DropdownField {
+    width: 100%;
+    background-color: rgba(0,0,0,0);
+    border-width: 0;
+}
+
+.unity-base-popup-field__input {
+    background-color: rgba(0,0,0,0);
+    color: rgba(255,255,255,0.78);
+    font-size: 26px;
+    border-width: 0;
+    padding-right: 10px;
+}
+
+.unity-base-popup-field__arrow {
+    -unity-background-image-tint-color: rgba(141, 207, 255, 0.71);
+    margin-right: 8px;
 }

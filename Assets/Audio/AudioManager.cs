@@ -139,7 +139,13 @@ public class AudioManager : MonoBehaviour
 
         while (timer < crossfadeDuration)
         {
-            timer += Time.deltaTime;
+            // Next track still plays while paused (crossfade is broken though)
+            if (!fadingOut.isPlaying)
+            {
+                fadingIn.time = 0f;
+                break;
+            }
+            timer += Time.deltaTime; //Affected by pause (timescale)
             float t = timer / crossfadeDuration;
             
             // Fade in the new track
@@ -226,5 +232,11 @@ public class AudioManager : MonoBehaviour
     private float GetSFXVolume(float volumeMultiplier = 1f)
     {
         return masterVolume * sfxVolume * volumeMultiplier;
+    }
+
+    public void UpdateMusicVolume()
+    {
+        AudioSource activeSource = isUsingSourceA ? sourceA : sourceB;
+        activeSource.volume = GetMusicVolume();
     }
 }
