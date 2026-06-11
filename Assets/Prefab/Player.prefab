@@ -118,9 +118,9 @@ MonoBehaviour:
   Camera: {fileID: 3861355915587117545}
   FollowPointFraming: {x: 0, y: 0}
   FollowingSharpness: 10000
-  DefaultDistance: 6
+  DefaultDistance: 8
   MinDistance: 0
-  MaxDistance: 10
+  MaxDistance: 12
   DistanceMovementSpeed: 5
   DistanceMovementSharpness: 10
   InvertX: 0
@@ -448,6 +448,9 @@ MonoBehaviour:
   FootstepInterval: 0.3
   SprintFootstepInterval: 0.25
   FootstepMoveThreshold: 0.2
+  Ripple: {fileID: 0}
+  WaterRaycastHeight: 1.5
+  RippleForwardOffset: 1
 --- !u!114 &2069686122990036387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -627,7 +630,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d577660f82e049dcbac3ec8cd556cec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Restart
+  mainMenuSceneName: MainMenu
   pauseMenu: {fileID: 0}
+  _optionsMenu: {fileID: 0}
   isPaused: 0
 --- !u!114 &8614795601736716391
 MonoBehaviour:
@@ -708,7 +713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
   m_Actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 3
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:

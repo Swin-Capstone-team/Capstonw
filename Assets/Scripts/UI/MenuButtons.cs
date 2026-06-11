@@ -24,11 +24,12 @@ public class MenuButtons : MonoBehaviour
         Cursor.visible = false; // Hide the cursor
         Cursor.lockState = CursorLockMode.Locked; // Lock the cursor to the center of the screen
         pauseMenu.SetActive(false); // Hide the pause menu
+        AudioManager.Instance.PlaySFX("menuSelect");
     }
     
     public void Quit()
     {
-        Debug.Log("Quitting game...");
-        Application.Quit(); // Quit the application
+        AudioManager.Instance.PlaySFX("menuSelect");
+        pauseScript.ToMainMenu();
     }
 }

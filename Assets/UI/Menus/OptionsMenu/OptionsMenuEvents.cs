@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
-using UnityEngine.SceneManagement;
+
+
 
 
 namespace UI.Menus.OptionsMenu
 {
+    public interface IMenu
+    {
+        void Show();
+        void Hide();
+    }
     public class OptionsMenuEvents : MonoBehaviour
     {
         private UIDocument _document;
@@ -18,9 +24,7 @@ namespace UI.Menus.OptionsMenu
         private AudioSettingsController _audioSettingsController;
         private bool _navigationInputRegistered;
 
-        [Header("Flow")]
-        [SerializeField] private string mainMenuSceneName = "MainMenu";
-        [SerializeField] private bool fallbackLoadMainMenuOnExit = true;
+        private IMenu previousMenu;
 
         [Header("Input")]
         [SerializeField] private string rebindSaveKey = "input-rebinds";
@@ -46,6 +50,8 @@ namespace UI.Menus.OptionsMenu
 
         public event Action ExitRequested;
 
+        private bool inMenu = false;
+
         private void Awake()
         {
             _document = GetComponent<UIDocument>();
@@ -54,6 +60,8 @@ namespace UI.Menus.OptionsMenu
             _gameplaySettingsController = new GameplaySettingsController();
             _videoSettingsController = new VideoSettingsController();
             _audioSettingsController = new AudioSettingsController();
+
+            _document.rootVisualElement.style.display = DisplayStyle.None;
         }
 
         private void OnEnable()
@@ -83,6 +91,11 @@ namespace UI.Menus.OptionsMenu
             _navigationController.ActivePanelChanged -= HandleActivePanelChanged;
             _navigationController.UnregisterButtons();
             _controlsRebindController.UnregisterRows();
+
+            _gameplaySettingsController.UnregisterButtons();
+            _videoSettingsController.UnregisterButtons();
+            _audioSettingsController.UnregisterButtons();
+            
         }
 
         private void InitializeMenuUI()
@@ -99,9 +112,9 @@ namespace UI.Menus.OptionsMenu
             _videoOptionsPanel = _root.Q<VisualElement>(OptionsMenuUIIDs.VideoOptions);
             _soundOptionsPanel = _root.Q<VisualElement>(OptionsMenuUIIDs.SoundOptions);
 
-            _gameplaySettingsController.Initialize(_root, _gameOptionsPanel);
-            _videoSettingsController.Initialize(_root, _videoOptionsPanel);
-            _audioSettingsController.Initialize(_root, _soundOptionsPanel);
+            _gameplaySettingsController.Initialize(_root, _gameOptionsPanel, OnAnyChange);
+            _videoSettingsController.Initialize(_root, _videoOptionsPanel, OnAnyChange);
+            _audioSettingsController.Initialize(_root, _soundOptionsPanel, OnAnyChange);
 
             _controlsRebindController.Initialize(
                 _root,
@@ -110,14 +123,49 @@ namespace UI.Menus.OptionsMenu
                 controlRowClass,
                 valueContainerClass,
                 listeningText,
-                unboundText);
+                unboundText,
+                OnAnyChange);
 
+
+            _gameplaySettingsController.RegisterButtons();
+            _videoSettingsController.RegisterButtons();
+            _audioSettingsController.RegisterButtons();
             _controlsRebindController.RegisterRows();
         }
 
+        public void Show(IMenu cameFrom)
+        {
+            if(!this.gameObject.activeSelf) this.gameObject.SetActive(true);
+            inMenu = true;
+            previousMenu = cameFrom;
+            _document.rootVisualElement.style.display = DisplayStyle.Flex;
+            previousMenu.Hide();
+        }
+
+        private void Hide()
+        {
+            inMenu = false;
+            _document.rootVisualElement.style.display = DisplayStyle.None;
+        }
+
+        private void OnAnyChange()
+        {
+            _navigationController.ChangeConfirmOpacity(1f);
+        }
+
+        private void confirmOpacity(float opacity)
+        {
+            _navigationController.ChangeConfirmOpacity(opacity);
+        }
+
+
         private void OnConfirmFooterClicked()
         {
-            // TODO
+            _gameplaySettingsController.Confirm();
+            _videoSettingsController.Confirm();
+            _audioSettingsController.Confirm();
+            PlayerPrefs.Save();
+            _navigationController.ChangeConfirmOpacity(0.3f);
         }
 
         private void OnDefaultSettingsFooterClicked()
@@ -154,20 +202,21 @@ namespace UI.Menus.OptionsMenu
 
         private void HandleExitRequested()
         {
-            ExitRequested?.Invoke();
-
-            if (ExitRequested == null && fallbackLoadMainMenuOnExit)
+            if (inMenu)
             {
-                SceneManager.LoadSceneAsync(mainMenuSceneName);
+                ExitRequested?.Invoke();
+
+                Hide();
+                previousMenu.Show(); 
             }
         }
 
         private void HandleActivePanelChanged(VisualElement activePanel)
         {
-            _gameplaySettingsController.HandleActivePanelChanged(activePanel);
-            _videoSettingsController.HandleActivePanelChanged(activePanel);
-            _audioSettingsController.HandleActivePanelChanged(activePanel);
-            _controlsRebindController.HandleActivePanelChanged(activePanel);
+            _gameplaySettingsController.HandleActivePanelChanged(activePanel, confirmOpacity);
+            _videoSettingsController.HandleActivePanelChanged(activePanel, confirmOpacity);
+            _audioSettingsController.HandleActivePanelChanged(activePanel, confirmOpacity);
+            _controlsRebindController.HandleActivePanelChanged(activePanel, confirmOpacity);
         }
 
         public void ResetAllBindingsToDefault()

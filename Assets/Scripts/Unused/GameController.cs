@@ -11,7 +11,7 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
-        _actions = new InputSystem_Actions();
+        //_actions = new InputSystem_Actions();
     }
 
     private void OnEnable()
@@ -31,7 +31,7 @@ public class GameController : MonoBehaviour
             pauseMenu.SetActive(false);
         }
 
-        _playerInput ??= GetComponentInParent<PlayerInputState>();
+        //_playerInput ??= GetComponentInParent<PlayerInputState>();
     }
 
     private void Update()

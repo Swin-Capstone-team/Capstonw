@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8804766832579302130}
   - component: {fileID: 3015594580890745389}
   - component: {fileID: 4098228276087689548}
+  - component: {fileID: 3417160778462821076}
   m_Layer: 5
   m_Name: OptionsMenu 1
   m_TagString: Untagged
@@ -115,3 +116,15 @@ MonoBehaviour:
     actionReference: {fileID: 0}
     compositePartName: 
     bindingGroup: 
+--- !u!114 &3417160778462821076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9066273360841348360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c4e9ee80e2e50498ef4e0c31729a05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameSettingsManager

@@ -2,13 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using UI.Menus.OptionsMenu;
 
 namespace UI.Menus.MainMenu
 {
-    public class MainMenuEvents : MonoBehaviour
+    public class MainMenuEvents : MonoBehaviour, IMenu
     {
         private UIDocument _document;
         private readonly List<Button> _mainMenuButtons = new List<Button>();
+        public OptionsMenuEvents _optionsMenu;
     
         private void Awake()
         {
@@ -64,7 +66,7 @@ namespace UI.Menus.MainMenu
             {
                 return;
             }
-        
+            AudioManager.Instance.PlaySFX("menuSelect");
             Debug.Log($"{button.name} clicked");
             switch (button.name) 
             {
@@ -78,13 +80,25 @@ namespace UI.Menus.MainMenu
                     LoadGame();
                     break;
                 case "OptionsButton":
-                    SceneManager.LoadSceneAsync("OptionsMenu");
+                    _optionsMenu.Show(this);
                     break;
                 case "QuitButton":
                     QuitGame();
                     break;
             
             }
+        }
+
+
+
+        public void Show()
+        {
+            _document.rootVisualElement.style.display = DisplayStyle.Flex;
+        }
+
+        public void Hide()
+        {
+            _document.rootVisualElement.style.display = DisplayStyle.None;
         }
     }
 
