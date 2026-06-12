@@ -83,7 +83,7 @@ public class GameTimer : MonoBehaviour
         uiManager.UpdateScoreDisplay(score);
         uiManager.ShowScoreAdded(addedScore);
         uiManager.DrainTimer();
-
+        AudioManager.Instance.PlaySFX("levelComplete");
     }
 
     public void TriggerGameOver()
@@ -91,6 +91,7 @@ public class GameTimer : MonoBehaviour
         isTimerRunning = false;
         uiManager.ShowGameOverScreen(score, roomCompletionCounts.Values.Sum());
         
+        AudioManager.Instance.PlaySFX("gameOver");
         // Add your logic here to freeze the player or stop game time
         Time.timeScale = 0f;
     }

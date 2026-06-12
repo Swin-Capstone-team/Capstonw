@@ -123,6 +123,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
         [Header("Footsteps")]
         public float FootstepInterval = 0.3f;
         public float SprintFootstepInterval = 0.25f;
+        public float CrouchFootstepInterval = 0.4f;
         public float FootstepMoveThreshold = 0.1f;
 
         private float _footstepTimer = 0f;
@@ -150,6 +151,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
         private bool _isSprinting = false;
         private float _currentSprintMultiplier = 1f;
         private bool _isSliding = false;
+        private bool _wasSliding = false;
 
         private int _consecutiveSlideJumps = 0;
         private float _continuousSprintTimer = 0f;
@@ -319,6 +321,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
                 {
                     if (TryFindGrapplePoint(out Vector3 point))
                     {
+                        AudioManager.Instance.PlaySFX("grapple"); 
                         // Ensure we unground when starting to grapple so we can move freely in the air
                         _grapplePoint = point;
                         Motor.ForceUnground();
@@ -839,6 +842,18 @@ public class CharacterController : MonoBehaviour, ICharacterController
             }
             HandleFootsteps(deltaTime);
             HandleWaterRipples(deltaTime);
+
+            if (_isSliding && !_wasSliding)
+            {
+                AudioManager.Instance.StartSlide("longSlide");
+            }
+            else if (!_isSliding && _wasSliding)
+            {
+                AudioManager.Instance.StopSlide();
+            }
+
+            _wasSliding = _isSliding;
+
         }
 
         public void PostGroundingUpdate(float deltaTime)
@@ -909,7 +924,7 @@ public class CharacterController : MonoBehaviour, ICharacterController
 
         private void HandleFootsteps(float deltaTime)
         {
-            if (!Motor.GroundingStatus.IsStableOnGround)
+            if (!Motor.GroundingStatus.IsStableOnGround || _isSliding)
             {
                 _footstepTimer = 0f;
                 return;
@@ -923,16 +938,30 @@ public class CharacterController : MonoBehaviour, ICharacterController
                 return;
             }
 
-            float interval = _isSprinting ? SprintFootstepInterval : FootstepInterval;
+            float interval;
+
+            if (_isCrouching)
+            {
+                interval = CrouchFootstepInterval;
+            }
+            else if (_isSprinting)
+            {
+                interval = SprintFootstepInterval;
+            }
+            else
+            {
+                interval = FootstepInterval;
+            }
 
             _footstepTimer += deltaTime;
 
             if (_footstepTimer >= interval)
             {
                 _footstepTimer = 0f;
-                AudioManager.Instance.PlaySFX("footstep");
+                AudioManager.Instance.PlaySFX("footstep", 0.7f);
             }
         }
+
 
         private void HandleWaterRipples(float deltaTime)
         {

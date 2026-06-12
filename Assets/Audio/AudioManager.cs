@@ -29,10 +29,13 @@ public class AudioManager : MonoBehaviour
     private AudioSource sourceA;
     private AudioSource sourceB;
     private AudioSource sfxSource;
+    private AudioSource slideSource; 
     private bool isUsingSourceA = true;
     private int currentTrackIndex = 0;
     private bool isTransitioning = false;
     private Dictionary<string, AudioClip[]> sfxLookup;
+    private Coroutine slideFadeCoroutine;
+
     
 
     private void Awake()
@@ -60,6 +63,11 @@ public class AudioManager : MonoBehaviour
         sfxSource = gameObject.AddComponent<AudioSource>();
         sfxSource.spatialBlend = 0f;
         sfxLookup = new Dictionary<string, AudioClip[]>();
+
+        slideSource = gameObject.AddComponent<AudioSource>();
+        slideSource.spatialBlend = 0f;
+        slideSource.playOnAwake = false;
+
 
         foreach (var sfx in soundEffects)
         {
@@ -238,5 +246,54 @@ public class AudioManager : MonoBehaviour
     {
         AudioSource activeSource = isUsingSourceA ? sourceA : sourceB;
         activeSource.volume = GetMusicVolume();
+    }
+
+    public void StartSlide(string id)
+    {
+        if (slideFadeCoroutine != null)
+        {
+            StopCoroutine(slideFadeCoroutine);
+            slideFadeCoroutine = null;
+        }
+
+        AudioClip clip = GetRandomSFX(id);
+
+        if (clip == null)
+            return;
+
+        slideSource.volume = GetSFXVolume();
+        slideSource.clip = clip;
+        slideSource.Play();
+    }
+
+    public void StopSlide()
+    {
+        if (slideFadeCoroutine != null)
+        {
+            StopCoroutine(slideFadeCoroutine);
+            slideFadeCoroutine = null;
+        }
+
+        slideFadeCoroutine = StartCoroutine(FadeOutSlide());
+    }
+
+    private IEnumerator FadeOutSlide()
+    {
+        float startVolume = slideSource.volume;
+        float duration = 0.3f;
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            slideSource.volume = Mathf.Lerp(startVolume, 0f, timer / duration);
+
+            yield return null;
+        }
+
+        slideSource.Stop();
+        slideSource.volume = GetSFXVolume();
+        slideFadeCoroutine = null;
     }
 }
