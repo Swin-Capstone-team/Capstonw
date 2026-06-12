@@ -185,9 +185,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   levelID: Shipping Factory
   isHallway: 0
-  defaultTime: 60
+  defaultTime: 120
   decayRate: 1.2
-  hints: []
+  hints:
+  - mechanicKey: General
+    message: 'Control to crouch/slide
+
+      Left click to grapple to a point'
   startPoint: {fileID: 5774339241059973414}
   endPoint: {fileID: 690862213955514386}
 --- !u!1 &4169975081488709158
@@ -217,8 +221,8 @@ Transform:
   m_GameObject: {fileID: 4169975081488709158}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.009, y: 0.0271, z: -0.437}
-  m_LocalScale: {x: 0.005564707, y: 0.005564707, z: 0.005564707}
+  m_LocalPosition: {x: -1.009, y: 0.0281, z: -0.437}
+  m_LocalScale: {x: 0.015, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5819155560593529582}
@@ -898,7 +902,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.655, y: 0.0271, z: 1.94}
-  m_LocalScale: {x: 0.005564707, y: 0.005564707, z: 0.005564707}
+  m_LocalScale: {x: 0.015, y: 0.015, z: 0.015}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5819155560593529582}
@@ -2450,8 +2454,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8.775595, y: 15.847103, z: 27.706392}
-  m_Center: {x: 0.00002908706, y: 7.792726, z: 3.6176004}
+  m_Size: {x: 8.775595, y: 15.847106, z: 19.333935}
+  m_Center: {x: 0.000028217242, y: 7.792726, z: -0.19862072}
 --- !u!4 &847417632425730652 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f9ff6f1fd08382b4296847cf6146e66c, type: 3}
@@ -6577,8 +6581,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8.775594, y: 15.847103, z: 27.70639}
-  m_Center: {x: -0.000031948093, y: 7.792726, z: 3.6176}
+  m_Size: {x: 8.775594, y: 15.847106, z: 18.992683}
+  m_Center: {x: -0.00003184767, y: 7.792726, z: -0.46298185}
 --- !u!4 &2916360992281697234 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f9ff6f1fd08382b4296847cf6146e66c, type: 3}
@@ -7706,7 +7710,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d4c21b3a0c3f7e40b7e5233bd72fd0c, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 9126167589304299295}
+      addedObject: {fileID: 933568837412439466}
   m_SourcePrefab: {fileID: 100100000, guid: 9d4c21b3a0c3f7e40b7e5233bd72fd0c, type: 3}
 --- !u!4 &3464266941976854754 stripped
 Transform:
@@ -7718,8 +7722,8 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d4c21b3a0c3f7e40b7e5233bd72fd0c, type: 3}
   m_PrefabInstance: {fileID: 4006291688993957641}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &9126167589304299295
-BoxCollider:
+--- !u!64 &933568837412439466
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -7736,9 +7740,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 27.970882, y: 32.32638, z: 50.661007}
-  m_Center: {x: -0.066321366, y: 12.651689, z: 0.2183008}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4678479412727719357, guid: 9d4c21b3a0c3f7e40b7e5233bd72fd0c, type: 3}
 --- !u!1001 &4088231744618428523
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8760,8 +8765,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5.928278, y: 7.6074376, z: 5.928278}
-  m_Center: {x: 0, y: 3.7676733, z: 0}
+  m_Size: {x: 5.928278, y: 6.029513, z: 5.928278}
+  m_Center: {x: 0, y: 2.978711, z: 0}
 --- !u!4 &4357881918160525815 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ab54e2a816f264c46a78f24335a87b47, type: 3}
@@ -11666,8 +11671,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8.775594, y: 19.263243, z: 108.081}
-  m_Center: {x: -0.00003184767, y: 9.500797, z: -36.569706}
+  m_Size: {x: 8.775594, y: 15.999698, z: 18.603699}
+  m_Center: {x: -0.00003184767, y: 7.869026, z: -0.08173386}
 --- !u!1001 &6463132400867007167
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12653,8 +12658,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8.775595, y: 15.847103, z: 27.706392}
-  m_Center: {x: 0.00002908706, y: 7.792726, z: 3.6176004}
+  m_Size: {x: 8.775591, y: 15.847106, z: 19.614037}
+  m_Center: {x: 0.00002911787, y: 7.792726, z: 0.27815026}
 --- !u!4 &6350559493867132642 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f9ff6f1fd08382b4296847cf6146e66c, type: 3}

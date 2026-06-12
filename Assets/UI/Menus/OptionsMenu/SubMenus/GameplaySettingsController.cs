@@ -46,7 +46,7 @@ namespace UI.Menus.OptionsMenu
 
         private void Load()
         {
-            _cameraSensitivity.SetValueWithoutNotify(Mathf.Round(PlayerPrefs.GetFloat("CameraSensitivity", 1f)));
+            _cameraSensitivity.SetValueWithoutNotify(Mathf.Round(PlayerPrefs.GetFloat("CameraSensitivity", _cameraSensitivity.highValue)));
             GameSettingsManager.Instance.CameraSensitivity = _cameraSensitivity.value;
             GameSettingsManager.Instance.Apply();
         }

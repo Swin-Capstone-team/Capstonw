@@ -293,7 +293,7 @@ MonoBehaviour:
   musicTracks:
   - {fileID: 8300000, guid: cdbeed10e632841d0b42ceabe573d1a2, type: 3}
   - {fileID: 8300000, guid: d91421ea2602f48919624e403df8ccdb, type: 3}
-  masterVolume: 0.5
+  masterVolume: 1
   crossfadeDuration: 1
 --- !u!1 &1980193726
 GameObject:

@@ -4644,8 +4644,8 @@ MonoBehaviour:
   - id: skate
     audioClips:
     - {fileID: 8300000, guid: 5c3c1df3f329cdd45b7860039df8203c, type: 3}
-  masterVolume: 0.496
-  musicVolume: 0
+  masterVolume: 1
+  musicVolume: 1
   sfxVolume: 1
   crossfadeDuration: 1
 --- !u!4 &858484285

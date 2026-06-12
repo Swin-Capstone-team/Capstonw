@@ -79,13 +79,14 @@ namespace UI.Menus.OptionsMenu
 
         private void Load()
         {
-            _masterSlider.SetValueWithoutNotify(Mathf.Round(PlayerPrefs.GetFloat("MasterVolume", 1f)));
-            _musicSlider.SetValueWithoutNotify(Mathf.Round(PlayerPrefs.GetFloat("MusicVolume", 1f)));
-            _sfxSlider.SetValueWithoutNotify(Mathf.Round(PlayerPrefs.GetFloat("SFXVolume", 1f)));
+            _masterSlider.SetValueWithoutNotify(Mathf.Round(PlayerPrefs.GetFloat("MasterVolume", _masterSlider.highValue)));
+            _musicSlider.SetValueWithoutNotify(Mathf.Round(PlayerPrefs.GetFloat("MusicVolume", _musicSlider.highValue)));
+            _sfxSlider.SetValueWithoutNotify(Mathf.Round(PlayerPrefs.GetFloat("SFXVolume", _sfxSlider.highValue)));
             
             AudioManager.Instance.masterVolume = _masterSlider.value/100;
             AudioManager.Instance.musicVolume = _musicSlider.value/100;
             AudioManager.Instance.sfxVolume = _sfxSlider.value/100;
+            AudioManager.Instance.UpdateMusicVolume();
         }
 
         public void Confirm()

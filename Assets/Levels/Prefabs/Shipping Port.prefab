@@ -199,11 +199,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   levelID: Shipping Port
   isHallway: 0
-  defaultTime: 60
+  defaultTime: 80
   decayRate: 1.2
-  hints: []
-  startPoint: {fileID: 4233223834149888857}
-  endPoint: {fileID: 455866667940118737}
+  hints:
+  - mechanicKey: General
+    message: 'Control to crouch/slide
+
+      Left click to grapple to a point'
+  startPoint: {fileID: 35166100709794767}
+  endPoint: {fileID: 8014113085597845535}
 --- !u!1 &364299035423024668
 GameObject:
   m_ObjectHideFlags: 0
@@ -2233,37 +2237,6 @@ Transform:
   - {fileID: 8611815484792018156}
   m_Father: {fileID: 313597950466222342}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3220294550489376685
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4233223834149888857}
-  m_Layer: 0
-  m_Name: Entrance
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4233223834149888857
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3220294550489376685}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: -121.95, y: -30, z: -15}
-  m_LocalScale: {x: 2, y: 2.5, z: 0.1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4047019318999590625}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3238118215532949562
 GameObject:
   m_ObjectHideFlags: 0
@@ -3002,8 +2975,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4233223834149888857}
-  - {fileID: 455866667940118737}
   - {fileID: 35166100709794767}
   - {fileID: 8014113085597845535}
   - {fileID: 1350248487033712292}
@@ -4065,7 +4036,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: -122, y: -33, z: -711.8}
-  m_LocalScale: {x: 2, y: 2.5, z: 0.1}
+  m_LocalScale: {x: 5, y: 3, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4047019318999590625}
@@ -4646,37 +4617,6 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!1 &6469267719138754482
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 455866667940118737}
-  m_Layer: 0
-  m_Name: Exit
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &455866667940118737
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6469267719138754482}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: -122.6, y: -33, z: -711.4}
-  m_LocalScale: {x: 2, y: 2.5, z: 0.1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4047019318999590625}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6509517421195676980
 GameObject:
   m_ObjectHideFlags: 0
@@ -5770,8 +5710,8 @@ Transform:
   m_GameObject: {fileID: 7693657240855288297}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: -121.95, y: -30, z: -15}
-  m_LocalScale: {x: 2, y: 2.5, z: 0.1}
+  m_LocalPosition: {x: -121.95, y: -31.1, z: -15}
+  m_LocalScale: {x: 5, y: 4, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4047019318999590625}

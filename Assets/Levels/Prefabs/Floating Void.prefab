@@ -291,9 +291,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   levelID: Floating Void
   isHallway: 0
-  defaultTime: 35
+  defaultTime: 120
   decayRate: 1.2
-  hints: []
+  hints:
+  - mechanicKey: General
+    message: 'Control to crouch/slide
+
+      Left click to grapple to a point'
   startPoint: {fileID: 35166100709794767}
   endPoint: {fileID: 8014113085597845535}
 --- !u!1 &644350609972014342
@@ -1765,8 +1769,6 @@ Transform:
   - {fileID: 5064811114957665263}
   - {fileID: 751640057268261257}
   - {fileID: 8343171817525728322}
-  - {fileID: 4233223834149888857}
-  - {fileID: 455866667940118737}
   - {fileID: 35166100709794767}
   - {fileID: 8014113085597845535}
   - {fileID: 4317022456244197110}
@@ -1952,37 +1954,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &3220294550489376685
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4233223834149888857}
-  m_Layer: 0
-  m_Name: Entrance
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4233223834149888857
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3220294550489376685}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -94, y: 3, z: 97.399994}
-  m_LocalScale: {x: 2, y: 2.5, z: 0.1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4764039855591361698}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &3289686987395342549
 GameObject:
   m_ObjectHideFlags: 0
@@ -3567,7 +3538,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: -119.8, y: 1.9, z: -280.6}
-  m_LocalScale: {x: 2, y: 2.5, z: 0.071254}
+  m_LocalScale: {x: 6, y: 4, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4764039855591361698}
@@ -4529,37 +4500,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &6469267719138754482
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 455866667940118737}
-  m_Layer: 0
-  m_Name: Exit
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &455866667940118737
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6469267719138754482}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -119.8, y: 0.41, z: -310.7}
-  m_LocalScale: {x: 2, y: 2.5, z: 0.1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4764039855591361698}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &6509079795933565084
 GameObject:
   m_ObjectHideFlags: 0
@@ -5706,8 +5646,8 @@ Transform:
   m_GameObject: {fileID: 7693657240855288297}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -94, y: 3, z: 97.1}
-  m_LocalScale: {x: 2, y: 2.5, z: 0.1}
+  m_LocalPosition: {x: -94, y: 1.8, z: 97.1}
+  m_LocalScale: {x: 6, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4764039855591361698}

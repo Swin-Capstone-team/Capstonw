@@ -107,9 +107,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   levelID: Floating Void
   isHallway: 0
-  defaultTime: 30
+  defaultTime: 60
   decayRate: 1.2
-  hints: []
+  hints:
+  - mechanicKey: General
+    message: 'Control to crouch/slide
+
+      Left click to grapple to a point'
   startPoint: {fileID: 35166100709794767}
   endPoint: {fileID: 8014113085597845535}
 --- !u!1 &1271294634071709481
@@ -385,6 +389,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 455866667940118737}
+  - {fileID: 4233223834149888857}
   - {fileID: 3747568139444466983}
   - {fileID: 5422523098271371850}
   - {fileID: 6835406455488404029}
@@ -419,8 +425,6 @@ Transform:
   - {fileID: 6478624896637211040}
   - {fileID: 1199682628854215104}
   - {fileID: 6089230228047804262}
-  - {fileID: 4233223834149888857}
-  - {fileID: 455866667940118737}
   - {fileID: 35166100709794767}
   - {fileID: 8014113085597845535}
   m_Father: {fileID: 3810945624698253640}
@@ -1031,7 +1035,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: -15, y: -17, z: -370.307}
-  m_LocalScale: {x: 2, y: 2.5, z: 0.1}
+  m_LocalScale: {x: 4, y: 3, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4764039855591361698}
@@ -1287,8 +1291,8 @@ Transform:
   m_GameObject: {fileID: 7693657240855288297}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -9.4, y: -1.25, z: -105}
-  m_LocalScale: {x: 2, y: 2.5, z: 0.1}
+  m_LocalPosition: {x: -9.4, y: -2.5, z: -105}
+  m_LocalScale: {x: 4, y: 3, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4764039855591361698}
