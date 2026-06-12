@@ -331,10 +331,19 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 5c3c1df3f329cdd45b7860039df8203c, type: 3}
   - id: menuSelect
     audioClips:
-    - {fileID: 8300000, guid: d12a9b18739bb53499a0f4249522c2be, type: 3}
+    - {fileID: 8300000, guid: ad004edae84d0104786224eaefaa614d, type: 3}
   - id: menuOptions
     audioClips:
-    - {fileID: 8300000, guid: 2bb21e466a4f3c6498113c002bfddf6b, type: 3}
+    - {fileID: 8300000, guid: 64dfdb2a21a26124b87a5f0b3f94dc00, type: 3}
+  - id: grapple
+    audioClips:
+    - {fileID: 8300000, guid: 852dfdfa63ab373448ef537586c7d404, type: 3}
+  - id: levelComplete
+    audioClips:
+    - {fileID: 8300000, guid: 846adef93d117014fbe5af4ecd44351c, type: 3}
+  - id: gameOver
+    audioClips:
+    - {fileID: 8300000, guid: 6a290078579e0c8438ee82ebe89d5d9d, type: 3}
   masterVolume: 0.5
   musicVolume: 0.5
   sfxVolume: 1
@@ -681,6 +690,10 @@ PrefabInstance:
     - target: {fileID: 5322472182857757716, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8281349379505519708, guid: 93879b0b290384521bf6ec4f91e79acc, type: 3}
+      propertyPath: CrouchFootstepInterval
+      value: 0.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
