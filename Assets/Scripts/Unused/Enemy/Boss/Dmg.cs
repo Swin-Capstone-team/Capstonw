@@ -1,13 +1,16 @@
 using UnityEngine;
+using System.Linq;
+using System.Collections.Generic;
+
 
 public class Dmg : MonoBehaviour
 {
-    public PlayerHealth playerHealth; // Reference to the player's health script
-    public float damageAmount; // Amount of damage to inflict
+    public UIManager uiManager; // Reference to the UI Manager
+    public GameTimer gameTimer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        gameTimer = FindFirstObjectByType<GameTimer>();
     }
 
     // Update is called once per frame
@@ -15,13 +18,21 @@ public class Dmg : MonoBehaviour
     {
 
     }
-    
+
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player") // Check if the collided object is the player
+        if (other.CompareTag("Player")) // Check if the collided object is the player
         {
-            playerHealth.currentHealth -= damageAmount; // Inflict damage to the player
-            Debug.Log("Player hit! Damage inflicted: " + damageAmount);
+            gameTimer.TriggerGameOver();
+            //Debug.Log("Player hit! Damage inflicted: " + damageAmount);
         }
     }
+    // private void TriggerGameOver()
+    // {
+    //     isTimerRunning = false;
+    //     uiManager.ShowGameOverScreen(score, roomCompletionCounts.Values.Sum());
+        
+    //     // Add your logic here to freeze the player or stop game time
+    //     Time.timeScale = 0f;
+    // }
 }

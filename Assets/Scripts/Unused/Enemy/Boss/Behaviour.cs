@@ -4,6 +4,7 @@ public class Behaviour : MonoBehaviour
 {
     public Animator animator;
     public Transform player;
+    public GameObject playerObj;
     public GameObject followRange;      // Aggro range for the boss to start following the player
     public GameObject stompRange;       // Range for the stomp attack
     public Collider stompHitbox;       // hitbox for the stomp attack
@@ -23,6 +24,11 @@ public class Behaviour : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            player = playerObj.transform;
+        }
         animator = GetComponent<Animator>();
     }
 
@@ -30,6 +36,15 @@ public class Behaviour : MonoBehaviour
     void Update()
     {
         attackTimer -= Time.deltaTime; //Cooldown for  attack
+        if (player == null)
+        {
+            playerObj = GameObject.FindGameObjectWithTag("Player");  //Find the player using script
+            if (playerObj != null)
+            {
+                player = playerObj.transform;
+            }
+            return;
+        }
 
         if (stompattackRange)       //Stomp Attack
         {

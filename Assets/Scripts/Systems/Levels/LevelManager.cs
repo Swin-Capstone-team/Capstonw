@@ -24,6 +24,7 @@ public class LevelManager : MonoBehaviour
 
     private List<Level> activeRooms = new List<Level>();
     private Level lastSpawnedRoom;
+    private Level lastSpawnedRoomPrefab;
     private Level startingRoomInstance;
 
     private HashSet<string> seenMechanicKeys = new HashSet<string>();
@@ -84,7 +85,21 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
-        Level prefabToSpawn = prefabArray[Random.Range(0, prefabArray.Length)];
+        Level prefabToSpawn;
+        if (prefabArray.Length > 1)
+        {
+            // Ensure we don't spawn the same prefab consecutively
+            do
+            {
+                prefabToSpawn = prefabArray[Random.Range(0, prefabArray.Length)];
+            } while (prefabToSpawn == lastSpawnedRoomPrefab);
+        }
+        else
+        {
+            prefabToSpawn = prefabArray[0];
+        }
+
+        lastSpawnedRoomPrefab = prefabToSpawn;
 
         Level newRoom = Instantiate(prefabToSpawn);
         AlignRoomToPrevious(newRoom, lastSpawnedRoom);

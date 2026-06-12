@@ -50,7 +50,7 @@
                             <ui:Label text="CAMERA  SENSITIVITY" name="" class="optionLabel"/>
                         </ui:VisualElement>
                         <ui:VisualElement name="" class="optionSettingsContainer">
-                            <ui:Slider label="Slider" value="42" high-value="100" show-input-field="true" tabindex="0" fill="true" name="CameraSensitivitySlider" style="color: rgb(255, 255, 255);"/>
+                            <ui:Slider label="Slider" value="100" high-value="100" show-input-field="true" tabindex="0" fill="true" name="CameraSensitivitySlider" style="color: rgb(255, 255, 255);"/>
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement class="optionGroup">
@@ -122,7 +122,7 @@
                             <ui:Label text="VOLUME" name="" class="optionLabel" style="padding-top: 8px;"/>
                         </ui:VisualElement>
                         <ui:VisualElement name="" class="optionSettingsContainer">
-                            <ui:Slider label="Slider" value="42" high-value="100" show-input-field="true" tabindex="0" fill="true" name="MasterSlider" style="color: rgb(255, 255, 255);"/>
+                            <ui:Slider label="Slider" value="100" high-value="100" show-input-field="true" tabindex="0" fill="true" name="MasterSlider" style="color: rgb(255, 255, 255);"/>
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement class="optionGroup">
@@ -130,7 +130,7 @@
                             <ui:Label text="MUSIC VOLUME" name="" class="optionLabel"/>
                         </ui:VisualElement>
                         <ui:VisualElement name="" class="optionSettingsContainer">
-                            <ui:Slider label="Slider" value="42" high-value="100" show-input-field="true" tabindex="0" fill="true" name="MusicSlider" style="color: rgb(255, 255, 255);"/>
+                            <ui:Slider label="Slider" value="100" high-value="100" show-input-field="true" tabindex="0" fill="true" name="MusicSlider" style="color: rgb(255, 255, 255);"/>
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:VisualElement name="" class="optionGroup">
@@ -138,7 +138,7 @@
                             <ui:Label text="SFX VOLUME" name="" class="optionLabel"/>
                         </ui:VisualElement>
                         <ui:VisualElement name="" class="optionSettingsContainer">
-                            <ui:Slider label="Slider" value="42" high-value="100" show-input-field="true" tabindex="0" fill="true" name="SFXSlider" style="color: rgb(255, 255, 255);"/>
+                            <ui:Slider label="Slider" value="100" high-value="100" show-input-field="true" tabindex="0" fill="true" name="SFXSlider" style="color: rgb(255, 255, 255);"/>
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>

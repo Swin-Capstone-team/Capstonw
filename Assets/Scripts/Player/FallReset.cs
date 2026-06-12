@@ -26,11 +26,12 @@ public class FallReset : MonoBehaviour
     }
 
     private void Update()
-    {
-        if (transform.position.y < fallY && Time.time - lastRespawnTime > 1f)
-        {
-            Respawn();
-        }
+    {   
+        //Unnecessary to use lines, trigger collider is used instead 👍
+        // if (transform.position.y < fallY && Time.time - lastRespawnTime > 1f)
+        // {
+        //     Respawn();
+        // }
     }
 
     public void SetRespawnPoint(Transform point)
@@ -63,5 +64,13 @@ public class FallReset : MonoBehaviour
         transform.rotation = currentRespawnRotation;
 
         Debug.Log("Player Respawned to: " + currentRespawnPosition);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Respawn"))
+        {
+            Respawn();
+        }
     }
 }

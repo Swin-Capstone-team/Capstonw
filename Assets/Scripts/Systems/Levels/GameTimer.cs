@@ -6,7 +6,6 @@ public class GameTimer : MonoBehaviour
 {
     [Header("References")]
     public UIManager uiManager;
-
     private float currentTime;
     private float decayMultiplier;
     private float maxTimeForCurrentLevel;
@@ -87,7 +86,7 @@ public class GameTimer : MonoBehaviour
         AudioManager.Instance.PlaySFX("levelComplete");
     }
 
-    private void TriggerGameOver()
+    public void TriggerGameOver()
     {
         isTimerRunning = false;
         uiManager.ShowGameOverScreen(score, roomCompletionCounts.Values.Sum());

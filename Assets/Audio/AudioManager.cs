@@ -21,7 +21,7 @@ public class AudioManager : MonoBehaviour
 
     [Header("Settings")]
     [Range(0f, 1f)] public float masterVolume = 1f;
-    [Range(0f, 1f)] public float musicVolume = 0.5f;
+    [Range(0f, 1f)] public float musicVolume = 1f;
     [Range(0f, 1f)] public float sfxVolume = 1f;
     [Tooltip("Time in seconds it takes to transition from one track to the next.")]
     public float crossfadeDuration = 2f;
