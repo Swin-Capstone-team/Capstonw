@@ -265,6 +265,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 75783359}
+  - component: {fileID: 75783361}
   - component: {fileID: 75783360}
   m_Layer: 0
   m_Name: Audio Manager
@@ -348,6 +349,24 @@ MonoBehaviour:
   musicVolume: 1
   sfxVolume: 1
   crossfadeDuration: 1
+--- !u!114 &75783361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 75783358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d332780514a87f4f98db58e06e73adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameAudioManager
+  musicTracks: []
+  soundEffects: []
+  masterVolume: 1
+  musicVolume: 1
+  sfxVolume: 1
+  crossfadeDuration: 2
 --- !u!1 &192708589
 GameObject:
   m_ObjectHideFlags: 0

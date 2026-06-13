@@ -3,21 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class SoundEffect
+public class GameSoundEffect
 {
     public string id;
     public AudioClip[] audioClips;
 }
 
-public class AudioManager : MonoBehaviour
+public class GameAudioManager : MonoBehaviour
 {
-    public static AudioManager Instance { get; private set; }
+    public static GameAudioManager Instance { get; private set; }
 
     [Header("Playlist")]
     [Tooltip("List of audio clips to play in order.")]
     public AudioClip[] musicTracks;
     [SerializeField]
-    private SoundEffect[] soundEffects;
+    private GameSoundEffect[] soundEffects;
 
     [Header("Settings")]
     [Range(0f, 1f)] public float masterVolume = 1f;
@@ -33,10 +33,10 @@ public class AudioManager : MonoBehaviour
     private bool isUsingSourceA = true;
     private int currentTrackIndex = 0;
     private bool isTransitioning = false;
-    private bool isFadingOutForSceneChange = false;
     private Dictionary<string, AudioClip[]> sfxLookup;
     private Coroutine slideFadeCoroutine;
-    private Coroutine musicFadeCoroutine;
+
+    
 
     private void Awake()
     {
@@ -48,6 +48,7 @@ public class AudioManager : MonoBehaviour
         }
 
         Instance = this;
+        DontDestroyOnLoad(gameObject);
 
         // Dynamically create two AudioSources to handle the crossfading smoothly
         sourceA = gameObject.AddComponent<AudioSource>();
@@ -68,6 +69,7 @@ public class AudioManager : MonoBehaviour
         slideSource.spatialBlend = 0f;
         slideSource.playOnAwake = false;
 
+
         foreach (var sfx in soundEffects)
         {
             if (string.IsNullOrEmpty(sfx.id))
@@ -84,19 +86,20 @@ public class AudioManager : MonoBehaviour
     }
 
     private void Start()
+{
+    if (sourceA.isPlaying || sourceB.isPlaying)
+        return;
+
+    if (musicTracks != null && musicTracks.Length > 0)
     {
-        // Begin playing the first track if we have any
-        if (musicTracks != null && musicTracks.Length > 0)
-        {
-            sourceA.clip = musicTracks[0];
-            sourceA.volume = GetMusicVolume();
-            sourceA.Play();
-        }
+        sourceA.clip = musicTracks[0];
+        sourceA.volume = GetMusicVolume();
+        sourceA.Play();
     }
+}
 
     private void Update()
     {
-        if (isFadingOutForSceneChange) return;
         if (musicTracks == null || musicTracks.Length == 0) return;
 
         AudioSource activeSource = isUsingSourceA ? sourceA : sourceB;
@@ -153,7 +156,6 @@ public class AudioManager : MonoBehaviour
                 fadingIn.time = 0f;
                 break;
             }
-
             timer += Time.deltaTime; //Affected by pause (timescale)
             float t = timer / crossfadeDuration;
             
@@ -178,40 +180,7 @@ public class AudioManager : MonoBehaviour
         isTransitioning = false;
     }
 
-    // Fade out current music before changing scenes
-    public void FadeOutMusic()
-    {
-        isFadingOutForSceneChange = true;
 
-        if (musicFadeCoroutine != null)
-        {
-            StopCoroutine(musicFadeCoroutine);
-        }
-
-        musicFadeCoroutine = StartCoroutine(FadeOutMusicRoutine());
-    }
-
-    private IEnumerator FadeOutMusicRoutine()
-    {
-        AudioSource activeSource = isUsingSourceA ? sourceA : sourceB;
-
-        if (activeSource == null)
-            yield break;
-
-        float startVolume = activeSource.volume;
-        float timer = 0f;
-
-        while (timer < crossfadeDuration)
-        {
-            timer += Time.deltaTime;
-            activeSource.volume = Mathf.Lerp(startVolume, 0f, timer / crossfadeDuration);
-            yield return null;
-        }
-
-        activeSource.volume = 0f;
-        activeSource.Stop();
-        musicFadeCoroutine = null;
-    }
 
     private AudioClip GetRandomSFX(string id)
     {
@@ -264,10 +233,12 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+
     private float GetMusicVolume()
     {
         return masterVolume * musicVolume;
     }
+
 
     private float GetSFXVolume(float volumeMultiplier = 1f)
     {

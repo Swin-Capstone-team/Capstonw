@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using UI.Menus.OptionsMenu;
+using System.Collections;
 
 namespace UI.Menus.MainMenu
 {
@@ -44,15 +45,27 @@ namespace UI.Menus.MainMenu
             Application.Quit();
         }
 
-        private void ContinueGame()
-        {
-            SceneManager.LoadSceneAsync("Main");
-        }
+private void ContinueGame()
+{
+    StartCoroutine(LoadMainWithFade());
+}
 
-        private void NewGame()
-        {
-            SceneManager.LoadSceneAsync("Main");
-        }
+private void NewGame()
+{
+    StartCoroutine(LoadMainWithFade());
+}
+
+private IEnumerator LoadMainWithFade()
+{
+    if (AudioManager.Instance != null)
+    {
+        AudioManager.Instance.FadeOutMusic();
+    }
+
+    yield return new WaitForSeconds(2f);
+
+    SceneManager.LoadSceneAsync("Main");
+}
 
         private void LoadGame()
         {
